@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#f5f4f0">
+<meta name="theme-color" content="#1a1916">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Déjà Vu">
 <link rel="manifest" href="manifest.json">
@@ -30,471 +30,476 @@
 html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:16px;line-height:1.5;}
 .app{max-width:480px;margin:0 auto;padding-bottom:40px;}
 .status-bar{height:calc(var(--safe-top)+6px);}
-.header{padding:2px 20px 16px;display:flex;align-items:center;justify-content:space-between;}
+.header{padding:2px 20px 14px;display:flex;align-items:center;justify-content:space-between;}
 .header-title{font-size:12px;color:var(--text3);letter-spacing:0.14em;text-transform:uppercase;}
 .back-btn{width:36px;height:36px;border-radius:var(--r-sm);border:1px solid var(--border2);background:var(--surface);color:var(--text);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;}
 .back-btn:active{background:var(--bg3);}
 .page{padding:0 20px 24px;}
-.hero{padding:6px 0 20px;}
+.hero{padding:6px 0 18px;}
 .hero-title{font-size:38px;font-weight:300;letter-spacing:-0.02em;line-height:1;}
-.hero-sub{font-size:13px;color:var(--text2);margin-top:6px;}
-.section-label{font-size:11px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin:20px 0 10px;}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;}
-.card-title{font-size:11px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:14px;}
-.stat-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
-.stat-row:last-child{border-bottom:none;}
-.stat-rank{font-size:11px;color:var(--text3);font-family:var(--mono);min-width:18px;}
-.stat-bar-wrap{flex:1;height:4px;background:var(--bg3);border-radius:99px;overflow:hidden;}
-.stat-bar{height:100%;border-radius:99px;transition:width 0.6s cubic-bezier(0.4,0,0.2,1);}
-.stat-name{font-size:13px;min-width:90px;}
-.stat-count{font-size:13px;font-family:var(--mono);color:var(--text2);min-width:28px;text-align:right;}
-.stat-pct{font-size:10px;color:var(--text3);font-family:var(--mono);min-width:34px;text-align:right;}
-.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.hero-sub{font-size:13px;color:var(--text2);margin-top:5px;}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
 .kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;}
 .kpi-val{font-size:36px;font-weight:300;letter-spacing:-0.02em;line-height:1;}
 .kpi-lbl{font-size:11px;color:var(--text3);margin-top:4px;}
-.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;position:relative;}
-.chart-canvas{max-height:220px;}
-.loading{text-align:center;padding:60px 20px;color:var(--text3);font-size:14px;}
-.loading i{font-size:24px;display:block;margin-bottom:8px;opacity:0.5;}
-.badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:var(--r-pill);background:var(--bg2);color:var(--text3);margin-left:6px;font-family:var(--mono);}
-.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;margin-bottom:16px;}
+.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;margin-bottom:16px;}
 .tabs::-webkit-scrollbar{display:none;}
-.tab{padding:7px 13px;border-radius:var(--r-pill);border:1px solid var(--border2);background:none;color:var(--text2);font-family:var(--font);font-size:13px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.tab{padding:7px 14px;border-radius:var(--r-pill);border:1px solid var(--border2);background:none;color:var(--text2);font-family:var(--font);font-size:13px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
 .tab.active{background:var(--text);color:var(--bg);border-color:var(--text);}
-.month-chip{display:inline-flex;align-items:center;gap:5px;background:var(--bg2);border-radius:var(--r-sm);padding:6px 10px;font-size:12px;color:var(--text2);margin:3px;}
-.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.combo-row{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;}
-.combo-row:last-child{border-bottom:none;}
-.combo-cnt{font-size:18px;font-weight:300;font-family:var(--mono);min-width:32px;text-align:right;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;}
+.card-title{font-size:11px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:14px;}
+.chart-wrap{position:relative;width:100%;}
+.section-label{font-size:11px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin:18px 0 10px;}
+.stat-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.stat-row:last-child{border-bottom:none;}
+.stat-rank{font-size:11px;color:var(--text3);font-family:var(--mono);min-width:18px;}
+.stat-name{font-size:13px;color:var(--text);flex:1;min-width:0;}
+.stat-sub{font-size:11px;color:var(--text3);display:block;}
+.stat-bar-wrap{width:80px;height:4px;background:var(--bg3);border-radius:99px;overflow:hidden;flex-shrink:0;}
+.stat-bar{height:100%;border-radius:99px;}
+.stat-count{font-size:13px;font-family:var(--mono);color:var(--text2);min-width:24px;text-align:right;}
+.stat-pct{font-size:10px;color:var(--text3);font-family:var(--mono);min-width:34px;text-align:right;}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);}
+.leg-sq{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+.divider{height:1px;background:var(--border);margin:16px 0;}
+.panel{display:none;}
+.panel.active{display:block;}
+.loading{text-align:center;padding:60px 20px;color:var(--text3);font-size:14px;}
+.loading i{font-size:28px;display:block;margin-bottom:8px;opacity:0.4;}
+.modelo-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:var(--r-pill);background:var(--bg2);color:var(--text2);font-family:var(--mono);margin-left:4px;}
 </style>
 </head>
 <body>
 <div class="app">
   <div class="status-bar"></div>
   <div class="header">
-    <a href="/" class="back-btn" title="volver"><i class="ti ti-arrow-left"></i></a>
-    <span class="header-title">analytics</span>
+    <a href="/" class="back-btn"><i class="ti ti-arrow-left"></i></a>
+    <span class="header-title">déjà vu</span>
     <div style="width:36px;"></div>
   </div>
-  <div class="page" id="main">
-    <div class="loading" id="loading">
-      <i class="ti ti-chart-bar"></i>
-      cargando datos…
+  <div class="page">
+    <div class="loading" id="loading"><i class="ti ti-chart-bar"></i>cargando datos…</div>
+    <div id="content" style="display:none;">
+      <div class="hero">
+        <div class="hero-title">déjà vu</div>
+        <div class="hero-sub" id="hero-sub">cargando…</div>
+      </div>
+      <div class="kpi-grid" id="kpis"></div>
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-tab="general">ranking</button>
+        <button class="tab" data-tab="ropa">ropa</button>
+        <button class="tab" data-tab="calzado">calzado</button>
+        <button class="tab" data-tab="accesorios">accesorios</button>
+        <button class="tab" data-tab="enfoques">enfoques</button>
+        <button class="tab" data-tab="evolucion">evolución</button>
+      </div>
+
+      <!-- RANKING GENERAL -->
+      <div class="panel active" id="panel-general">
+        <div class="card">
+          <div class="card-title">todas las prendas · ranking</div>
+          <div class="chart-wrap" style="height:220px;"><canvas id="chart-general" role="img" aria-label="Ranking general de marcas">Ranking de marcas más usadas.</canvas></div>
+        </div>
+        <div class="card" style="padding:4px 14px;" id="list-general"></div>
+      </div>
+
+      <!-- ROPA -->
+      <div class="panel" id="panel-ropa">
+        <div class="section-label">camisas + pantalones</div>
+        <div class="card">
+          <div class="card-title">marcas de ropa combinadas</div>
+          <div id="legend-ropa" class="legend"></div>
+          <div class="chart-wrap" style="height:240px;"><canvas id="chart-ropa" role="img" aria-label="Marcas de ropa combinadas">Distribución de marcas en camisas y pantalones.</canvas></div>
+        </div>
+        <div class="card" style="padding:4px 14px;" id="list-ropa"></div>
+        <div class="section-label">solo camisas</div>
+        <div class="card" style="padding:4px 14px;" id="list-camisas"></div>
+        <div class="section-label">solo pantalones</div>
+        <div class="card" style="padding:4px 14px;" id="list-pantalones"></div>
+      </div>
+
+      <!-- CALZADO -->
+      <div class="panel" id="panel-calzado">
+        <div class="section-label">por marca</div>
+        <div class="card">
+          <div class="chart-wrap" style="height:180px;"><canvas id="chart-calzado-marca" role="img" aria-label="Marcas de calzado más usadas">Marcas de calzado.</canvas></div>
+        </div>
+        <div class="card" style="padding:4px 14px;" id="list-calzado-marca"></div>
+        <div class="section-label">por modelo</div>
+        <div class="card">
+          <div class="card-title">detalle de cada par</div>
+          <div class="chart-wrap" style="height:260px;"><canvas id="chart-calzado-modelo" role="img" aria-label="Modelos de calzado más usados">Modelos específicos de calzado.</canvas></div>
+        </div>
+        <div class="card" style="padding:4px 14px;" id="list-calzado-modelo"></div>
+      </div>
+
+      <!-- ACCESORIOS -->
+      <div class="panel" id="panel-accesorios">
+        <div class="section-label">bolsos + termos</div>
+        <div class="card">
+          <div class="card-title">accesorios combinados</div>
+          <div id="legend-accesorios" class="legend"></div>
+          <div class="chart-wrap" style="height:240px;"><canvas id="chart-accesorios" role="img" aria-label="Marcas de accesorios">Distribución de bolsos y termos.</canvas></div>
+        </div>
+        <div class="card" style="padding:4px 14px;" id="list-accesorios"></div>
+        <div class="section-label">solo bolsos</div>
+        <div class="card" style="padding:4px 14px;" id="list-bolsos"></div>
+        <div class="section-label">solo termos</div>
+        <div class="card" style="padding:4px 14px;" id="list-termos"></div>
+      </div>
+
+      <!-- ENFOQUES -->
+      <div class="panel" id="panel-enfoques">
+        <div class="card">
+          <div class="card-title">enfoques de color · historial completo</div>
+          <div id="legend-enfoques" class="legend"></div>
+          <div class="chart-wrap" style="height:260px;"><canvas id="chart-enfoques" role="img" aria-label="Enfoques de color usados">Distribución de enfoques.</canvas></div>
+        </div>
+        <div class="card" style="padding:4px 14px;" id="list-enfoques"></div>
+      </div>
+
+      <!-- EVOLUCIÓN -->
+      <div class="panel" id="panel-evolucion">
+        <div class="card">
+          <div class="card-title">top marcas de ropa · por mes</div>
+          <div class="chart-wrap" style="height:260px;"><canvas id="chart-line" role="img" aria-label="Evolución mensual de marcas">Evolución de marcas por mes.</canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title">outfits por mes</div>
+          <div class="chart-wrap" style="height:160px;"><canvas id="chart-mes" role="img" aria-label="Outfits por mes">Cantidad de outfits por mes.</canvas></div>
+        </div>
+      </div>
+
     </div>
-    <div id="content" style="display:none;"></div>
   </div>
 </div>
-
 <script>
-// ── CONFIG ──
 const SB_URL='https://uytbnqvmgalycxqnhdzb.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5dGJucXZtZ2FseWN4cW5oZHpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5MjI0MzcsImV4cCI6MjA5NjQ5ODQzN30._6AtcAcpMqlhMAcU5rSP-UAq77k7n6hrhN2NgE49izY';
 const SB_H={'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
 
-// ── ENFOQUES ──
-const ENFOQUES={
+const ENFOQUES_COLOR={
   "Silver Chariot":"#9E9E9E","Lost in Paradise":"#C4A882","Stone Ocean":"#4A90C4",
   "Emerald Splash":"#639922","Red Bebop":"#8B1A1A","Overtime":"#7F77DD",
   "Kurozaki Boy":"#E07B2A","Bites The Dust":"#E8A0B4","Black & White":"#2C2C2A",
   "Golden Spin":"#8B6914","Jet Black":"#111111","Hermit Purple":"#9B59B6"
 };
-const CATS={EE:{nombre:"Elegantes",color:"#7F77DD"},FF:{nombre:"Formales",color:"#378ADD"},RR:{nombre:"Relaxed",color:"#1D9E75"},WW:{nombre:"Weekend",color:"#BA7517"}};
 
-// ── MAPA DE MARCAS ──
-const MARCAS={
-  EE01:{camisa:"Vélez",pantalon:"Zara",calzado:"H&M",bolso:"Aldo",termo:"Stanley"},
-  EE02:{camisa:"Vélez",pantalon:"H&M",calzado:"H&M",bolso:"Aldo",termo:"Stanley"},
-  EE03:{camisa:"Vélez",pantalon:"H&M",calzado:"H&M",bolso:"Aldo",termo:"Stanley"},
-  EE04:{camisa:"Zara",pantalon:"H&M",calzado:"H&M",bolso:"Aldo",termo:"Stanley"},
-  EE05:{camisa:"Massimo Dutti",pantalon:"H&M",calzado:"H&M",bolso:"Aldo",termo:"Stanley"},
-  EE06:{camisa:"Zara",pantalon:"Zara",calzado:"H&M",bolso:"Aldo",termo:"Stanley"},
-  EE07:{camisa:"Vélez",pantalon:"H&M",calzado:"Fiorenci",bolso:"Mario Hernandez",termo:"Brumatte"},
-  EE08:{camisa:"H&M",pantalon:"H&M",calzado:"Adidas",bolso:"Calvin Klein",termo:"Brumatte"},
-  FF01:{camisa:"Pull&Bear",pantalon:"Pull&Bear",calzado:"H&M",bolso:"Aldo",termo:"Stanley"},
-  FF02:{camisa:"H&M",pantalon:"Calvornis",calzado:"Fiorenci",bolso:"Mario Hernandez",termo:"Brumatte"},
-  FF03:{camisa:"Bershka",pantalon:"Pull&Bear",calzado:"H&M",bolso:"Aldo",termo:"Stanley"},
-  FF04:{camisa:"Kolmoda",pantalon:"H&M",calzado:"Nike",bolso:"Adidas",termo:"Frostbuddy"},
-  FF05:{camisa:"Kolmoda",pantalon:"Mevak",calzado:"Adidas",bolso:"Pull&Bear",termo:"Stanley"},
-  FF06:{camisa:"Gym Rank",pantalon:"H&M",calzado:"Adidas",bolso:"Aldo",termo:"Stanley"},
-  FF07:{camisa:"H&M",pantalon:"H&M",calzado:"H&M",bolso:"Aldo",termo:"Stanley"},
-  FF08:{camisa:"Kolmoda",pantalon:"Bershka",calzado:"Adidas",bolso:"Calvin Klein",termo:"Brumatte"},
-  FF09:{camisa:"H&M",pantalon:"H&M",calzado:"Aldo",bolso:"Aldo",termo:"Stanley"},
-  FF10:{camisa:"H&M",pantalon:"H&M",calzado:"Nike",bolso:"Adidas",termo:"Frostbuddy"},
-  FF11:{camisa:"Brano",pantalon:"H&M",calzado:"Aldo",bolso:"Calvin Klein",termo:"Frostbuddy"},
-  FF12:{camisa:"H&M",pantalon:"H&M",calzado:"Nike",bolso:"Adidas",termo:"Frostbuddy"},
-  FF13:{camisa:"Pull&Bear",pantalon:"H&M",calzado:"Adidas",bolso:"Pull&Bear",termo:"Frostbuddy"},
-  FF14:{camisa:"Massimo Dutti",pantalon:"H&M",calzado:"Adidas",bolso:"Aldo",termo:"Stanley"},
-  FF15:{camisa:"Pull&Bear",pantalon:"Pull&Bear",calzado:"Nike",bolso:"Adidas",termo:"Frostbuddy"},
-  FF16:{camisa:"Manfinity",pantalon:"H&M",calzado:"Adidas",bolso:"Aldo",termo:"Stanley"},
-  FF17:{camisa:"Dante",pantalon:"H&M",calzado:"Aldo",bolso:"Aldo",termo:"Stanley"},
-  FF18:{camisa:"H&M",pantalon:"H&M",calzado:"Aldo",bolso:"Pull&Bear",termo:"Frostbuddy"},
-  FF19:{camisa:"H&M",pantalon:"H&M",calzado:"Adidas",bolso:"Calvin Klein",termo:"Brumatte"},
-  FF20:{camisa:"Manfinity",pantalon:"H&M",calzado:"Adidas",bolso:"Aldo",termo:"Stanley"},
-  RR01:{camisa:"Dante",pantalon:"H&M",calzado:"Adidas",bolso:"Adidas",termo:"Frostbuddy"},
-  RR02:{camisa:"H&M",pantalon:"Zara",calzado:"Nike",bolso:"Adidas",termo:"Frostbuddy"},
-  RR03:{camisa:"Dante",pantalon:"Zara",calzado:"Adidas",bolso:"Calvin Klein",termo:"Brumatte"},
-  RR04:{camisa:"H&M",pantalon:"H&M",calzado:"Aldo",bolso:"Pull&Bear",termo:"Frostbuddy"},
-  RR05:{camisa:"Pull&Bear",pantalon:"Pull&Bear",calzado:"Nike",bolso:"Adidas",termo:"Frostbuddy"},
-  RR06:{camisa:"H&M",pantalon:"H&M",calzado:"Adidas",bolso:"Calvin Klein",termo:"Brumatte"},
-  RR07:{camisa:"Gym Rank",pantalon:"Bershka",calzado:"Aldo",bolso:"Mario Hernandez",termo:"Brumatte"},
-  WW01:{camisa:"Victor",pantalon:"Bershka",calzado:"Adidas",bolso:"Adidas",termo:"Frostbuddy"},
-  WW02:{camisa:"Victor",pantalon:"Bershka",calzado:"Adidas",bolso:"Pull&Bear",termo:"Frostbuddy"},
-  WW03:{camisa:"Bershka",pantalon:"Bershka",calzado:"Adidas",bolso:"Aldo",termo:"Stanley"},
-  WW04:{camisa:"H&M",pantalon:"Zona Libre",calzado:"Nike",bolso:"Adidas",termo:"Frostbuddy"},
-  WW05:{camisa:"Renzo",pantalon:"Bershka",calzado:"Aldo",bolso:"Mario Hernandez",termo:"Brumatte"},
-  WW06:{camisa:"Victor",pantalon:"Bershka",calzado:"Aldo",bolso:"Calvin Klein",termo:"Frostbuddy"},
-  WW07:{camisa:"Dante",pantalon:"Bershka",calzado:"Nike",bolso:"Aldo",termo:"Stanley"},
-  WW08:{camisa:"Gym Rank",pantalon:"Bershka",calzado:"Adidas",bolso:"Aldo",termo:"Stanley"},
-  WW09:{camisa:"Manfinity",pantalon:"Bershka",calzado:"Adidas",bolso:"Aldo",termo:"Stanley"},
+// Calzado: marca + modelo separados
+const CALZADO_MAP={
+  EE01:{marca:"H&M",    modelo:"Botas ⚫️"},
+  EE02:{marca:"H&M",    modelo:"Botas ⚫️"},
+  EE03:{marca:"H&M",    modelo:"Botas ⚫️"},
+  EE04:{marca:"H&M",    modelo:"Botas ⚫️"},
+  EE05:{marca:"H&M",    modelo:"Botas ⚫️"},
+  EE06:{marca:"H&M",    modelo:"Botas ⚫️"},
+  EE07:{marca:"Fiorenci",modelo:"Botas 🟤"},
+  EE08:{marca:"Adidas", modelo:"Stan Smith"},
+  FF01:{marca:"H&M",    modelo:"Botas ⚫️"},
+  FF02:{marca:"Fiorenci",modelo:"Botas 🟤"},
+  FF03:{marca:"H&M",    modelo:"Botas ⚫️"},
+  FF04:{marca:"Nike",   modelo:"AF1"},
+  FF05:{marca:"Adidas", modelo:"Advantage ⚫️"},
+  FF06:{marca:"Adidas", modelo:"Advantage ⚫️"},
+  FF07:{marca:"H&M",    modelo:"Botas ⚫️"},
+  FF08:{marca:"Adidas", modelo:"Stan Smith"},
+  FF09:{marca:"Aldo",   modelo:"Zapato Aldo"},
+  FF10:{marca:"Nike",   modelo:"AF1"},
+  FF11:{marca:"Aldo",   modelo:"Zapato Aldo"},
+  FF12:{marca:"Nike",   modelo:"AF1"},
+  FF13:{marca:"Adidas", modelo:"Advantage ⚪️🟢"},
+  FF14:{marca:"Adidas", modelo:"Advantage ⚫️"},
+  FF15:{marca:"Nike",   modelo:"AF1"},
+  FF16:{marca:"Adidas", modelo:"Advantage ⚫️"},
+  FF17:{marca:"Aldo",   modelo:"Zapato Aldo"},
+  FF18:{marca:"Aldo",   modelo:"Zapato Aldo"},
+  FF19:{marca:"Adidas", modelo:"Stan Smith"},
+  FF20:{marca:"Adidas", modelo:"Advantage ⚫️"},
+  RR01:{marca:"Adidas", modelo:"Daily 4.0 ⚪️🔵"},
+  RR02:{marca:"Nike",   modelo:"AF1"},
+  RR03:{marca:"Adidas", modelo:"Stan Smith"},
+  RR04:{marca:"Aldo",   modelo:"Zapato Aldo"},
+  RR05:{marca:"Nike",   modelo:"AF1"},
+  RR06:{marca:"Adidas", modelo:"Stan Smith"},
+  RR07:{marca:"Aldo",   modelo:"Zapato Aldo"},
+  WW01:{marca:"Adidas", modelo:"Daily 4.0 ⚪️🔵"},
+  WW02:{marca:"Adidas", modelo:"Advantage ⚪️🟢"},
+  WW03:{marca:"Adidas", modelo:"Advantage ⚫️"},
+  WW04:{marca:"Nike",   modelo:"AF1"},
+  WW05:{marca:"Aldo",   modelo:"Zapato Aldo"},
+  WW06:{marca:"Aldo",   modelo:"Zapato Aldo"},
+  WW07:{marca:"Nike",   modelo:"Air Max"},
+  WW08:{marca:"Adidas", modelo:"Advantage ⚫️"},
+  WW09:{marca:"Adidas", modelo:"Advantage ⚫️"},
 };
 
-// ── COLORES DE MARCA ──
+const MARCAS={
+  EE01:{camisa:"Vélez",   pantalon:"Zara",       bolso:"Aldo",          termo:"Stanley"},
+  EE02:{camisa:"Vélez",   pantalon:"H&M",        bolso:"Aldo",          termo:"Stanley"},
+  EE03:{camisa:"Vélez",   pantalon:"H&M",        bolso:"Aldo",          termo:"Stanley"},
+  EE04:{camisa:"Zara",    pantalon:"H&M",        bolso:"Aldo",          termo:"Stanley"},
+  EE05:{camisa:"Massimo Dutti",pantalon:"H&M",   bolso:"Aldo",          termo:"Stanley"},
+  EE06:{camisa:"Zara",    pantalon:"Zara",       bolso:"Aldo",          termo:"Stanley"},
+  EE07:{camisa:"Vélez",   pantalon:"H&M",        bolso:"Mario Hernandez",termo:"Brumatte"},
+  EE08:{camisa:"H&M",     pantalon:"H&M",        bolso:"Calvin Klein",  termo:"Brumatte"},
+  FF01:{camisa:"Pull&Bear",pantalon:"Pull&Bear", bolso:"Aldo",          termo:"Stanley"},
+  FF02:{camisa:"H&M",     pantalon:"Calvornis",  bolso:"Mario Hernandez",termo:"Brumatte"},
+  FF03:{camisa:"Bershka", pantalon:"Pull&Bear",  bolso:"Aldo",          termo:"Stanley"},
+  FF04:{camisa:"Kolmoda", pantalon:"H&M",        bolso:"Adidas",        termo:"Frostbuddy"},
+  FF05:{camisa:"Kolmoda", pantalon:"Mevak",      bolso:"Pull&Bear",     termo:"Stanley"},
+  FF06:{camisa:"Gym Rank",pantalon:"H&M",        bolso:"Aldo",          termo:"Stanley"},
+  FF07:{camisa:"H&M",     pantalon:"H&M",        bolso:"Aldo",          termo:"Stanley"},
+  FF08:{camisa:"Kolmoda", pantalon:"Bershka",    bolso:"Calvin Klein",  termo:"Brumatte"},
+  FF09:{camisa:"H&M",     pantalon:"H&M",        bolso:"Aldo",          termo:"Stanley"},
+  FF10:{camisa:"H&M",     pantalon:"H&M",        bolso:"Adidas",        termo:"Frostbuddy"},
+  FF11:{camisa:"Brano",   pantalon:"H&M",        bolso:"Calvin Klein",  termo:"Frostbuddy"},
+  FF12:{camisa:"H&M",     pantalon:"H&M",        bolso:"Adidas",        termo:"Frostbuddy"},
+  FF13:{camisa:"Pull&Bear",pantalon:"H&M",       bolso:"Pull&Bear",     termo:"Frostbuddy"},
+  FF14:{camisa:"Massimo Dutti",pantalon:"H&M",   bolso:"Aldo",          termo:"Stanley"},
+  FF15:{camisa:"Pull&Bear",pantalon:"Pull&Bear", bolso:"Adidas",        termo:"Frostbuddy"},
+  FF16:{camisa:"Manfinity",pantalon:"H&M",       bolso:"Aldo",          termo:"Stanley"},
+  FF17:{camisa:"Dante",   pantalon:"H&M",        bolso:"Aldo",          termo:"Stanley"},
+  FF18:{camisa:"H&M",     pantalon:"H&M",        bolso:"Pull&Bear",     termo:"Frostbuddy"},
+  FF19:{camisa:"H&M",     pantalon:"H&M",        bolso:"Calvin Klein",  termo:"Brumatte"},
+  FF20:{camisa:"Manfinity",pantalon:"H&M",       bolso:"Aldo",          termo:"Stanley"},
+  RR01:{camisa:"Dante",   pantalon:"H&M",        bolso:"Adidas",        termo:"Frostbuddy"},
+  RR02:{camisa:"H&M",     pantalon:"Zara",       bolso:"Adidas",        termo:"Frostbuddy"},
+  RR03:{camisa:"Dante",   pantalon:"Zara",       bolso:"Calvin Klein",  termo:"Brumatte"},
+  RR04:{camisa:"H&M",     pantalon:"H&M",        bolso:"Pull&Bear",     termo:"Frostbuddy"},
+  RR05:{camisa:"Pull&Bear",pantalon:"Pull&Bear", bolso:"Adidas",        termo:"Frostbuddy"},
+  RR06:{camisa:"H&M",     pantalon:"H&M",        bolso:"Calvin Klein",  termo:"Brumatte"},
+  RR07:{camisa:"Gym Rank",pantalon:"Bershka",    bolso:"Mario Hernandez",termo:"Brumatte"},
+  WW01:{camisa:"Victor",  pantalon:"Bershka",    bolso:"Adidas",        termo:"Frostbuddy"},
+  WW02:{camisa:"Victor",  pantalon:"Bershka",    bolso:"Pull&Bear",     termo:"Frostbuddy"},
+  WW03:{camisa:"Bershka", pantalon:"Bershka",    bolso:"Aldo",          termo:"Stanley"},
+  WW04:{camisa:"H&M",     pantalon:"Zona Libre", bolso:"Adidas",        termo:"Frostbuddy"},
+  WW05:{camisa:"Renzo",   pantalon:"Bershka",    bolso:"Mario Hernandez",termo:"Brumatte"},
+  WW06:{camisa:"Victor",  pantalon:"Bershka",    bolso:"Calvin Klein",  termo:"Frostbuddy"},
+  WW07:{camisa:"Dante",   pantalon:"Bershka",    bolso:"Aldo",          termo:"Stanley"},
+  WW08:{camisa:"Gym Rank",pantalon:"Bershka",    bolso:"Aldo",          termo:"Stanley"},
+  WW09:{camisa:"Manfinity",pantalon:"Bershka",   bolso:"Aldo",          termo:"Stanley"},
+};
+
 const MARCA_COLORS={
-  "H&M":"#E22A3A","Zara":"#000000","Pull&Bear":"#1a1a2e","Bershka":"#ff6b35",
+  "H&M":"#E22A3A","Zara":"#444440","Pull&Bear":"#1a3a6b","Bershka":"#e05a20",
   "Massimo Dutti":"#8B7355","Vélez":"#8B1A1A","Kolmoda":"#4A90C4","Dante":"#639922",
   "Gym Rank":"#E07B2A","Manfinity":"#9B59B6","Victor":"#2C7A7A","Renzo":"#C4A882",
   "Brano":"#7F77DD","Calvornis":"#BA7517","Mevak":"#1D9E75","Zona Libre":"#4A7CB5",
-  "Adidas":"#000000","Nike":"#FF6600","Aldo":"#8B7355","Fiorenci":"#C4A882",
-  "Mario Hernandez":"#2C2C2A","Calvin Klein":"#1a1a1a","Frostbuddy":"#4A90C4",
+  "Adidas":"#303030","Nike":"#E05010","Aldo":"#9B8060","Fiorenci":"#B09070",
+  "Mario Hernandez":"#2C2C2A","Calvin Klein":"#4444AA","Frostbuddy":"#4A90C4",
   "Stanley":"#2d7a2d","Brumatte":"#6B4C3B",
+  // Modelos calzado
+  "Stan Smith":"#3a8a3a","AF1":"#E05010","Advantage ⚫️":"#222222",
+  "Advantage ⚪️🟢":"#5a9a2a","Daily 4.0 ⚪️🔵":"#3a6aaa",
+  "Botas ⚫️":"#1a1a1a","Botas 🟤":"#6B4020","Zapato Aldo":"#9B8060",
+  "Air Max":"#CC4400",
 };
 
-function getColor(marca,alpha=1){
-  const hex=MARCA_COLORS[marca]||'#888888';
-  if(alpha===1) return hex;
-  const r=parseInt(hex.slice(1,3),16);
-  const g=parseInt(hex.slice(3,5),16);
-  const b=parseInt(hex.slice(5,7),16);
-  return `rgba(${r},${g},${b},${alpha})`;
-}
+function gc(k){return MARCA_COLORS[k]||'#888888';}
 
-// ── FETCH SUPABASE ──
-async function fetchState(){
-  const r=await fetch(`${SB_URL}/rest/v1/outfits_state?key=eq.state&select=value`,{headers:SB_H});
-  if(!r.ok) throw new Error('Supabase error');
-  const d=await r.json();
-  if(!d.length) throw new Error('Sin datos');
-  return JSON.parse(d[0].value);
-}
-
-// ── CONTEOS ──
-function contarPorCampo(historial,campo){
+function contar(hist,campo){
   const cnt={};
-  historial.forEach(h=>{
-    const m=MARCAS[h.id];
-    if(!m) return;
-    const v=m[campo];
-    if(v) cnt[v]=(cnt[v]||0)+1;
+  hist.forEach(h=>{
+    const m=MARCAS[h.id];if(!m)return;
+    const v=m[campo];if(v) cnt[v]=(cnt[v]||0)+1;
   });
   return Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
 }
 
-function contarTotal(historial){
+function contarCalzado(hist,tipo){
   const cnt={};
-  historial.forEach(h=>{
-    const m=MARCAS[h.id];
-    if(!m) return;
-    ['camisa','pantalon','calzado','bolso','termo'].forEach(c=>{
-      const v=m[c];if(v) cnt[v]=(cnt[v]||0)+1;
-    });
+  hist.forEach(h=>{
+    const c=CALZADO_MAP[h.id];if(!c)return;
+    const v=c[tipo];if(v) cnt[v]=(cnt[v]||0)+1;
   });
   return Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
 }
 
-function contarEnfoques(historial){
+function contarDos(hist,c1,c2){
   const cnt={};
-  historial.forEach(h=>{if(h.e) cnt[h.e]=(cnt[h.e]||0)+1;});
-  return Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
-}
-
-function contarCats(historial){
-  const cnt={EE:0,FF:0,RR:0,WW:0};
-  historial.forEach(h=>{const c=h.id?.substring(0,2);if(cnt[c]!==undefined) cnt[c]++;});
-  return Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
-}
-
-function contarPorMes(historial){
-  const meses={};
-  historial.forEach(h=>{
-    const m=h.fecha?.substring(0,7);
-    if(!m) return;
-    if(!meses[m]) meses[m]={};
-    const marcas=MARCAS[h.id];
-    if(marcas){
-      ['camisa','pantalon'].forEach(c=>{
-        const v=marcas[c];if(v) meses[m][v]=(meses[m][v]||0)+1;
-      });
-    }
+  hist.forEach(h=>{
+    const m=MARCAS[h.id];if(!m)return;
+    [m[c1],m[c2]].forEach(v=>{if(v) cnt[v]=(cnt[v]||0)+1;});
   });
-  return meses;
+  return Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
 }
 
-function topN(arr,n=8){return arr.slice(0,n);}
-
-// ── CHART.JS HELPERS ──
-const chartInstances={};
-function makeChart(id,config){
-  if(chartInstances[id]) chartInstances[id].destroy();
-  const ctx=document.getElementById(id);
-  if(!ctx) return;
-  chartInstances[id]=new Chart(ctx,config);
+function contarTotal(hist){
+  const cnt={};
+  hist.forEach(h=>{
+    const m=MARCAS[h.id];if(!m)return;
+    ['camisa','pantalon','bolso','termo'].forEach(c=>{const v=m[c];if(v) cnt[v]=(cnt[v]||0)+1;});
+    const cz=CALZADO_MAP[h.id];if(cz) cnt[cz.marca]=(cnt[cz.marca]||0)+1;
+  });
+  return Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
 }
 
-function isDark(){return window.matchMedia('(prefers-color-scheme:dark)').matches;}
-function textColor(){return isDark()?'#f0ede6':'#1a1916';}
-function gridColor(){return isDark()?'rgba(240,237,230,0.08)':'rgba(26,25,22,0.08)';}
-
-function barConfig(labels,data,colors,title){
-  return{
-    type:'bar',
-    data:{labels,datasets:[{data,backgroundColor:colors,borderRadius:6,borderSkipped:false}]},
-    options:{
-      responsive:true,maintainAspectRatio:true,
-      plugins:{legend:{display:false},title:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.parsed.y} veces`}}},
-      scales:{
-        x:{ticks:{color:textColor(),font:{family:'DM Mono',size:10}},grid:{display:false}},
-        y:{ticks:{color:textColor(),font:{family:'DM Mono',size:10},stepSize:1},grid:{color:gridColor()},beginAtZero:true}
-      }
-    }
-  };
+function contarEnf(hist){
+  const cnt={};
+  hist.forEach(h=>{if(h.e) cnt[h.e]=(cnt[h.e]||0)+1;});
+  return Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
 }
 
-function doughnutConfig(labels,data,colors){
-  return{
-    type:'doughnut',
-    data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:0,hoverOffset:4}]},
-    options:{
-      responsive:true,maintainAspectRatio:true,cutout:'65%',
-      plugins:{
-        legend:{position:'right',labels:{color:textColor(),font:{family:'DM Sans',size:11},boxWidth:10,padding:8}},
-        tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed} (${Math.round(ctx.parsed/ctx.dataset.data.reduce((a,b)=>a+b,0)*100)}%)`}}
-      }
-    }
-  };
-}
-
-function lineConfig(labels,datasets){
-  return{
-    type:'line',
-    data:{labels,datasets},
-    options:{
-      responsive:true,maintainAspectRatio:true,
-      plugins:{legend:{labels:{color:textColor(),font:{family:'DM Sans',size:11},boxWidth:10}}},
-      scales:{
-        x:{ticks:{color:textColor(),font:{family:'DM Mono',size:10}},grid:{color:gridColor()}},
-        y:{ticks:{color:textColor(),font:{family:'DM Mono',size:10},stepSize:1},grid:{color:gridColor()},beginAtZero:true}
-      }
-    }
-  };
-}
-
-// ── RENDER LISTA CON BARRA ──
-function listaBarras(datos,total,colorFn,limit=10){
-  const top=datos.slice(0,limit);
-  const max=top[0]?.[1]||1;
-  return top.map(([nombre,cnt],i)=>`
+function renderLista(id,data,colorFn,limit=15,subFn){
+  const total=data.reduce((a,b)=>a+b[1],0);
+  const max=data[0]?.[1]||1;
+  document.getElementById(id).innerHTML=data.slice(0,limit).map(([name,cnt],i)=>`
     <div class="stat-row">
       <span class="stat-rank">${i+1}</span>
-      <span class="stat-name">${nombre}</span>
-      <div class="stat-bar-wrap"><div class="stat-bar" style="width:${Math.round(cnt/max*100)}%;background:${colorFn(nombre)}"></div></div>
+      <span class="stat-name">${name}${subFn?`<span class="stat-sub">${subFn(name)}</span>`:''}</span>
+      <div class="stat-bar-wrap"><div class="stat-bar" style="width:${Math.round(cnt/max*100)}%;background:${colorFn(name)}"></div></div>
       <span class="stat-count">${cnt}</span>
       <span class="stat-pct">${Math.round(cnt/total*100)}%</span>
     </div>`).join('');
 }
 
-// ── RENDER PRINCIPAL ──
+function renderLegend(id,data,colorFn,limit=8){
+  document.getElementById(id).innerHTML=data.slice(0,limit).map(([n,c])=>
+    `<span class="leg-item"><span class="leg-sq" style="background:${colorFn(n)}"></span>${n} <span style="color:var(--text3);font-family:var(--mono);font-size:10px;">${c}</span></span>`
+  ).join('');
+}
+
+const charts={};
+function mk(id,cfg){
+  if(charts[id]) charts[id].destroy();
+  const c=document.getElementById(id);if(!c)return;
+  charts[id]=new Chart(c,cfg);
+}
+
+function isDark(){return matchMedia('(prefers-color-scheme:dark)').matches;}
+function tc(){return isDark()?'#8a8880':'#6b6960';}
+function grd(){return isDark()?'rgba(255,255,255,0.06)':'rgba(0,0,0,0.06)';}
+
+function barCfg(labels,data,colors){
+  return{type:'bar',
+    data:{labels,datasets:[{data,backgroundColor:colors,borderRadius:6,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.parsed.y} veces`}}},
+      scales:{
+        x:{ticks:{color:tc(),font:{size:10},maxRotation:35},grid:{display:false}},
+        y:{ticks:{color:tc(),font:{size:10},stepSize:1},grid:{color:grd()},beginAtZero:true}
+      }}};
+}
+
+function doughCfg(labels,data,colors){
+  return{type:'doughnut',
+    data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:0,hoverOffset:4}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.label}: ${c.parsed}`}}}}};
+}
+
 function render(state){
   const hist=state.historial||[];
   const total=hist.length;
-  if(!total){
-    document.getElementById('content').innerHTML='<div class="loading"><i class="ti ti-inbox"></i>sin historial</div>';
-    return;
-  }
+  const unicos=new Set(hist.map(h=>h.id)).size;
+  const dias=new Set(hist.map(h=>h.fecha)).size;
+  const marcasUsadas=new Set([
+    ...hist.flatMap(h=>MARCAS[h.id]?Object.values(MARCAS[h.id]):[]),
+    ...hist.map(h=>CALZADO_MAP[h.id]?.marca).filter(Boolean)
+  ]).size;
 
-  const camisas=contarPorCampo(hist,'camisa');
-  const pantalones=contarPorCampo(hist,'pantalon');
-  const calzados=contarPorCampo(hist,'calzado');
-  const bolsos=contarPorCampo(hist,'bolso');
-  const termos=contarPorCampo(hist,'termo');
+  document.getElementById('hero-sub').textContent=`${total} outfits registrados · ${dias} días`;
+  document.getElementById('kpis').innerHTML=`
+    <div class="kpi"><div class="kpi-val">${total}</div><div class="kpi-lbl">outfits totales</div></div>
+    <div class="kpi"><div class="kpi-val">${unicos}</div><div class="kpi-lbl">outfits únicos</div></div>
+    <div class="kpi"><div class="kpi-val">${marcasUsadas}</div><div class="kpi-lbl">marcas usadas</div></div>
+    <div class="kpi"><div class="kpi-val">${dias}</div><div class="kpi-lbl">días con outfit</div></div>`;
+
+  // Datos
   const totalMarcas=contarTotal(hist);
-  const enfoques=contarEnfoques(hist);
-  const cats=contarCats(hist);
+  const camisas=contar(hist,'camisa');
+  const pantalones=contar(hist,'pantalon');
+  const ropaComb=contarDos(hist,'camisa','pantalon');
+  const bolsos=contar(hist,'bolso');
+  const termos=contar(hist,'termo');
+  const accComb=contarDos(hist,'bolso','termo');
+  const calzMarca=contarCalzado(hist,'marca');
+  const calzModelo=contarCalzado(hist,'modelo');
+  const enfs=contarEnf(hist);
 
-  // KPIs
-  const marcasUnicas=new Set(Object.values(MARCAS).flatMap(m=>Object.values(m))).size;
-  const marcasUsadas=new Set(hist.flatMap(h=>MARCAS[h.id]?Object.values(MARCAS[h.id]):[]).filter(Boolean)).size;
-  const outfitsUnicos=new Set(hist.map(h=>h.id)).size;
-  const diasConOutfit=new Set(hist.map(h=>h.fecha)).size;
+  // GENERAL
+  const top10=totalMarcas.slice(0,10);
+  mk('chart-general',barCfg(top10.map(([m])=>m),top10.map(([,n])=>n),top10.map(([m])=>gc(m))));
+  renderLista('list-general',totalMarcas,gc);
 
-  // Meses para line chart
-  const mesesData=contarPorMes(hist);
-  const mesesOrdenados=Object.keys(mesesData).sort();
+  // ROPA
+  renderLegend('legend-ropa',ropaComb,gc);
+  mk('chart-ropa',doughCfg(ropaComb.map(([m])=>m),ropaComb.map(([,n])=>n),ropaComb.map(([m])=>gc(m))));
+  renderLista('list-ropa',ropaComb,gc);
+  renderLista('list-camisas',camisas,gc);
+  renderLista('list-pantalones',pantalones,gc);
+
+  // CALZADO
+  mk('chart-calzado-marca',barCfg(calzMarca.map(([m])=>m),calzMarca.map(([,n])=>n),calzMarca.map(([m])=>gc(m))));
+  renderLista('list-calzado-marca',calzMarca,gc);
+  const top8mod=calzModelo.slice(0,8);
+  mk('chart-calzado-modelo',barCfg(top8mod.map(([m])=>m),top8mod.map(([,n])=>n),top8mod.map(([m])=>gc(m))));
+  renderLista('list-calzado-modelo',calzModelo,gc);
+
+  // ACCESORIOS
+  renderLegend('legend-accesorios',accComb,gc);
+  mk('chart-accesorios',doughCfg(accComb.map(([m])=>m),accComb.map(([,n])=>n),accComb.map(([m])=>gc(m))));
+  renderLista('list-accesorios',accComb,gc);
+  renderLista('list-bolsos',bolsos,gc);
+  renderLista('list-termos',termos,gc);
+
+  // ENFOQUES
+  renderLegend('legend-enfoques',enfs,e=>ENFOQUES_COLOR[e]||'#888',12);
+  mk('chart-enfoques',doughCfg(enfs.map(([e])=>e),enfs.map(([,n])=>n),enfs.map(([e])=>ENFOQUES_COLOR[e]||'#888')));
+  renderLista('list-enfoques',enfs,e=>ENFOQUES_COLOR[e]||'#888');
+
+  // EVOLUCIÓN — line por mes
+  const mesesSet=[...new Set(hist.map(h=>h.fecha?.substring(0,7)))].filter(Boolean).sort();
   const mNames={1:'ene',2:'feb',3:'mar',4:'abr',5:'may',6:'jun',7:'jul',8:'ago',9:'sep',10:'oct',11:'nov',12:'dic'};
-  const mLabels=mesesOrdenados.map(m=>`${mNames[parseInt(m.split('-')[1])]} ${m.split('-')[0].slice(2)}`);
-
-  // Top 5 marcas ropa (camisa+pantalon) para line
-  const ropaMarcas={};
-  hist.forEach(h=>{
-    const m=MARCAS[h.id];if(!m)return;
-    ['camisa','pantalon'].forEach(c=>{const v=m[c];if(v) ropaMarcas[v]=(ropaMarcas[v]||0)+1;});
-  });
-  const topRopa=Object.entries(ropaMarcas).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([m])=>m);
-
-  const lineDatasets=topRopa.map(marca=>({
+  const mLabels=mesesSet.map(m=>`${mNames[parseInt(m.split('-')[1])]} ${m.split('-')[0].slice(2)}`);
+  const topRopa=ropaComb.slice(0,5).map(([m])=>m);
+  const lineDs=topRopa.map(marca=>({
     label:marca,
-    data:mesesOrdenados.map(mes=>{
-      const d=mesesData[mes]||{};return d[marca]||0;
+    data:mesesSet.map(mes=>{
+      let c=0;
+      hist.filter(h=>h.fecha?.startsWith(mes)).forEach(h=>{
+        const m=MARCAS[h.id];
+        if(m&&(m.camisa===marca||m.pantalon===marca)) c++;
+      });
+      return c;
     }),
-    borderColor:getColor(marca),backgroundColor:getColor(marca,0.15),
+    borderColor:gc(marca),backgroundColor:gc(marca)+'22',
     tension:0.3,fill:false,pointRadius:3,borderWidth:2,
   }));
+  mk('chart-line',{type:'line',data:{labels:mLabels,datasets:lineDs},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:tc(),font:{size:11,family:'DM Sans'},boxWidth:10,padding:8}}},
+      scales:{x:{ticks:{color:tc(),font:{size:10}},grid:{color:grd()}},
+              y:{ticks:{color:tc(),font:{size:10},stepSize:1},grid:{color:grd()},beginAtZero:true}}}});
 
-  document.getElementById('content').innerHTML=`
-    <div class="hero">
-      <div class="hero-title">analytics</div>
-      <div class="hero-sub">${total} outfits registrados · ${diasConOutfit} días</div>
-    </div>
-
-    <div class="kpi-grid">
-      <div class="kpi"><div class="kpi-val">${total}</div><div class="kpi-lbl">outfits totales</div></div>
-      <div class="kpi"><div class="kpi-val">${outfitsUnicos}</div><div class="kpi-lbl">outfits únicos</div></div>
-      <div class="kpi"><div class="kpi-val">${marcasUsadas}</div><div class="kpi-lbl">marcas usadas</div></div>
-      <div class="kpi"><div class="kpi-val">${marcasUnicas}</div><div class="kpi-lbl">marcas en closet</div></div>
-    </div>
-
-    <div class="section-label">ranking general de marcas</div>
-    <div class="chart-wrap">
-      <div class="card-title">todas las prendas combinadas</div>
-      <canvas id="chart-total" class="chart-canvas"></canvas>
-    </div>
-    <div class="card" style="padding:4px 14px;">
-      ${listaBarras(totalMarcas,totalMarcas.reduce((a,b)=>a+b[1],0),m=>getColor(m))}
-    </div>
-
-    <div class="section-label">camisas</div>
-    <div class="chart-wrap">
-      <canvas id="chart-camisas" class="chart-canvas"></canvas>
-    </div>
-    <div class="card" style="padding:4px 14px;">
-      ${listaBarras(camisas,camisas.reduce((a,b)=>a+b[1],0),m=>getColor(m))}
-    </div>
-
-    <div class="section-label">pantalones</div>
-    <div class="chart-wrap">
-      <canvas id="chart-pantalones" class="chart-canvas"></canvas>
-    </div>
-    <div class="card" style="padding:4px 14px;">
-      ${listaBarras(pantalones,pantalones.reduce((a,b)=>a+b[1],0),m=>getColor(m))}
-    </div>
-
-    <div class="section-label">calzado</div>
-    <div class="chart-wrap">
-      <canvas id="chart-calzado" class="chart-canvas"></canvas>
-    </div>
-
-    <div class="section-label">bolsos</div>
-    <div class="chart-wrap">
-      <canvas id="chart-bolsos" class="chart-canvas"></canvas>
-    </div>
-
-    <div class="section-label">termos</div>
-    <div class="chart-wrap">
-      <canvas id="chart-termos" class="chart-canvas"></canvas>
-    </div>
-
-    <div class="section-label">enfoques de color</div>
-    <div class="chart-wrap">
-      <canvas id="chart-enfoques" class="chart-canvas"></canvas>
-    </div>
-
-    <div class="section-label">categorías</div>
-    <div class="chart-wrap">
-      <canvas id="chart-cats" class="chart-canvas"></canvas>
-    </div>
-
-    <div class="section-label">evolución de marcas de ropa por mes</div>
-    <div class="chart-wrap">
-      <div class="card-title">top 5 marcas · camisas + pantalones</div>
-      <canvas id="chart-line" class="chart-canvas" style="max-height:260px;"></canvas>
-    </div>
-
-    <div style="padding-top:10px;text-align:center;font-size:12px;color:var(--text3);">déjà vu · jose saade</div>
-  `;
-
-  // Dibujar charts
-  requestAnimationFrame(()=>{
-    // Total marcas (top 10 bar)
-    const top10=topN(totalMarcas,10);
-    makeChart('chart-total',barConfig(
-      top10.map(([m])=>m),top10.map(([,n])=>n),
-      top10.map(([m])=>getColor(m))
-    ));
-
-    // Camisas doughnut
-    const topCam=topN(camisas,8);
-    makeChart('chart-camisas',doughnutConfig(
-      topCam.map(([m])=>m),topCam.map(([,n])=>n),
-      topCam.map(([m])=>getColor(m))
-    ));
-
-    // Pantalones doughnut
-    const topPan=topN(pantalones,8);
-    makeChart('chart-pantalones',doughnutConfig(
-      topPan.map(([m])=>m),topPan.map(([,n])=>n),
-      topPan.map(([m])=>getColor(m))
-    ));
-
-    // Calzado bar
-    makeChart('chart-calzado',barConfig(
-      calzados.map(([m])=>m),calzados.map(([,n])=>n),
-      calzados.map(([m])=>getColor(m))
-    ));
-
-    // Bolsos bar
-    makeChart('chart-bolsos',barConfig(
-      bolsos.map(([m])=>m),bolsos.map(([,n])=>n),
-      bolsos.map(([m])=>getColor(m))
-    ));
-
-    // Termos bar
-    makeChart('chart-termos',barConfig(
-      termos.map(([m])=>m),termos.map(([,n])=>n),
-      termos.map(([m])=>getColor(m))
-    ));
-
-    // Enfoques doughnut
-    makeChart('chart-enfoques',doughnutConfig(
-      enfoques.map(([e])=>e),enfoques.map(([,n])=>n),
-      enfoques.map(([e])=>ENFOQUES[e]||'#888')
-    ));
-
-    // Categorías doughnut
-    makeChart('chart-cats',doughnutConfig(
-      cats.map(([k])=>CATS[k]?.nombre||k),
-      cats.map(([,n])=>n),
-      cats.map(([k])=>CATS[k]?.color||'#888')
-    ));
-
-    // Line chart evolución
-    if(mesesOrdenados.length>1){
-      makeChart('chart-line',lineConfig(mLabels,lineDatasets));
-    }
-  });
+  // outfits por mes
+  const cntMes=mesesSet.map(m=>hist.filter(h=>h.fecha?.startsWith(m)).length);
+  mk('chart-mes',barCfg(mLabels,cntMes,mesesSet.map(()=>'#7F77DD')));
 }
 
-// ── INIT ──
+// Tabs
+document.getElementById('tabs').addEventListener('click',e=>{
+  const btn=e.target.closest('.tab');if(!btn)return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+  setTimeout(()=>Object.values(charts).forEach(c=>c.resize()),50);
+});
+
 async function init(){
   try{
-    const state=await fetchState();
+    const r=await fetch(`${SB_URL}/rest/v1/outfits_state?key=eq.state&select=value`,{headers:SB_H});
+    const d=await r.json();
+    const state=JSON.parse(d[0].value);
     document.getElementById('loading').style.display='none';
     document.getElementById('content').style.display='';
     render(state);
   }catch(e){
-    document.getElementById('loading').innerHTML=`<i class="ti ti-wifi-off"></i>error cargando datos`;
+    document.getElementById('loading').innerHTML='<i class="ti ti-wifi-off"></i>error cargando datos';
   }
 }
-
 init();
 </script>
 </body>
