@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Fondo redondeado -->
+  <rect width="512" height="512" rx="112" fill="#1a1916"/>
+  
+  <!-- Barra 1 - Emerald Splash -->
+  <rect x="72" y="260" width="72" height="160" rx="12" fill="#639922"/>
+  
+  <!-- Barra 2 - Stone Ocean -->
+  <rect x="168" y="180" width="72" height="240" rx="12" fill="#4A90C4"/>
+  
+  <!-- Barra 3 - Bites The Dust -->
+  <rect x="264" y="120" width="72" height="300" rx="12" fill="#E8A0B4"/>
+  
+  <!-- Barra 4 - Kurozaki Boy -->
+  <rect x="360" y="200" width="72" height="220" rx="12" fill="#E07B2A"/>
+
+  <!-- Línea tendencia -->
+  <polyline points="108,220 204,155 300,100 396,165" 
+    fill="none" stroke="#ffffff" stroke-width="12" 
+    stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"/>
+  
+  <!-- Puntos en la línea -->
+  <circle cx="108" cy="220" r="10" fill="#ffffff"/>
+  <circle cx="204" cy="155" r="10" fill="#ffffff"/>
+  <circle cx="300" cy="100" r="10" fill="#ffffff"/>
+  <circle cx="396" cy="165" r="10" fill="#ffffff"/>
+</svg>
