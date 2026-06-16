@@ -503,13 +503,35 @@ document.getElementById('tabs').addEventListener('click',e=>{
 
 async function init(){
   try{
-    const r=await fetch(`${SB_URL}/rest/v1/outfits_state?key=eq.state&select=value`,{headers:SB_H});
-    const d=await r.json();
-    const state=JSON.parse(d[0].value);
+    // Leer historial y outfits de las tablas nuevas en paralelo
+    const [rHist, rOutfits] = await Promise.all([
+      fetch(`${SB_URL}/rest/v1/historial?order=fecha.asc,id.asc&select=fecha,outfit_id,nombre,enfoque`,{headers:SB_H}),
+      fetch(`${SB_URL}/rest/v1/outfits?select=id,usado`,{headers:SB_H})
+    ]);
+
+    const histRows   = await rHist.json();
+    const outfitRows = await rOutfits.json();
+
+    // Mapear al formato que usa render()
+    const historial = histRows.map(r=>({
+      fecha:  r.fecha,
+      id:     r.outfit_id,
+      nombre: r.nombre,
+      e:      r.enfoque
+    }));
+
+    const outfits = OUTFITS_INV.map(o=>{
+      const row = outfitRows.find(r=>r.id===o.id);
+      return { id: o.id, usado: row ? row.usado : false };
+    });
+
+    const state = { historial, outfits };
+
     document.getElementById('loading').style.display='none';
     document.getElementById('content').style.display='';
     render(state);
   }catch(e){
+    console.error(e);
     document.getElementById('loading').innerHTML='<i class="ti ti-wifi-off"></i>error cargando datos';
   }
 }
