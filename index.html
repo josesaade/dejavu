@@ -121,14 +121,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
         <button class="tab" data-tab="ropa">ropa</button>
         <button class="tab" data-tab="calzado">calzado</button>
         <button class="tab" data-tab="accesorios">accesorios</button>
-        <button class="tab" data-tab="enfoques">enfoques</button>
-        <button class="tab" data-tab="inventario">inventario</button>
-        <button class="tab" data-tab="combinaciones">combos</button>
-        <button class="tab" data-tab="patrones">patrones</button>
-        <button class="tab" data-tab="marcas-cat">marca×cat</button>
-        <button class="tab" data-tab="rotacion">rotación</button>
         <button class="tab" data-tab="heatmap">heatmap</button>
-        <button class="tab" data-tab="evolucion">evolución</button>
       </div>
 
       <!-- RANKING -->
@@ -167,56 +160,6 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
         <div class="card" style="padding:4px 14px;" id="list-termos"></div>
       </div>
 
-      <!-- ENFOQUES -->
-      <div class="panel" id="panel-enfoques">
-        <div class="card"><div class="card-title">enfoques de color · historial completo</div><div id="legend-enfoques" class="legend"></div><div class="chart-wrap" style="height:260px;"><canvas id="chart-enfoques" role="img" aria-label="Enfoques de color">Distribución de enfoques.</canvas></div></div>
-        <div class="card" style="padding:4px 14px;" id="list-enfoques"></div>
-      </div>
-
-      <!-- INVENTARIO -->
-      <div class="panel" id="panel-inventario">
-        <div class="card"><div class="card-title">closet vs uso real · ropa</div><div class="chart-wrap" style="height:200px;"><canvas id="chart-inv" role="img" aria-label="Inventario vs uso">Inventario vs uso.</canvas></div></div>
-        <div class="card" style="padding:4px 14px;" id="list-inv"></div>
-      </div>
-
-      <!-- COMBINACIONES -->
-      <div class="panel" id="panel-combinaciones">
-        <div class="sl">camisa + pantalón más frecuentes</div>
-        <div class="card" style="padding:4px 14px;" id="list-combos-ropa"></div>
-        <div class="sl">calzado + bolso más frecuentes</div>
-        <div class="card" style="padding:4px 14px;" id="list-combos-acc"></div>
-      </div>
-
-      <!-- PATRONES -->
-      <div class="panel" id="panel-patrones">
-        <div class="sl">outfits por día de la semana</div>
-        <div class="card"><div class="dow-grid" id="dow-grid"></div></div>
-        <div class="sl">categoría favorita por día</div>
-        <div class="card" style="padding:4px 14px;" id="cat-dow"></div>
-        <div class="sl">rachas</div>
-        <div class="card" style="padding:4px 14px;" id="rachas"></div>
-      </div>
-
-      <!-- MARCAS × CAT -->
-      <div class="panel" id="panel-marcas-cat">
-        <div class="sl">marca dominante por categoría</div>
-        <div class="card" style="padding:4px 14px;" id="marca-cat"></div>
-        <div class="sl">camisa por categoría</div>
-        <div class="card" style="padding:4px 14px;" id="camisa-cat"></div>
-        <div class="sl">pantalón por categoría</div>
-        <div class="card" style="padding:4px 14px;" id="pantalon-cat"></div>
-      </div>
-
-      <!-- ROTACIÓN -->
-      <div class="panel" id="panel-rotacion">
-        <div class="sl">más repetidos</div>
-        <div class="card" style="padding:4px 14px;" id="rot-top"></div>
-        <div class="sl">nunca usados</div>
-        <div class="card" style="padding:4px 14px;" id="rot-never"></div>
-        <div class="sl">más tiempo sin usar</div>
-        <div class="card" style="padding:4px 14px;" id="rot-old"></div>
-      </div>
-
       <!-- HEATMAP -->
       <div class="panel" id="panel-heatmap">
         <div class="card">
@@ -226,12 +169,6 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
         </div>
         <div class="sl">mes más activo</div>
         <div class="card" style="padding:4px 14px;" id="mes-stats"></div>
-      </div>
-
-      <!-- EVOLUCIÓN -->
-      <div class="panel" id="panel-evolucion">
-        <div class="card"><div class="card-title">top marcas de ropa · por mes</div><div class="chart-wrap" style="height:260px;"><canvas id="chart-line" role="img" aria-label="Evolución mensual">Evolución de marcas.</canvas></div></div>
-        <div class="card"><div class="card-title">outfits por mes</div><div class="chart-wrap" style="height:160px;"><canvas id="chart-mes" role="img" aria-label="Outfits por mes">Outfits por mes.</canvas></div></div>
       </div>
 
     </div>
@@ -246,26 +183,26 @@ const ENFOQUES_C={"Silver Chariot":"#9E9E9E","Lost in Paradise":"#C4A882","Stone
 
 const CALZADO_MAP={
   EE01:{marca:"H&M",modelo:"Botas ⚫️"},EE02:{marca:"H&M",modelo:"Botas ⚫️"},EE03:{marca:"H&M",modelo:"Botas ⚫️"},EE04:{marca:"H&M",modelo:"Botas ⚫️"},EE05:{marca:"H&M",modelo:"Botas ⚫️"},EE06:{marca:"H&M",modelo:"Botas ⚫️"},EE07:{marca:"Fiorenci",modelo:"Botas 🟤"},EE08:{marca:"Adidas",modelo:"Stan Smith"},
-  FF01:{marca:"H&M",modelo:"Botas ⚫️"},FF02:{marca:"Fiorenci",modelo:"Botas 🟤"},FF03:{marca:"H&M",modelo:"Botas ⚫️"},FF04:{marca:"Nike",modelo:"AF1"},FF05:{marca:"Adidas",modelo:"Advantage ⚫️"},FF06:{marca:"Adidas",modelo:"Advantage ⚫️"},FF07:{marca:"H&M",modelo:"Botas ⚫️"},FF08:{marca:"Adidas",modelo:"Stan Smith"},FF09:{marca:"Aldo",modelo:"Zapato Aldo"},FF10:{marca:"Nike",modelo:"AF1"},FF11:{marca:"Aldo",modelo:"Zapato Aldo"},FF12:{marca:"Nike",modelo:"AF1"},FF13:{marca:"Adidas",modelo:"Advantage ⚪️🟢"},FF14:{marca:"Adidas",modelo:"Advantage ⚫️"},FF15:{marca:"Nike",modelo:"AF1"},FF16:{marca:"Adidas",modelo:"Advantage ⚫️"},FF17:{marca:"Aldo",modelo:"Zapato Aldo"},FF18:{marca:"Aldo",modelo:"Zapato Aldo"},FF19:{marca:"Adidas",modelo:"Stan Smith"},FF20:{marca:"Adidas",modelo:"Advantage ⚫️"},
+  FF01:{marca:"H&M",modelo:"Botas ⚫️"},FF02:{marca:"Fiorenci",modelo:"Botas 🟤"},FF03:{marca:"H&M",modelo:"Botas ⚫️"},FF04:{marca:"Nike",modelo:"AF1"},FF05:{marca:"Adidas",modelo:"Advantage ⚫️"},FF06:{marca:"Adidas",modelo:"Advantage ⚫️"},FF07:{marca:"H&M",modelo:"Botas ⚫️"},FF08:{marca:"Adidas",modelo:"Stan Smith"},FF09:{marca:"Aldo",modelo:"Zapato Aldo"},FF10:{marca:"Nike",modelo:"AF1"},FF11:{marca:"Aldo",modelo:"Zapato Aldo"},FF12:{marca:"Nike",modelo:"AF1"},FF13:{marca:"Adidas",modelo:"Advantage ⚪️🟢"},FF14:{marca:"Adidas",modelo:"Advantage ⚫️"},FF15:{marca:"Nike",modelo:"AF1"},FF16:{marca:"Adidas",modelo:"Advantage ⚫️"},FF17:{marca:"Aldo",modelo:"Zapato Aldo"},FF18:{marca:"Aldo",modelo:"Zapato Aldo"},FF19:{marca:"Adidas",modelo:"Stan Smith"},FF20:{marca:"Adidas",modelo:"Advantage ⚫️"},FF21:{marca:"Adidas",modelo:"Advantage ⚫️"},
   RR01:{marca:"Adidas",modelo:"Daily 4.0 ⚪️🔵"},RR02:{marca:"Nike",modelo:"AF1"},RR03:{marca:"Adidas",modelo:"Stan Smith"},RR04:{marca:"Aldo",modelo:"Zapato Aldo"},RR05:{marca:"Nike",modelo:"AF1"},RR06:{marca:"Adidas",modelo:"Stan Smith"},RR07:{marca:"Aldo",modelo:"Zapato Aldo"},
   WW01:{marca:"Adidas",modelo:"Daily 4.0 ⚪️🔵"},WW02:{marca:"Adidas",modelo:"Advantage ⚪️🟢"},WW03:{marca:"Adidas",modelo:"Advantage ⚫️"},WW04:{marca:"Nike",modelo:"AF1"},WW05:{marca:"Aldo",modelo:"Zapato Aldo"},WW06:{marca:"Aldo",modelo:"Zapato Aldo"},WW07:{marca:"Nike",modelo:"Air Max"},WW08:{marca:"Adidas",modelo:"Advantage ⚫️"},WW09:{marca:"Adidas",modelo:"Advantage ⚫️"},
 };
 
 const MARCAS={
   EE01:{camisa:"Vélez",pantalon:"Zara",bolso:"Aldo",termo:"Stanley"},EE02:{camisa:"Vélez",pantalon:"H&M",bolso:"Aldo",termo:"Stanley"},EE03:{camisa:"Vélez",pantalon:"H&M",bolso:"Aldo",termo:"Stanley"},EE04:{camisa:"Zara",pantalon:"H&M",bolso:"Aldo",termo:"Stanley"},EE05:{camisa:"Massimo Dutti",pantalon:"H&M",bolso:"Aldo",termo:"Stanley"},EE06:{camisa:"Zara",pantalon:"Zara",bolso:"Aldo",termo:"Stanley"},EE07:{camisa:"Vélez",pantalon:"H&M",bolso:"Mario Hernandez",termo:"Brumatte"},EE08:{camisa:"H&M",pantalon:"H&M",bolso:"Calvin Klein",termo:"Brumatte"},
-  FF01:{camisa:"Pull&Bear",pantalon:"Pull&Bear",bolso:"Aldo",termo:"Stanley"},FF02:{camisa:"H&M",pantalon:"Calvornis",bolso:"Mario Hernandez",termo:"Brumatte"},FF03:{camisa:"Bershka",pantalon:"Pull&Bear",bolso:"Aldo",termo:"Stanley"},FF04:{camisa:"Kolmoda",pantalon:"H&M",bolso:"Adidas",termo:"Frostbuddy"},FF05:{camisa:"Kolmoda",pantalon:"Mevak",bolso:"Pull&Bear",termo:"Stanley"},FF06:{camisa:"Gym Rank",pantalon:"H&M",bolso:"Aldo",termo:"Stanley"},FF07:{camisa:"H&M",pantalon:"H&M",bolso:"Aldo",termo:"Stanley"},FF08:{camisa:"Kolmoda",pantalon:"Bershka",bolso:"Calvin Klein",termo:"Brumatte"},FF09:{camisa:"H&M",pantalon:"H&M",bolso:"Aldo",termo:"Stanley"},FF10:{camisa:"H&M",pantalon:"H&M",bolso:"Adidas",termo:"Frostbuddy"},FF11:{camisa:"Brano",pantalon:"H&M",bolso:"Calvin Klein",termo:"Frostbuddy"},FF12:{camisa:"H&M",pantalon:"H&M",bolso:"Adidas",termo:"Frostbuddy"},FF13:{camisa:"Pull&Bear",pantalon:"H&M",bolso:"Pull&Bear",termo:"Frostbuddy"},FF14:{camisa:"Massimo Dutti",pantalon:"H&M",bolso:"Aldo",termo:"Stanley"},FF15:{camisa:"Pull&Bear",pantalon:"Pull&Bear",bolso:"Adidas",termo:"Frostbuddy"},FF16:{camisa:"Manfinity",pantalon:"H&M",bolso:"Aldo",termo:"Stanley"},FF17:{camisa:"Dante",pantalon:"H&M",bolso:"Aldo",termo:"Stanley"},FF18:{camisa:"H&M",pantalon:"H&M",bolso:"Pull&Bear",termo:"Frostbuddy"},FF19:{camisa:"H&M",pantalon:"H&M",bolso:"Calvin Klein",termo:"Brumatte"},FF20:{camisa:"Manfinity",pantalon:"H&M",bolso:"Aldo",termo:"Stanley"},
+  FF01:{camisa:"Pull&Bear",pantalon:"Pull&Bear",bolso:"Aldo",termo:"Stanley"},FF02:{camisa:"H&M",pantalon:"Calvornis",bolso:"Mario Hernandez",termo:"Brumatte"},FF03:{camisa:"Bershka",pantalon:"Pull&Bear",bolso:"Aldo",termo:"Stanley"},FF04:{camisa:"Kolmoda",pantalon:"H&M",bolso:"Adidas",termo:"Frostbuddy"},FF05:{camisa:"Kolmoda",pantalon:"Mevak",bolso:"Pull&Bear",termo:"Stanley"},FF06:{camisa:"Gym Rank",pantalon:"H&M",bolso:"Aldo",termo:"Stanley"},FF07:{camisa:"H&M",pantalon:"H&M",bolso:"Aldo",termo:"Stanley"},FF08:{camisa:"Kolmoda",pantalon:"Bershka",bolso:"Calvin Klein",termo:"Brumatte"},FF09:{camisa:"H&M",pantalon:"H&M",bolso:"Aldo",termo:"Stanley"},FF10:{camisa:"H&M",pantalon:"H&M",bolso:"Adidas",termo:"Frostbuddy"},FF11:{camisa:"Brano",pantalon:"H&M",bolso:"Calvin Klein",termo:"Frostbuddy"},FF12:{camisa:"H&M",pantalon:"H&M",bolso:"Adidas",termo:"Frostbuddy"},FF13:{camisa:"Pull&Bear",pantalon:"H&M",bolso:"Pull&Bear",termo:"Frostbuddy"},FF14:{camisa:"Massimo Dutti",pantalon:"H&M",bolso:"Aldo",termo:"Stanley"},FF15:{camisa:"Pull&Bear",pantalon:"Pull&Bear",bolso:"Adidas",termo:"Frostbuddy"},FF16:{camisa:"Manfinity",pantalon:"H&M",bolso:"Aldo",termo:"Stanley"},FF17:{camisa:"Dante",pantalon:"H&M",bolso:"Aldo",termo:"Stanley"},FF18:{camisa:"H&M",pantalon:"H&M",bolso:"Pull&Bear",termo:"Frostbuddy"},FF19:{camisa:"H&M",pantalon:"H&M",bolso:"Calvin Klein",termo:"Brumatte"},FF20:{camisa:"Manfinity",pantalon:"H&M",bolso:"Aldo",termo:"Stanley"},FF21:{camisa:"Alimens",pantalon:"Mevak",bolso:"Aldo",termo:"Stanley"},
   RR01:{camisa:"Dante",pantalon:"H&M",bolso:"Adidas",termo:"Frostbuddy"},RR02:{camisa:"H&M",pantalon:"Zara",bolso:"Adidas",termo:"Frostbuddy"},RR03:{camisa:"Dante",pantalon:"Zara",bolso:"Calvin Klein",termo:"Brumatte"},RR04:{camisa:"H&M",pantalon:"H&M",bolso:"Pull&Bear",termo:"Frostbuddy"},RR05:{camisa:"Pull&Bear",pantalon:"Pull&Bear",bolso:"Adidas",termo:"Frostbuddy"},RR06:{camisa:"H&M",pantalon:"H&M",bolso:"Calvin Klein",termo:"Brumatte"},RR07:{camisa:"Gym Rank",pantalon:"Bershka",bolso:"Mario Hernandez",termo:"Brumatte"},
   WW01:{camisa:"Victor",pantalon:"Bershka",bolso:"Adidas",termo:"Frostbuddy"},WW02:{camisa:"Victor",pantalon:"Bershka",bolso:"Pull&Bear",termo:"Frostbuddy"},WW03:{camisa:"Bershka",pantalon:"Bershka",bolso:"Aldo",termo:"Stanley"},WW04:{camisa:"H&M",pantalon:"Zona Libre",bolso:"Adidas",termo:"Frostbuddy"},WW05:{camisa:"Renzo",pantalon:"Bershka",bolso:"Mario Hernandez",termo:"Brumatte"},WW06:{camisa:"Victor",pantalon:"Bershka",bolso:"Calvin Klein",termo:"Frostbuddy"},WW07:{camisa:"Dante",pantalon:"Bershka",bolso:"Aldo",termo:"Stanley"},WW08:{camisa:"Gym Rank",pantalon:"Bershka",bolso:"Aldo",termo:"Stanley"},WW09:{camisa:"Manfinity",pantalon:"Bershka",bolso:"Aldo",termo:"Stanley"},
 };
 
 const OUTFITS_INV=[
   {id:"EE01"},{id:"EE02"},{id:"EE03"},{id:"EE04"},{id:"EE05"},{id:"EE06"},{id:"EE07"},{id:"EE08"},
-  {id:"FF01"},{id:"FF02"},{id:"FF03"},{id:"FF04"},{id:"FF05"},{id:"FF06"},{id:"FF07"},{id:"FF08"},{id:"FF09"},{id:"FF10"},{id:"FF11"},{id:"FF12"},{id:"FF13"},{id:"FF14"},{id:"FF15"},{id:"FF16"},{id:"FF17"},{id:"FF18"},{id:"FF19"},{id:"FF20"},
+  {id:"FF01"},{id:"FF02"},{id:"FF03"},{id:"FF04"},{id:"FF05"},{id:"FF06"},{id:"FF07"},{id:"FF08"},{id:"FF09"},{id:"FF10"},{id:"FF11"},{id:"FF12"},{id:"FF13"},{id:"FF14"},{id:"FF15"},{id:"FF16"},{id:"FF17"},{id:"FF18"},{id:"FF19"},{id:"FF20"},{id:"FF21"},
   {id:"RR01"},{id:"RR02"},{id:"RR03"},{id:"RR04"},{id:"RR05"},{id:"RR06"},{id:"RR07"},
   {id:"WW01"},{id:"WW02"},{id:"WW03"},{id:"WW04"},{id:"WW05"},{id:"WW06"},{id:"WW07"},{id:"WW08"},{id:"WW09"},
 ];
 
-const MC={"H&M":"#E22A3A","Zara":"#555550","Pull&Bear":"#1a3a6b","Bershka":"#e05a20","Massimo Dutti":"#8B7355","Vélez":"#8B1A1A","Kolmoda":"#4A90C4","Dante":"#639922","Gym Rank":"#E07B2A","Manfinity":"#9B59B6","Victor":"#2C7A7A","Renzo":"#C4A882","Brano":"#7F77DD","Calvornis":"#BA7517","Mevak":"#1D9E75","Zona Libre":"#4A7CB5","Adidas":"#303030","Nike":"#E05010","Aldo":"#9B8060","Fiorenci":"#B09070","Mario Hernandez":"#333333","Calvin Klein":"#4444AA","Frostbuddy":"#4A90C4","Stanley":"#2d7a2d","Brumatte":"#6B4C3B"};
+const MC={"H&M":"#E22A3A","Zara":"#555550","Pull&Bear":"#1a3a6b","Bershka":"#e05a20","Massimo Dutti":"#8B7355","Vélez":"#8B1A1A","Kolmoda":"#4A90C4","Dante":"#639922","Gym Rank":"#E07B2A","Manfinity":"#9B59B6","Victor":"#2C7A7A","Renzo":"#C4A882","Brano":"#7F77DD","Calvornis":"#BA7517","Mevak":"#1D9E75","Zona Libre":"#4A7CB5","Adidas":"#303030","Nike":"#E05010","Aldo":"#9B8060","Fiorenci":"#B09070","Mario Hernandez":"#333333","Calvin Klein":"#4444AA","Frostbuddy":"#4A90C4","Stanley":"#2d7a2d","Brumatte":"#6B4C3B","Alimens":"#C0392B"};
 const CC={EE:"#7F77DD",FF:"#378ADD",RR:"#1D9E75",WW:"#BA7517"};
 const CN={EE:"Elegantes",FF:"Formales",RR:"Relaxed",WW:"Weekend"};
 function gc(k){return MC[k]||'#888';}
@@ -415,62 +352,6 @@ function render(state){
     renderLista('list-bolsos',bolsos,gc);
     renderLista('list-termos',termos,gc);
 
-    // ENFOQUES
-    renderLegend('legend-enfoques',enfs,e=>ENFOQUES_C[e]||'#888',12);
-    mk('chart-enfoques',doughCfg(enfs.map(([e])=>e),enfs.map(([,n])=>n),enfs.map(([e])=>ENFOQUES_C[e]||'#888')));
-    renderLista('list-enfoques',enfs,e=>ENFOQUES_C[e]||'#888');
-
-    // INVENTARIO
-    const invR={};
-    OUTFITS_INV.forEach(o=>{const m=MARCAS[o.id];if(!m)return;invR[m.camisa]=(invR[m.camisa]||0)+1;invR[m.pantalon]=(invR[m.pantalon]||0)+1;});
-    const invSorted=Object.entries(invR).sort((a,b)=>b[1]-a[1]);
-    const usoR={};hist.forEach(h=>{const m=MARCAS[h.id];if(!m)return;usoR[m.camisa]=(usoR[m.camisa]||0)+1;usoR[m.pantalon]=(usoR[m.pantalon]||0)+1;});
-    const top8=invSorted.slice(0,8);
-    mk('chart-inv',{type:'bar',data:{labels:top8.map(([m])=>m),datasets:[
-      {label:'en closet',data:top8.map(([m,n])=>n),backgroundColor:top8.map(([m])=>gc(m)+'88'),borderRadius:4,borderSkipped:false},
-      {label:'veces usado',data:top8.map(([m])=>usoR[m]||0),backgroundColor:top8.map(([m])=>gc(m)),borderRadius:4,borderSkipped:false},
-    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tc(),font:{size:10},boxWidth:8,padding:6}}},scales:{x:{ticks:{color:tc(),font:{size:9},maxRotation:35},grid:{display:false}},y:{ticks:{color:tc(),font:{size:9}},grid:{color:grd()},beginAtZero:true}}}});
-    const maxI=invSorted[0]?.[1]||1;
-    document.getElementById('list-inv').innerHTML=invSorted.map(([m,n],i)=>`
-      <div class="row"><span class="rk">${i+1}</span><span class="rn">${m}<span class="badge">${usoR[m]||0} usos</span></span>
-      <div class="bw"><div class="bf" style="width:${Math.round(n/maxI*100)}%;background:${gc(m)}"></div></div>
-      <span class="rc">${n}</span></div>`).join('');
-
-    // COMBOS
-    const combosR={},combosA={};
-    hist.forEach(h=>{const m=MARCAS[h.id];if(m){const k=`${m.camisa}+${m.pantalon}`;combosR[k]=(combosR[k]||0)+1;}const cz=CALZADO_MAP[h.id];if(cz){const k=`${cz.modelo}+${MARCAS[h.id]?.bolso||'?'}`;combosA[k]=(combosA[k]||0)+1;}});
-    const topCR=Object.entries(combosR).sort((a,b)=>b[1]-a[1]).slice(0,8);
-    const topCA=Object.entries(combosA).sort((a,b)=>b[1]-a[1]).slice(0,8);
-    document.getElementById('list-combos-ropa').innerHTML=topCR.map(([k,n],i)=>{const[a,b]=k.split('+');return`<div class="combo-row"><span class="rk">${i+1}</span><div class="pills"><span class="pill" style="border-color:${gc(a)};color:${gc(a)};">${a}</span><span style="font-size:9px;color:var(--text3);">+</span><span class="pill" style="border-color:${gc(b)};color:${gc(b)};">${b}</span></div><span class="combo-n">${n}</span></div>`;}).join('');
-    document.getElementById('list-combos-acc').innerHTML=topCA.map(([k,n],i)=>{const[a,b]=k.split('+');return`<div class="combo-row"><span class="rk">${i+1}</span><div class="pills"><span class="pill">${a}</span><span style="font-size:9px;color:var(--text3);">+</span><span class="pill">${b}</span></div><span class="combo-n">${n}</span></div>`;}).join('');
-
-    // PATRONES
-    const dowCnt=[0,0,0,0,0,0,0],dowCat={0:{},1:{},2:{},3:{},4:{},5:{},6:{}};
-    hist.forEach(h=>{const d=new Date(h.fecha+'T12:00:00').getDay();dowCnt[d]++;const c=cat(h.id);dowCat[d][c]=(dowCat[d][c]||0)+1;});
-    const dowL=['dom','lun','mar','mié','jue','vie','sáb'];
-    const dowColors=['#7F77DD','#E22A3A','#4A90C4','#639922','#E07B2A','#1D9E75','#BA7517'];
-    const maxDow=Math.max(...dowCnt,1);
-    document.getElementById('dow-grid').innerHTML=dowL.map((l,i)=>`<div class="dow-col"><div class="dow-lbl">${l}</div><div class="dow-bw"><div class="dow-bf" style="height:${Math.round(dowCnt[i]/maxDow*100)}%;background:${dowColors[i]};"></div></div><div class="dow-n">${dowCnt[i]}</div></div>`).join('');
-    document.getElementById('cat-dow').innerHTML=dowL.map((l,i)=>{const top=Object.entries(dowCat[i]).sort((a,b)=>b[1]-a[1])[0];if(!top)return`<div class="row"><span class="rk">${l}</span><span class="rn" style="color:var(--text3);">sin datos</span></div>`;return`<div class="row"><span class="rk">${l}</span><span class="cat-dot" style="background:${CC[top[0]]}"></span><span class="rn">${CN[top[0]]}<span class="rsub">${top[1]} outfits</span></span></div>`;}).join('');
-    document.getElementById('rachas').innerHTML=`<div class="row"><span class="rk">🏆</span><span class="rn">racha máxima<span class="rsub">días consecutivos con outfit</span></span><span class="combo-n">${maxR}</span></div><div class="row"><span class="rk">📅</span><span class="rn">último outfit<span class="rsub">${fechas[fechas.length-1]}</span></span></div><div class="row"><span class="rk">📊</span><span class="rn">días únicos registrados</span><span class="combo-n">${fechas.length}</span></div>`;
-
-    // MARCAS × CAT
-    const cats=['EE','FF','RR','WW'];
-    document.getElementById('marca-cat').innerHTML=cats.map(c=>{const cnt={};hist.filter(h=>h.id.startsWith(c)).forEach(h=>{const m=MARCAS[h.id];if(!m)return;[m.camisa,m.pantalon].forEach(v=>{if(v)cnt[v]=(cnt[v]||0)+1;});});const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0]||['—',0];return`<div class="cat-row"><span class="cat-dot" style="background:${CC[c]}"></span><span class="cat-lbl">${CN[c]}</span><span class="cat-win">${top[0]}<span class="badge">${top[1]}x</span></span></div>`;}).join('');
-    document.getElementById('camisa-cat').innerHTML=cats.map(c=>{const[m,n]=topMC(hist,c,'camisa');return`<div class="cat-row"><span class="cat-dot" style="background:${CC[c]}"></span><span class="cat-lbl">${CN[c]}</span><span class="cat-win">${m}<span class="badge">${n}x</span></span></div>`;}).join('');
-    document.getElementById('pantalon-cat').innerHTML=cats.map(c=>{const[m,n]=topMC(hist,c,'pantalon');return`<div class="cat-row"><span class="cat-dot" style="background:${CC[c]}"></span><span class="cat-lbl">${CN[c]}</span><span class="cat-win">${m}<span class="badge">${n}x</span></span></div>`;}).join('');
-
-    // ROTACIÓN
-    const usoCnt={},fechaUso={};
-    hist.forEach(h=>{usoCnt[h.id]=(usoCnt[h.id]||0)+1;if(!fechaUso[h.id]||h.fecha>fechaUso[h.id])fechaUso[h.id]=h.fecha;});
-    const topUsados=Object.entries(usoCnt).sort((a,b)=>b[1]-a[1]).slice(0,8);
-    const nunca=OUTFITS_INV.filter(o=>!usoCnt[o.id]);
-    const masViejos=Object.entries(fechaUso).sort((a,b)=>a[1].localeCompare(b[1])).slice(0,6);
-    const hoyD=new Date();
-    document.getElementById('rot-top').innerHTML=topUsados.map(([id,n],i)=>`<div class="os-row"><span class="rk">${i+1}</span><span class="os-dot" style="background:${CC[cat(id)]}"></span><span class="os-id">${id}</span><span class="os-name">${state.outfits?.find(o=>o.id===id)?.e||''}</span><span class="os-n">${n}x</span></div>`).join('');
-    document.getElementById('rot-never').innerHTML=nunca.length===0?'<div style="padding:10px;font-size:12px;color:var(--text3);">todos los outfits han sido usados</div>':nunca.map(o=>`<div class="os-row"><span class="os-dot" style="background:${CC[cat(o.id)]}"></span><span class="os-id">${o.id}</span><span class="os-name">${state.outfits?.find(x=>x.id===o.id)?.e||''}</span><span class="os-n" style="color:var(--text3);">0x</span></div>`).join('');
-    document.getElementById('rot-old').innerHTML=masViejos.map(([id,fecha])=>{const dias=Math.floor((hoyD-new Date(fecha))/86400000);return`<div class="os-row"><span class="os-dot" style="background:${CC[cat(id)]}"></span><span class="os-id">${id}</span><span class="os-name">${state.outfits?.find(o=>o.id===id)?.e||''}</span><span class="os-d">${dias}d atrás</span></div>`;}).join('');
-
     // HEATMAP
     buildHeatmap(hist);
 
@@ -480,14 +361,6 @@ function render(state){
     const maxM=topMes[0]?.[1]||1;
     const mN=['','ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
     document.getElementById('mes-stats').innerHTML=topMes.map(([mes,n],i)=>{const[y,m]=mes.split('-');return`<div class="row"><span class="rk">${i+1}</span><span class="rn">${mN[parseInt(m)]} ${y}</span><div class="bw"><div class="bf" style="width:${Math.round(n/maxM*100)}%;background:#7F77DD;"></div></div><span class="rc">${n}</span></div>`;}).join('');
-
-    // EVOLUCIÓN
-    const mesesSet=[...new Set(hist.map(h=>h.fecha.substring(0,7)))].sort();
-    const mLabels=mesesSet.map(m=>`${mN[parseInt(m.split('-')[1])]} ${m.split('-')[0].slice(2)}`);
-    const topRopa=ropaComb.slice(0,5).map(([m])=>m);
-    mk('chart-line',{type:'line',data:{labels:mLabels,datasets:topRopa.map(marca=>({label:marca,data:mesesSet.map(mes=>{let c=0;hist.filter(h=>h.fecha.startsWith(mes)).forEach(h=>{const m=MARCAS[h.id];if(m&&(m.camisa===marca||m.pantalon===marca))c++;});return c;}),borderColor:gc(marca),backgroundColor:gc(marca)+'22',tension:0.3,fill:false,pointRadius:3,borderWidth:2}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tc(),font:{size:11},boxWidth:10,padding:8}}},scales:{x:{ticks:{color:tc(),font:{size:10}},grid:{color:grd()}},y:{ticks:{color:tc(),font:{size:10},stepSize:1},grid:{color:grd()},beginAtZero:true}}}});
-    const cntMes=mesesSet.map(m=>hist.filter(h=>h.fecha.startsWith(m)).length);
-    mk('chart-mes',barCfg(mLabels,cntMes,mesesSet.map(()=>'#7F77DD')));
   },100);
 }
 
