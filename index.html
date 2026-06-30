@@ -157,6 +157,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
           <button class="sub-tab" data-sub="calzado">Calzado</button>
           <button class="sub-tab" data-sub="bolso">Bolso de mano</button>
           <button class="sub-tab" data-sub="accesorio">Accesorios</button>
+          <button class="sub-tab" data-sub="basicos">Básicos</button>
         </div>
       </div>
       <div class="sub-panel active" id="sub-pantalon"><div class="closet-body" id="list-pantalon"></div></div>
@@ -164,6 +165,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
       <div class="sub-panel" id="sub-calzado"><div class="closet-body" id="list-calzado"></div></div>
       <div class="sub-panel" id="sub-bolso"><div class="closet-body" id="list-bolso"></div></div>
       <div class="sub-panel" id="sub-accesorio"><div class="closet-body" id="list-accesorio"></div></div>
+      <div class="sub-panel" id="sub-basicos"><div class="closet-body" id="list-basicos"></div></div>
     </div>
 
     <!-- ══════════════════════════════════ -->
@@ -233,8 +235,33 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
       <input type="text" id="f-outfits" placeholder="FF01, FF03, EE07…">
     </div>
     <div class="form-field">
-      <label>color principal (hex)</label>
-      <input type="text" id="f-color" placeholder="#1a1916">
+      <label>color</label>
+      <select id="f-color">
+        <option value="">— selecciona —</option>
+        <option value="#1a1916">Negro</option>
+        <option value="#f5f4f0">Blanco</option>
+        <option value="#4A90C4">Azul claro</option>
+        <option value="#1E3A8A">Azul rey</option>
+        <option value="#1a2a4a">Azul oscuro/marino</option>
+        <option value="#C0392B">Rojo</option>
+        <option value="#6B1A1A">Vinotinto</option>
+        <option value="#E07B2A">Naranja</option>
+        <option value="#C4C4C0">Gris claro</option>
+        <option value="#9E9E9E">Gris medio</option>
+        <option value="#555555">Gris oscuro/plomo</option>
+        <option value="#C4A882">Beige</option>
+        <option value="#D8C8A8">Arena</option>
+        <option value="#E8DCC4">Crema</option>
+        <option value="#8FBC8F">Verde claro/menta</option>
+        <option value="#639922">Verde oliva</option>
+        <option value="#2d5a2d">Verde oscuro</option>
+        <option value="#E8A0B4">Rosado claro</option>
+        <option value="#C2185B">Rosado fuerte/fucsia</option>
+        <option value="#C9A8E0">Lila</option>
+        <option value="#9B59B6">Violeta</option>
+        <option value="#3E2723">Café oscuro</option>
+        <option value="#8D6E63">Café claro</option>
+      </select>
     </div>
     <div class="form-field">
       <label>descripción</label>
@@ -243,6 +270,65 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
     <div class="form-actions">
       <button class="btn" onclick="closeForm()">cancelar</button>
       <button class="btn btn-dark" onclick="guardarPrenda()"><i class="ti ti-check"></i> guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- FORM BÁSICOS -->
+<div class="form-overlay" id="form-overlay-basico" style="display:none;">
+  <div class="form-sheet">
+    <div class="form-title" id="form-title-basico">agregar básico</div>
+    <div class="form-field">
+      <label>categoría</label>
+      <select id="b-categoria">
+        <option value="medias">Medias</option>
+        <option value="boxers">Boxers</option>
+      </select>
+    </div>
+    <div class="form-field">
+      <label>descripción</label>
+      <input type="text" id="b-desc" placeholder="Medias largas, boxer algodón…">
+    </div>
+    <div class="form-field">
+      <label>marca</label>
+      <input type="text" id="b-marca" placeholder="Adidas, Nike…">
+    </div>
+    <div class="form-field">
+      <label>color</label>
+      <select id="b-color">
+        <option value="">— selecciona —</option>
+        <option value="#1a1916">Negro</option>
+        <option value="#f5f4f0">Blanco</option>
+        <option value="#4A90C4">Azul claro</option>
+        <option value="#1E3A8A">Azul rey</option>
+        <option value="#1a2a4a">Azul oscuro/marino</option>
+        <option value="#C0392B">Rojo</option>
+        <option value="#6B1A1A">Vinotinto</option>
+        <option value="#E07B2A">Naranja</option>
+        <option value="#C4C4C0">Gris claro</option>
+        <option value="#9E9E9E">Gris medio</option>
+        <option value="#555555">Gris oscuro/plomo</option>
+        <option value="#C4A882">Beige</option>
+        <option value="#D8C8A8">Arena</option>
+        <option value="#E8DCC4">Crema</option>
+        <option value="#8FBC8F">Verde claro/menta</option>
+        <option value="#639922">Verde oliva</option>
+        <option value="#2d5a2d">Verde oscuro</option>
+        <option value="#E8A0B4">Rosado claro</option>
+        <option value="#C2185B">Rosado fuerte/fucsia</option>
+        <option value="#C9A8E0">Lila</option>
+        <option value="#9B59B6">Violeta</option>
+        <option value="#3E2723">Café oscuro</option>
+        <option value="#8D6E63">Café claro</option>
+      </select>
+    </div>
+    <div class="form-field">
+      <label>cantidad</label>
+      <input type="number" id="b-cantidad" min="0" value="1">
+    </div>
+    <div class="form-actions">
+      <button class="btn" onclick="closeFormBasico()">cancelar</button>
+      <button class="btn btn-dark" onclick="guardarBasico()"><i class="ti ti-check"></i> guardar</button>
     </div>
   </div>
 </div>
@@ -261,7 +347,7 @@ const OUTFITS_INV=["EE01","EE02","EE03","EE04","EE05","EE06","EE07","EE08","FF01
 const TIPO_LABELS={pantalon:"Pantalón",camisa:"Camisa",calzado:"Calzado",bolso:"Bolso de mano",accesorio:"Accesorio"};
 
 // Estado global
-let globalHist=[], globalPrendas=[], editingId=null;
+let globalHist=[], globalPrendas=[], editingId=null, globalBasicos=[], editingBasicoId=null;
 
 function toast(msg){
   const t=document.getElementById('toast');
@@ -551,6 +637,108 @@ function buildHeatmap(hist){
     `<span class="hm-leg"><span class="hm-leg-sq" style="background:${ENFOQUES_C[e]||'#888'}"></span>${e}</span>`).join('');
 }
 
+// ── BÁSICOS (medias, boxers) ──
+function renderBasicos(basicos){
+  const container=document.getElementById('list-basicos');
+  if(!container) return;
+
+  const byCat={medias:[],boxers:[]};
+  basicos.forEach(b=>{ if(byCat[b.categoria]) byCat[b.categoria].push(b); });
+
+  const catLabels={medias:'Medias',boxers:'Boxers'};
+  let html='';
+  Object.entries(byCat).forEach(([cat,items])=>{
+    html+=`<div class="subtipo-lbl">${catLabels[cat]}</div>`;
+    if(items.length===0){
+      html+=`<div style="font-size:12px;color:var(--text3);padding:4px 0 8px;">sin registros</div>`;
+    }
+    items.forEach(b=>{
+      const color=b.color||'#888888';
+      html+=`<div class="prenda-card">
+        <div class="prenda-color" style="background:${color};"></div>
+        <div class="prenda-info">
+          <div class="prenda-top">
+            <span class="prenda-marca">${b.marca||'—'}</span>
+            <span class="prenda-usos">· tengo ${b.cantidad} ${b.cantidad===1?'unidad':'unidades'}</span>
+          </div>
+          ${b.descripcion?`<div class="prenda-desc">${b.descripcion}</div>`:''}
+        </div>
+        <button onclick="openEditFormBasico('${b.id}')" style="background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;flex-shrink:0;"><i class="ti ti-pencil" style="font-size:14px;"></i></button>
+      </div>`;
+    });
+  });
+  html+=`<button class="add-btn" onclick="openFormBasico()"><i class="ti ti-plus"></i> agregar básico</button>`;
+  container.innerHTML=html;
+}
+
+function openFormBasico(){
+  editingBasicoId=null;
+  document.getElementById('form-title-basico').textContent='agregar básico';
+  document.getElementById('b-categoria').value='medias';
+  document.getElementById('b-desc').value='';
+  document.getElementById('b-marca').value='';
+  document.getElementById('b-color').value='';
+  document.getElementById('b-cantidad').value='1';
+  document.getElementById('form-overlay-basico').style.display='flex';
+}
+
+function openEditFormBasico(id){
+  const b=globalBasicos.find(x=>x.id===id);
+  if(!b) return;
+  editingBasicoId=id;
+  document.getElementById('form-title-basico').textContent='editar básico';
+  document.getElementById('b-categoria').value=b.categoria||'medias';
+  document.getElementById('b-desc').value=b.descripcion||'';
+  document.getElementById('b-marca').value=b.marca||'';
+  document.getElementById('b-color').value=b.color||'';
+  document.getElementById('b-cantidad').value=b.cantidad||1;
+  document.getElementById('form-overlay-basico').style.display='flex';
+}
+
+function closeFormBasico(){
+  document.getElementById('form-overlay-basico').style.display='none';
+  editingBasicoId=null;
+}
+
+async function guardarBasico(){
+  const categoria=document.getElementById('b-categoria').value;
+  const descripcion=document.getElementById('b-desc').value.trim();
+  const marca=document.getElementById('b-marca').value.trim();
+  const color=document.getElementById('b-color').value;
+  const cantidad=parseInt(document.getElementById('b-cantidad').value)||0;
+
+  if(!descripcion){toast('agrega una descripción');return;}
+
+  const body={categoria,descripcion,marca,color,cantidad};
+
+  try{
+    let r;
+    if(editingBasicoId){
+      r=await fetch(`${SB_URL}/rest/v1/basicos?id=eq.${editingBasicoId}`,{
+        method:'PATCH',headers:{...SB_H,'Prefer':'return=minimal'},body:JSON.stringify(body)
+      });
+    } else {
+      r=await fetch(`${SB_URL}/rest/v1/basicos`,{
+        method:'POST',headers:{...SB_H,'Prefer':'return=minimal'},body:JSON.stringify(body)
+      });
+    }
+    if(!r.ok){const t=await r.text();console.error(t);toast('error al guardar');return;}
+    toast(editingBasicoId?'básico actualizado ✓':'básico guardado ✓');
+    closeFormBasico();
+    const basicos=await fetchBasicos();
+    globalBasicos=basicos;
+    renderBasicos(basicos);
+  }catch(e){console.error(e);toast('error de conexión');}
+}
+
+async function fetchBasicos(){
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/basicos?select=*&order=categoria.asc`,{headers:SB_H});
+    if(!r.ok) return [];
+    return await r.json();
+  }catch(e){return [];}
+}
+
 // ── FETCH ──
 async function fetchPrendas(){
   try{
@@ -562,25 +750,29 @@ async function fetchPrendas(){
 
 async function init(){
   try{
-    const [rHist,rOutfits,rPrendas]=await Promise.all([
+    const [rHist,rOutfits,rPrendas,rBasicos]=await Promise.all([
       fetch(`${SB_URL}/rest/v1/historial?order=fecha.asc,id.asc&select=fecha,outfit_id,enfoque`,{headers:SB_H}),
       fetch(`${SB_URL}/rest/v1/outfits?select=id,usado`,{headers:SB_H}),
       fetch(`${SB_URL}/rest/v1/prendas?select=*&order=tipo.asc,subtipo.asc`,{headers:SB_H}),
+      fetch(`${SB_URL}/rest/v1/basicos?select=*&order=categoria.asc`,{headers:SB_H}),
     ]);
 
     const histRows=await rHist.json();
     const outfits=await rOutfits.json();
     const prendas=await rPrendas.json();
+    const basicos=await rBasicos.json();
 
     const hist=histRows.map(r=>({fecha:r.fecha,id:r.outfit_id,e:r.enfoque}));
 
     globalHist=hist;
     globalPrendas=prendas;
+    globalBasicos=basicos;
 
     document.getElementById('loading').style.display='none';
     document.getElementById('content').style.display='';
 
     renderCloset(prendas,hist);
+    renderBasicos(basicos);
     renderStats(hist,outfits);
     buildHeatmap(hist);
   }catch(e){
@@ -592,6 +784,9 @@ async function init(){
 // Cerrar form al tocar fuera
 document.getElementById('form-overlay').addEventListener('click',e=>{
   if(e.target===document.getElementById('form-overlay')) closeForm();
+});
+document.getElementById('form-overlay-basico').addEventListener('click',e=>{
+  if(e.target===document.getElementById('form-overlay-basico')) closeFormBasico();
 });
 
 init();
