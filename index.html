@@ -283,6 +283,13 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
       <select id="b-categoria">
         <option value="medias">Medias</option>
         <option value="boxers">Boxers</option>
+        <option value="camisillas">Camisillas (con/sin mangas)</option>
+        <option value="camisetas_dormir">Camisetas para dormir</option>
+        <option value="camisetas_ejercicio">Camisetas de ejercicio</option>
+        <option value="camisa_hibrida">Camisa híbrida (dormir/ejercicio)</option>
+        <option value="pantaloneta_dormir">Pantaloneta de dormir</option>
+        <option value="pantaloneta_ejercicio">Pantaloneta de ejercicio</option>
+        <option value="pantaloneta_hibrida">Pantaloneta híbrida (dormir/ejercicio)</option>
       </select>
     </div>
     <div class="form-field">
@@ -642,16 +649,24 @@ function renderBasicos(basicos){
   const container=document.getElementById('list-basicos');
   if(!container) return;
 
-  const byCat={medias:[],boxers:[]};
+  const byCat={medias:[],boxers:[],camisillas:[],camisetas_dormir:[],camisetas_ejercicio:[],camisa_hibrida:[],pantaloneta_dormir:[],pantaloneta_ejercicio:[],pantaloneta_hibrida:[]};
   basicos.forEach(b=>{ if(byCat[b.categoria]) byCat[b.categoria].push(b); });
 
-  const catLabels={medias:'Medias',boxers:'Boxers'};
+  const catLabels={
+    medias:'Medias',
+    boxers:'Boxers',
+    camisillas:'Camisillas (con/sin mangas)',
+    camisetas_dormir:'Camisetas para dormir',
+    camisetas_ejercicio:'Camisetas de ejercicio',
+    camisa_hibrida:'Camisa híbrida (dormir/ejercicio)',
+    pantaloneta_dormir:'Pantaloneta de dormir',
+    pantaloneta_ejercicio:'Pantaloneta de ejercicio',
+    pantaloneta_hibrida:'Pantaloneta híbrida (dormir/ejercicio)',
+  };
   let html='';
   Object.entries(byCat).forEach(([cat,items])=>{
+    if(items.length===0) return;
     html+=`<div class="subtipo-lbl">${catLabels[cat]}</div>`;
-    if(items.length===0){
-      html+=`<div style="font-size:12px;color:var(--text3);padding:4px 0 8px;">sin registros</div>`;
-    }
     items.forEach(b=>{
       const color=b.color||'#888888';
       html+=`<div class="prenda-card">
