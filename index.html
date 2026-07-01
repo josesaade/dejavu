@@ -214,7 +214,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
     <div class="form-title" id="form-title">agregar prenda</div>
     <div class="form-field">
       <label>tipo</label>
-      <select id="f-tipo">
+      <select id="f-tipo" onchange="togglePretina()">
         <option value="pantalon">Pantalón</option>
         <option value="camisa">Camisa</option>
         <option value="calzado">Calzado</option>
@@ -229,6 +229,23 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
     <div class="form-field">
       <label>marca</label>
       <input type="text" id="f-marca" placeholder="H&M, Mevak, Adidas…">
+    </div>
+    <div class="form-field">
+      <label>talla</label>
+      <input type="text" id="f-talla" placeholder="S, M, L, XL, 30, 32…">
+    </div>
+    <div class="form-field">
+      <label>fit</label>
+      <input type="text" id="f-fit" placeholder="slim fit, regular, oversized…">
+    </div>
+    <div class="form-field" id="field-pretina" style="display:none;">
+      <label>pretina</label>
+      <select id="f-pretina">
+        <option value="">— selecciona —</option>
+        <option value="Tradicional">Tradicional</option>
+        <option value="Elástico con cordón">Elástico con cordón</option>
+        <option value="Pull-on de Vestir">Pull-on de Vestir</option>
+      </select>
     </div>
     <div class="form-field">
       <label>outfit(s) asociado(s)</label>
@@ -411,6 +428,7 @@ function renderCloset(prendas, hist){
         const usosTotales=outfitIds.reduce((acc,id)=>acc+(usoCnt[id]||0),0);
         const color=p.color||'#888888';
         const isLight=color==='#f5f4f0'||color==='#ffffff'||color.toLowerCase()==='#fff'||color.toLowerCase()==='#f0f0e8';
+        const extras=[p.talla,p.fit,p.pretina].filter(Boolean).join(' · ');
         html+=`<div class="prenda-card">
           <div class="prenda-color" style="background:${color};${isLight?'border-color:var(--border2);':''}"></div>
           <div class="prenda-info">
@@ -418,6 +436,7 @@ function renderCloset(prendas, hist){
               <span class="prenda-marca">${p.marca||'—'}</span>
               <span class="prenda-usos">${usosTotales>0?'· usado '+usosTotales+(usosTotales===1?' vez':' veces'):'· sin uso aún'}</span>
             </div>
+            ${extras?`<div class="prenda-desc" style="color:var(--text3);font-size:11px;">${extras}</div>`:''}
             ${p.descripcion?`<div class="prenda-desc">${p.descripcion}</div>`:''}
             <div class="prenda-outfits">
               ${outfitIds.map(id=>`<span class="outfit-tag">${id}</span>`).join('')}
@@ -434,15 +453,25 @@ function renderCloset(prendas, hist){
 }
 
 // ── FORM ──
+// Mostrar/ocultar pretina según tipo
+function togglePretina(){
+  const tipo=document.getElementById('f-tipo').value;
+  document.getElementById('field-pretina').style.display=tipo==='pantalon'?'block':'none';
+}
+
 function openForm(tipo){
   editingId=null;
   document.getElementById('form-title').textContent='agregar prenda';
   document.getElementById('f-tipo').value=tipo||'pantalon';
   document.getElementById('f-subtipo').value='';
   document.getElementById('f-marca').value='';
+  document.getElementById('f-talla').value='';
+  document.getElementById('f-fit').value='';
+  document.getElementById('f-pretina').value='';
   document.getElementById('f-outfits').value='';
   document.getElementById('f-color').value='';
   document.getElementById('f-desc').value='';
+  togglePretina();
   document.getElementById('form-overlay').style.display='flex';
 }
 
@@ -454,9 +483,13 @@ function openEditForm(id){
   document.getElementById('f-tipo').value=p.tipo||'pantalon';
   document.getElementById('f-subtipo').value=p.subtipo||'';
   document.getElementById('f-marca').value=p.marca||'';
+  document.getElementById('f-talla').value=p.talla||'';
+  document.getElementById('f-fit').value=p.fit||'';
+  document.getElementById('f-pretina').value=p.pretina||'';
   document.getElementById('f-outfits').value=p.outfit_id||'';
   document.getElementById('f-color').value=p.color||'';
   document.getElementById('f-desc').value=p.descripcion||'';
+  togglePretina();
   document.getElementById('form-overlay').style.display='flex';
 }
 
@@ -469,13 +502,16 @@ async function guardarPrenda(){
   const tipo=document.getElementById('f-tipo').value;
   const subtipo=document.getElementById('f-subtipo').value.trim();
   const marca=document.getElementById('f-marca').value.trim();
+  const talla=document.getElementById('f-talla').value.trim();
+  const fit=document.getElementById('f-fit').value.trim();
+  const pretina=tipo==='pantalon'?document.getElementById('f-pretina').value:'';
   const outfit_id=document.getElementById('f-outfits').value.trim();
   const color=document.getElementById('f-color').value.trim();
   const descripcion=document.getElementById('f-desc').value.trim();
 
   if(!marca){toast('agrega la marca');return;}
 
-  const body={tipo,subtipo,marca,outfit_id,color,descripcion};
+  const body={tipo,subtipo,marca,talla,fit,pretina,outfit_id,color,descripcion};
 
   try{
     let r;
