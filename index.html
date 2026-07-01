@@ -54,7 +54,19 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 .closet-body{padding:16px 20px;}
 .subtipo-lbl{font-size:10px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin:14px 0 8px;}
 .subtipo-lbl:first-child{margin-top:0;}
-.prenda-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:13px 14px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start;}
+.prenda-card{background:var(--surface);border-top:1px solid var(--border);padding:12px 14px;display:flex;gap:12px;align-items:flex-start;}
+.prenda-card:last-of-type{border-bottom:none;}
+
+/* ACORDEÓN */
+.accordion{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:8px;background:var(--surface);}
+.acc-header{display:flex;align-items:center;gap:10px;padding:13px 14px;cursor:pointer;user-select:none;transition:background 0.15s;}
+.acc-header:active{background:var(--bg2);}
+.acc-title{font-size:13px;font-weight:500;color:var(--text);flex:1;}
+.acc-count{font-size:10px;color:var(--text3);background:var(--bg2);padding:2px 8px;border-radius:var(--r-pill);border:1px solid var(--border);}
+.acc-chevron{font-size:13px;color:var(--text3);transition:transform 0.2s;flex-shrink:0;}
+.accordion.open .acc-chevron{transform:rotate(180deg);}
+.acc-body{display:none;}
+.accordion.open .acc-body{display:block;}
 .prenda-color{width:36px;height:36px;border-radius:8px;flex-shrink:0;border:1px solid var(--border);}
 .prenda-info{flex:1;min-width:0;}
 .prenda-top{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;margin-bottom:3px;}
@@ -172,26 +184,82 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
     <!-- ESTADÍSTICAS                       -->
     <!-- ══════════════════════════════════ -->
     <div class="main-panel" id="main-stats">
-      <div class="stats-body">
-        <div class="sl">resumen</div>
-        <div class="kpi-grid" id="kpis-stats"></div>
-
-        <div class="sl">rachas</div>
-        <div id="rachas-section"></div>
-
-        <div class="sl">outfits más usados</div>
-        <div class="card" id="top-outfits"></div>
-
-        <div class="sl">outfits nunca usados</div>
-        <div class="card" id="nunca-usados"></div>
-
-        <div class="sl">actividad por día de la semana</div>
-        <div class="card" style="padding:14px;">
-          <div class="dow-grid" id="dow-grid"></div>
+      <div class="sub-tabs-wrap">
+        <div class="sub-tabs">
+          <button class="sub-tab active" data-statsub="uso">Uso</button>
+          <button class="sub-tab" data-statsub="closet">Closet</button>
         </div>
+      </div>
 
-        <div class="sl">enfoques de esta semana</div>
-        <div class="card" id="semana-enfoques"></div>
+      <!-- Uso -->
+      <div class="sub-panel active" id="statsub-uso">
+        <div class="stats-body">
+          <div class="sl">resumen</div>
+          <div class="kpi-grid" id="kpis-stats"></div>
+          <div class="sl">rachas</div>
+          <div id="rachas-section"></div>
+          <div class="sl">outfits más usados</div>
+          <div class="card" id="top-outfits"></div>
+          <div class="sl">outfits nunca usados</div>
+          <div class="card" id="nunca-usados"></div>
+          <div class="sl">actividad por día de la semana</div>
+          <div class="card" style="padding:14px;"><div class="dow-grid" id="dow-grid"></div></div>
+          <div class="sl">enfoques de esta semana</div>
+          <div class="card" id="semana-enfoques"></div>
+        </div>
+      </div>
+
+      <!-- Closet stats -->
+      <div class="sub-panel" id="statsub-closet">
+        <div class="stats-body">
+
+          <!-- General -->
+          <div class="sl">resumen del closet</div>
+          <div class="kpi-grid" id="cs-kpis" style="grid-template-columns:1fr 1fr 1fr;"></div>
+
+          <div class="sl">colores que predominan</div>
+          <div class="card" id="cs-colores-general"></div>
+
+          <div class="sl">marcas más frecuentes</div>
+          <div class="card" id="cs-marcas-general"></div>
+
+          <!-- Pantalones -->
+          <div class="sl" style="margin-top:24px;">pantalones · tipos</div>
+          <div class="card" id="cs-pan-tipos"></div>
+          <div class="sl">pantalones · colores</div>
+          <div class="card" id="cs-pan-colores"></div>
+          <div class="sl">pantalones · fit</div>
+          <div class="card" id="cs-pan-fit"></div>
+          <div class="sl">pantalones · pretina</div>
+          <div class="card" id="cs-pan-pretina"></div>
+
+          <!-- Camisas -->
+          <div class="sl" style="margin-top:24px;">camisas · tipos</div>
+          <div class="card" id="cs-cam-tipos"></div>
+          <div class="sl">camisas · colores</div>
+          <div class="card" id="cs-cam-colores"></div>
+          <div class="sl">camisas · fit</div>
+          <div class="card" id="cs-cam-fit"></div>
+
+          <!-- Calzado -->
+          <div class="sl" style="margin-top:24px;">calzado · tipos</div>
+          <div class="card" id="cs-cal-tipos"></div>
+          <div class="sl">calzado · modelos</div>
+          <div class="card" id="cs-cal-modelos"></div>
+          <div class="sl">calzado · marcas</div>
+          <div class="card" id="cs-cal-marcas"></div>
+          <div class="sl">calzado · colores</div>
+          <div class="card" id="cs-cal-colores"></div>
+
+          <!-- Accesorios -->
+          <div class="sl" style="margin-top:24px;">bolsos · tipos</div>
+          <div class="card" id="cs-bol-tipos"></div>
+          <div class="sl">accesorios · marcas</div>
+          <div class="card" id="cs-acc-marcas"></div>
+          <div class="sl">accesorios · colores</div>
+          <div class="card" id="cs-acc-colores"></div>
+
+        </div>
       </div>
     </div>
 
@@ -234,9 +302,13 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
       <label>talla</label>
       <input type="text" id="f-talla" placeholder="S, M, L, XL, 30, 32…">
     </div>
-    <div class="form-field">
-      <label>fit</label>
+    <div class="form-field" id="field-fit">
+      <label id="label-fit">fit</label>
       <input type="text" id="f-fit" placeholder="slim fit, regular, oversized…">
+    </div>
+    <div class="form-field" id="field-modelo" style="display:none;">
+      <label>modelo</label>
+      <input type="text" id="f-modelo" placeholder="Advantage, Stan Smith, Air Force 1…">
     </div>
     <div class="form-field" id="field-pretina" style="display:none;">
       <label>pretina</label>
@@ -388,22 +460,29 @@ document.querySelector('.main-tabs').addEventListener('click',e=>{
   document.getElementById('main-'+btn.dataset.main).classList.add('active');
 });
 
-document.querySelector('.sub-tabs').addEventListener('click',e=>{
-  const btn=e.target.closest('.sub-tab');if(!btn)return;
-  document.querySelectorAll('.sub-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.sub-panel').forEach(p=>p.classList.remove('active'));
+// Subtabs del closet
+document.getElementById('main-closet').addEventListener('click',e=>{
+  const btn=e.target.closest('[data-sub]');if(!btn)return;
+  document.querySelectorAll('#main-closet .sub-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('#main-closet .sub-panel').forEach(p=>p.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('sub-'+btn.dataset.sub).classList.add('active');
+});
+
+// Subtabs de estadísticas
+document.getElementById('main-stats').addEventListener('click',e=>{
+  const btn=e.target.closest('[data-statsub]');if(!btn)return;
+  document.querySelectorAll('#main-stats .sub-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('#main-stats .sub-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('statsub-'+btn.dataset.statsub).classList.add('active');
 });
 
 // ── CLOSET ──
 function renderCloset(prendas, hist){
   const tipoMap={pantalon:[],camisa:[],calzado:[],bolso:[],accesorio:[]};
-  prendas.forEach(p=>{
-    if(tipoMap[p.tipo]) tipoMap[p.tipo].push(p);
-  });
+  prendas.forEach(p=>{ if(tipoMap[p.tipo]) tipoMap[p.tipo].push(p); });
 
-  // Calcular usos por outfit_id del historial
   const usoCnt={};
   hist.forEach(h=>{usoCnt[h.id]=(usoCnt[h.id]||0)+1;});
 
@@ -420,34 +499,55 @@ function renderCloset(prendas, hist){
     });
 
     let html='';
-    Object.entries(bySubtipo).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([sub,ps])=>{
-      html+=`<div class="subtipo-lbl">${sub}</div>`;
-      ps.forEach(p=>{
-        // Calcular usos totales sumando los outfits asociados
+
+    // Un acordeón por subtipo
+    Object.entries(bySubtipo).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([sub,ps],idx)=>{
+      const count=ps.length;
+      const prendasHTML=ps.map(p=>{
         const outfitIds=(p.outfit_id||'').split(',').map(s=>s.trim()).filter(Boolean);
         const usosTotales=outfitIds.reduce((acc,id)=>acc+(usoCnt[id]||0),0);
         const color=p.color||'#888888';
-        const isLight=color==='#f5f4f0'||color==='#ffffff'||color.toLowerCase()==='#fff'||color.toLowerCase()==='#f0f0e8';
-        const extras=[p.talla,p.fit,p.pretina].filter(Boolean).join(' · ');
-        html+=`<div class="prenda-card">
-          <div class="prenda-color" style="background:${color};${isLight?'border-color:var(--border2);':''}"></div>
-          <div class="prenda-info">
+        const isLight=['#f5f4f0','#ffffff','#fff','#f0f0e8','#E8DCC4','#D8C8A8'].includes(color.toLowerCase());
+        const extras=tipo==='calzado'
+          ?[p.talla,p.modelo].filter(Boolean).join(' · ')
+          :[p.talla,p.fit,p.pretina].filter(Boolean).join(' · ');
+        return`<div class="prenda-card">
+          <div class="prenda-color" style="background:${color};${isLight?'border:1px solid var(--border2);':''}width:32px;height:32px;border-radius:7px;flex-shrink:0;"></div>
+          <div class="prenda-info" style="flex:1;min-width:0;">
             <div class="prenda-top">
               <span class="prenda-marca">${p.marca||'—'}</span>
-              <span class="prenda-usos">${usosTotales>0?'· usado '+usosTotales+(usosTotales===1?' vez':' veces'):'· sin uso aún'}</span>
+              <span class="prenda-usos">${usosTotales>0?'· '+usosTotales+(usosTotales===1?' uso':' usos'):'· sin uso aún'}</span>
             </div>
-            ${extras?`<div class="prenda-desc" style="color:var(--text3);font-size:11px;">${extras}</div>`:''}
+            ${extras?`<div class="prenda-desc" style="color:var(--text3);font-size:11px;margin-bottom:3px;">${extras}</div>`:''}
             ${p.descripcion?`<div class="prenda-desc">${p.descripcion}</div>`:''}
-            <div class="prenda-outfits">
-              ${outfitIds.map(id=>`<span class="outfit-tag">${id}</span>`).join('')}
-            </div>
+            <div class="prenda-outfits">${outfitIds.map(id=>`<span class="outfit-tag">${id}</span>`).join('')}</div>
           </div>
-          <button onclick="openEditForm('${p.id}')" style="background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;flex-shrink:0;"><i class="ti ti-pencil" style="font-size:14px;"></i></button>
+          <button onclick="event.stopPropagation();openEditForm('${p.id}')" style="background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;flex-shrink:0;"><i class="ti ti-pencil" style="font-size:14px;"></i></button>
         </div>`;
-      });
+      }).join('');
+
+      // Primer subtipo abierto por defecto
+      html+=`<div class="accordion${idx===0?' open':''}">
+        <div class="acc-header" onclick="this.closest('.accordion').classList.toggle('open')">
+          <span class="acc-title">${sub}</span>
+          <span class="acc-count">${count} ${count===1?'prenda':'prendas'}</span>
+          <i class="ti ti-chevron-down acc-chevron"></i>
+        </div>
+        <div class="acc-body">
+          ${prendasHTML}
+          <div style="padding:10px 14px;">
+            <button class="add-btn" onclick="event.stopPropagation();openForm('${tipo}')"><i class="ti ti-plus"></i> agregar ${sub.toLowerCase()}</button>
+          </div>
+        </div>
+      </div>`;
     });
 
-    html+=`<button class="add-btn" onclick="openForm('${tipo}')"><i class="ti ti-plus"></i> agregar ${TIPO_LABELS[tipo]?.toLowerCase()||tipo}</button>`;
+    // Si no hay prendas aún
+    if(Object.keys(bySubtipo).length===0){
+      html=`<div style="text-align:center;padding:32px 20px;color:var(--text3);font-size:13px;">sin prendas aún</div>`;
+    }
+
+    html+=`<button class="add-btn" style="margin-top:4px;" onclick="openForm('${tipo}')"><i class="ti ti-plus"></i> agregar ${TIPO_LABELS[tipo]?.toLowerCase()||tipo}</button>`;
     container.innerHTML=html;
   });
 }
@@ -457,6 +557,8 @@ function renderCloset(prendas, hist){
 function togglePretina(){
   const tipo=document.getElementById('f-tipo').value;
   document.getElementById('field-pretina').style.display=tipo==='pantalon'?'block':'none';
+  document.getElementById('field-fit').style.display=tipo==='calzado'?'none':'block';
+  document.getElementById('field-modelo').style.display=tipo==='calzado'?'block':'none';
 }
 
 function openForm(tipo){
@@ -467,6 +569,7 @@ function openForm(tipo){
   document.getElementById('f-marca').value='';
   document.getElementById('f-talla').value='';
   document.getElementById('f-fit').value='';
+  document.getElementById('f-modelo').value='';
   document.getElementById('f-pretina').value='';
   document.getElementById('f-outfits').value='';
   document.getElementById('f-color').value='';
@@ -485,6 +588,7 @@ function openEditForm(id){
   document.getElementById('f-marca').value=p.marca||'';
   document.getElementById('f-talla').value=p.talla||'';
   document.getElementById('f-fit').value=p.fit||'';
+  document.getElementById('f-modelo').value=p.modelo||'';
   document.getElementById('f-pretina').value=p.pretina||'';
   document.getElementById('f-outfits').value=p.outfit_id||'';
   document.getElementById('f-color').value=p.color||'';
@@ -503,7 +607,8 @@ async function guardarPrenda(){
   const subtipo=document.getElementById('f-subtipo').value.trim();
   const marca=document.getElementById('f-marca').value.trim();
   const talla=document.getElementById('f-talla').value.trim();
-  const fit=document.getElementById('f-fit').value.trim();
+  const fit=tipo==='calzado'?'':document.getElementById('f-fit').value.trim();
+  const modelo=tipo==='calzado'?document.getElementById('f-modelo').value.trim():'';
   const pretina=tipo==='pantalon'?document.getElementById('f-pretina').value:'';
   const outfit_id=document.getElementById('f-outfits').value.trim();
   const color=document.getElementById('f-color').value.trim();
@@ -511,7 +616,7 @@ async function guardarPrenda(){
 
   if(!marca){toast('agrega la marca');return;}
 
-  const body={tipo,subtipo,marca,talla,fit,pretina,outfit_id,color,descripcion};
+  const body={tipo,subtipo,marca,talla,fit,modelo,pretina,outfit_id,color,descripcion};
 
   try{
     let r;
@@ -799,6 +904,135 @@ async function fetchPrendas(){
   }catch(e){return [];}
 }
 
+// ── CLOSET STATS ──
+function renderClosetStats(prendas){
+  // Helpers
+  function contar(items, campo){
+    const cnt={};
+    items.forEach(p=>{ const v=p[campo]; if(v) cnt[v]=(cnt[v]||0)+1; });
+    return Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
+  }
+
+  function barRow(name, n, max, color, swatch){
+    const pct=Math.round((n/max)*100);
+    const swatchHTML=swatch
+      ?`<div style="width:14px;height:14px;border-radius:3px;background:${swatch};border:1px solid rgba(255,255,255,0.1);flex-shrink:0;"></div>`
+      :`<span style="font-size:11px;color:var(--text3);min-width:14px;"></span>`;
+    return`<div class="row">
+      ${swatchHTML}
+      <span class="rn" style="font-size:12px;">${name}</span>
+      <div class="bw"><div class="bf" style="width:${pct}%;background:${color};"></div></div>
+      <span class="rc">${n}</span>
+    </div>`;
+  }
+
+  function fillCard(id, rows, color, useSwatch=false){
+    const el=document.getElementById(id);
+    if(!el) return;
+    if(rows.length===0){ el.innerHTML='<div style="padding:10px;font-size:12px;color:var(--text3);">sin datos aún</div>'; return; }
+    const max=rows[0][1];
+    el.innerHTML=rows.map(([name,n])=>barRow(name,n,max,color,useSwatch?name:null)).join('');
+  }
+
+  // Mapa de color hex → nombre legible (inverso del selector)
+  const COLOR_NAMES={
+    '#1a1916':'Negro','#f5f4f0':'Blanco','#4A90C4':'Azul claro','#1E3A8A':'Azul rey',
+    '#1a2a4a':'Azul oscuro','#C0392B':'Rojo','#6B1A1A':'Vinotinto','#E07B2A':'Naranja',
+    '#C4C4C0':'Gris claro','#9E9E9E':'Gris medio','#555555':'Gris oscuro',
+    '#C4A882':'Beige','#D8C8A8':'Arena','#E8DCC4':'Crema',
+    '#8FBC8F':'Verde claro','#639922':'Verde oliva','#2d5a2d':'Verde oscuro',
+    '#E8A0B4':'Rosado claro','#C2185B':'Rosado fuerte','#C9A8E0':'Lila',
+    '#9B59B6':'Violeta','#3E2723':'Café oscuro','#8D6E63':'Café claro',
+  };
+
+  function contarColores(items){
+    const cnt={};
+    items.forEach(p=>{ const v=p.color; if(v) cnt[v]=(cnt[v]||0)+1; });
+    return Object.entries(cnt).sort((a,b)=>b[1]-a[1])
+      .map(([hex,n])=>([COLOR_NAMES[hex]||hex, n, hex]));
+  }
+
+  function fillColores(id, items, color){
+    const el=document.getElementById(id);
+    if(!el) return;
+    const rows=contarColores(items);
+    if(rows.length===0){ el.innerHTML='<div style="padding:10px;font-size:12px;color:var(--text3);">sin datos aún</div>'; return; }
+    const max=rows[0][1];
+    el.innerHTML=rows.map(([name,n,hex])=>`<div class="row">
+      <div style="width:14px;height:14px;border-radius:3px;background:${hex};border:1px solid rgba(255,255,255,0.1);flex-shrink:0;"></div>
+      <span class="rn" style="font-size:12px;">${name}</span>
+      <div class="bw"><div class="bf" style="width:${Math.round(n/max*100)}%;background:${color};"></div></div>
+      <span class="rc">${n}</span>
+    </div>`).join('');
+  }
+
+  // Pretina donut
+  function fillPretina(id, items){
+    const el=document.getElementById(id);
+    if(!el) return;
+    const cnt={}; items.forEach(p=>{ if(p.pretina) cnt[p.pretina]=(cnt[p.pretina]||0)+1; });
+    const data=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
+    if(data.length===0){ el.innerHTML='<div style="padding:10px;font-size:12px;color:var(--text3);">sin datos aún</div>'; return; }
+    const colors=['#378ADD','#1D9E75','#7F77DD'];
+    const total=data.reduce((a,b)=>a+b[1],0);
+    const r=36,circ=2*Math.PI*r;
+    let offset=circ/4;
+    const slices=data.map(([name,n],i)=>{
+      const dash=(n/total)*circ;
+      const el=`<circle cx="45" cy="45" r="${r}" fill="none" stroke="${colors[i]||'#888'}" stroke-width="10" stroke-dasharray="${dash.toFixed(2)} ${(circ-dash).toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}" stroke-linecap="round"/>`;
+      offset-=dash; return el;
+    }).join('');
+    const leg=data.map(([name,n],i)=>`<div class="donut-leg-row"><span class="donut-leg-dot" style="background:${colors[i]||'#888'}"></span><span style="flex:1;font-size:12px;">${name}</span><span style="font-size:11px;color:var(--text3);">${n}</span></div>`).join('');
+    el.innerHTML=`<div style="padding:12px;display:flex;align-items:center;gap:14px;">
+      <svg width="90" height="90" viewBox="0 0 90 90">${slices}</svg>
+      <div style="display:flex;flex-direction:column;gap:6px;flex:1;">${leg}</div>
+    </div>`;
+  }
+
+  const pantalones=prendas.filter(p=>p.tipo==='pantalon');
+  const camisas=prendas.filter(p=>p.tipo==='camisa');
+  const calzado=prendas.filter(p=>p.tipo==='calzado');
+  const bolsos=prendas.filter(p=>p.tipo==='bolso');
+  const accesorios=prendas.filter(p=>p.tipo==='accesorio');
+  const todos=[...pantalones,...camisas,...calzado,...bolsos,...accesorios];
+
+  // KPIs generales
+  const kpisEl=document.getElementById('cs-kpis');
+  if(kpisEl) kpisEl.innerHTML=`
+    <div class="kpi"><div class="kpi-val">${pantalones.length}</div><div class="kpi-lbl">pantalones</div></div>
+    <div class="kpi"><div class="kpi-val">${camisas.length}</div><div class="kpi-lbl">camisas</div></div>
+    <div class="kpi"><div class="kpi-val">${calzado.length}</div><div class="kpi-lbl">calzado</div></div>
+    <div class="kpi"><div class="kpi-val">${bolsos.length}</div><div class="kpi-lbl">bolsos</div></div>
+    <div class="kpi"><div class="kpi-val">${accesorios.length}</div><div class="kpi-lbl">accesorios</div></div>
+    <div class="kpi"><div class="kpi-val">${todos.length}</div><div class="kpi-lbl">total prendas</div></div>`;
+
+  // General
+  fillColores('cs-colores-general', todos, '#7F77DD');
+  fillCard('cs-marcas-general', contar(todos,'marca'), '#7F77DD');
+
+  // Pantalones
+  fillCard('cs-pan-tipos',   contar(pantalones,'subtipo'), '#378ADD');
+  fillColores('cs-pan-colores', pantalones, '#378ADD');
+  fillCard('cs-pan-fit',     contar(pantalones,'fit'),     '#1D9E75');
+  fillPretina('cs-pan-pretina', pantalones);
+
+  // Camisas
+  fillCard('cs-cam-tipos',   contar(camisas,'subtipo'), '#7F77DD');
+  fillColores('cs-cam-colores', camisas, '#7F77DD');
+  fillCard('cs-cam-fit',     contar(camisas,'fit'),     '#E07B2A');
+
+  // Calzado
+  fillCard('cs-cal-tipos',   contar(calzado,'subtipo'), '#BA7517');
+  fillCard('cs-cal-modelos', contar(calzado,'modelo'),  '#BA7517');
+  fillCard('cs-cal-marcas',  contar(calzado,'marca'),   '#BA7517');
+  fillColores('cs-cal-colores', calzado, '#BA7517');
+
+  // Accesorios / Bolsos
+  fillCard('cs-bol-tipos',   contar(bolsos,'subtipo'),                    '#E8A0B4');
+  fillCard('cs-acc-marcas',  contar([...bolsos,...accesorios],'marca'),   '#639922');
+  fillColores('cs-acc-colores', [...bolsos,...accesorios], '#639922');
+}
+
 async function init(){
   try{
     const [rHist,rOutfits,rPrendas,rBasicos]=await Promise.all([
@@ -825,6 +1059,7 @@ async function init(){
     renderCloset(prendas,hist);
     renderBasicos(basicos);
     renderStats(hist,outfits);
+    renderClosetStats(prendas);
     buildHeatmap(hist);
   }catch(e){
     console.error(e);
