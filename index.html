@@ -188,6 +188,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
         <div class="sub-tabs">
           <button class="sub-tab active" data-statsub="uso">Uso</button>
           <button class="sub-tab" data-statsub="closet">Closet</button>
+          <button class="sub-tab" data-statsub="prendas">Prendas</button>
         </div>
       </div>
 
@@ -258,6 +259,21 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
           <div class="card" id="cs-acc-marcas"></div>
           <div class="sl">accesorios · colores</div>
           <div class="card" id="cs-acc-colores"></div>
+
+        </div>
+      </div>
+
+      <!-- Prendas sin outfit / con múltiples -->
+      <div class="sub-panel" id="statsub-prendas">
+        <div class="stats-body">
+
+          <div class="sl">sin outfit asignado</div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">camisas y pantalones sin ningún outfit</div>
+          <div class="card" id="pr-sin-outfit"></div>
+
+          <div class="sl" style="margin-top:20px;">con más de un outfit asignado</div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">prendas versátiles que van con varios outfits</div>
+          <div class="card" id="pr-multi-outfit"></div>
 
         </div>
       </div>
@@ -1031,6 +1047,56 @@ function renderClosetStats(prendas){
   fillCard('cs-bol-tipos',   contar(bolsos,'subtipo'),                    '#E8A0B4');
   fillCard('cs-acc-marcas',  contar([...bolsos,...accesorios],'marca'),   '#639922');
   fillColores('cs-acc-colores', [...bolsos,...accesorios], '#639922');
+
+  // ── Prendas sin outfit / multi-outfit (solo camisas y pantalones) ──
+  const ropaRelevante=[...pantalones,...camisas];
+
+  const sinOutfit=ropaRelevante.filter(p=>!p.outfit_id||p.outfit_id.trim()==='');
+  const sinOutfitEl=document.getElementById('pr-sin-outfit');
+  if(sinOutfitEl){
+    if(sinOutfit.length===0){
+      sinOutfitEl.innerHTML='<div style="padding:10px;font-size:12px;color:var(--text3);">todas tienen outfit asignado ✓</div>';
+    } else {
+      sinOutfitEl.innerHTML=sinOutfit.map(p=>{
+        const tipo=p.tipo==='pantalon'?'Pantalón':'Camisa';
+        const sub=p.subtipo?` · ${p.subtipo}`:'';
+        return`<div class="row">
+          <div style="width:10px;height:10px;border-radius:50%;background:${p.color||'#888'};flex-shrink:0;"></div>
+          <span class="rn" style="font-size:12px;">${p.marca||'—'}<span style="font-size:10px;color:var(--text3);margin-left:5px;">${tipo}${sub}</span></span>
+          <span style="font-size:11px;color:#C0392B;">sin outfit</span>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  const multiOutfit=ropaRelevante.filter(p=>{
+    if(!p.outfit_id) return false;
+    return p.outfit_id.split(',').map(s=>s.trim()).filter(Boolean).length>1;
+  }).sort((a,b)=>{
+    return b.outfit_id.split(',').filter(Boolean).length - a.outfit_id.split(',').filter(Boolean).length;
+  });
+  const multiEl=document.getElementById('pr-multi-outfit');
+  if(multiEl){
+    if(multiOutfit.length===0){
+      multiEl.innerHTML='<div style="padding:10px;font-size:12px;color:var(--text3);">ninguna prenda tiene más de un outfit aún</div>';
+    } else {
+      multiEl.innerHTML=multiOutfit.map(p=>{
+        const ids=p.outfit_id.split(',').map(s=>s.trim()).filter(Boolean);
+        const tipo=p.tipo==='pantalon'?'Pantalón':'Camisa';
+        const sub=p.subtipo?` · ${p.subtipo}`:'';
+        return`<div class="row" style="flex-wrap:wrap;align-items:flex-start;">
+          <div style="width:10px;height:10px;border-radius:50%;background:${p.color||'#888'};flex-shrink:0;margin-top:3px;"></div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:12px;color:var(--text);">${p.marca||'—'}<span style="font-size:10px;color:var(--text3);margin-left:5px;">${tipo}${sub}</span></div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;">
+              ${ids.map(id=>`<span class="outfit-tag">${id}</span>`).join('')}
+            </div>
+          </div>
+          <span style="font-size:12px;color:var(--text2);font-family:var(--mono);margin-top:1px;">${ids.length}x</span>
+        </div>`;
+      }).join('');
+    }
+  }
 }
 
 async function init(){
