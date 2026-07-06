@@ -72,6 +72,13 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 .prenda-top{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;margin-bottom:3px;}
 .prenda-marca{font-size:14px;font-weight:500;color:var(--text);}
 .prenda-usos{font-size:11px;color:var(--text3);}
+.prenda-codigo{font-size:10px;font-family:var(--mono);color:var(--text3);background:var(--bg2);padding:1px 6px;border-radius:4px;border:1px solid var(--border);}
+.rating{display:flex;gap:2px;margin-top:5px;}
+.star{font-size:14px;cursor:pointer;color:var(--bg3);transition:color 0.1s;line-height:1;}
+.star.on{color:#E07B2A;}
+.star:hover,.star:hover~.star{color:var(--bg3);}
+.rating:hover .star{color:#E07B2A;}
+.rating .star:hover~.star{color:var(--bg3)!important;}
 .prenda-desc{font-size:12px;color:var(--text2);line-height:1.4;margin-bottom:7px;}
 .prenda-outfits{display:flex;gap:4px;flex-wrap:wrap;}
 .outfit-tag{font-size:10px;padding:2px 8px;border-radius:var(--r-pill);background:var(--bg2);color:var(--text2);border:1px solid var(--border2);}
@@ -531,12 +538,16 @@ function renderCloset(prendas, hist){
           <div class="prenda-color" style="background:${color};${isLight?'border:1px solid var(--border2);':''}width:32px;height:32px;border-radius:7px;flex-shrink:0;"></div>
           <div class="prenda-info" style="flex:1;min-width:0;">
             <div class="prenda-top">
+              ${p.codigo?`<span class="prenda-codigo">${p.codigo}</span>`:''}
               <span class="prenda-marca">${p.marca||'—'}</span>
               <span class="prenda-usos">${usosTotales>0?'· '+usosTotales+(usosTotales===1?' uso':' usos'):'· sin uso aún'}</span>
             </div>
             ${extras?`<div class="prenda-desc" style="color:var(--text3);font-size:11px;margin-bottom:3px;">${extras}</div>`:''}
             ${p.descripcion?`<div class="prenda-desc">${p.descripcion}</div>`:''}
             <div class="prenda-outfits">${outfitIds.map(id=>`<span class="outfit-tag">${id}</span>`).join('')}</div>
+            <div class="rating" data-id="${p.id}" data-rating="${p.rating||0}">
+              ${[1,2,3,4,5].map(i=>`<span class="star ${(p.rating||0)>=i?'on':''}" onclick="event.stopPropagation();setRating('${p.id}',${i},this.closest('.rating'))">★</span>`).join('')}
+            </div>
           </div>
           <button onclick="event.stopPropagation();openEditForm('${p.id}')" style="background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;flex-shrink:0;"><i class="ti ti-pencil" style="font-size:14px;"></i></button>
         </div>`;
@@ -569,6 +580,29 @@ function renderCloset(prendas, hist){
 }
 
 // ── FORM ──
+// ── RATING ──
+async function setRating(id, stars, ratingEl){
+  // Actualizar visual inmediatamente
+  ratingEl.querySelectorAll('.star').forEach((s,i)=>{
+    s.classList.toggle('on', i < stars);
+  });
+  ratingEl.dataset.rating = stars;
+
+  // Actualizar en globalPrendas
+  const p = globalPrendas.find(x=>x.id===id);
+  if(p) p.rating = stars;
+
+  // Guardar en Supabase
+  try{
+    await fetch(`${SB_URL}/rest/v1/prendas?id=eq.${id}`,{
+      method:'PATCH',
+      headers:{...SB_H,'Prefer':'return=minimal'},
+      body:JSON.stringify({rating:stars})
+    });
+    toast('rating guardado ✓');
+  }catch(e){ toast('error al guardar'); }
+}
+
 // Mostrar/ocultar pretina según tipo
 function togglePretina(){
   const tipo=document.getElementById('f-tipo').value;
