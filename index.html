@@ -57,7 +57,24 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 .prenda-card{background:var(--surface);border-top:1px solid var(--border);padding:12px 14px;display:flex;gap:12px;align-items:flex-start;}
 .prenda-card:last-of-type{border-bottom:none;}
 
-/* ACORDEÓN */
+/* OUTFITS PANEL */
+.outfit-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:13px 14px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start;}
+.outfit-card-thumb{width:44px;height:58px;border-radius:8px;object-fit:cover;background:var(--bg2);flex-shrink:0;}
+.outfit-card-info{flex:1;min-width:0;}
+.outfit-card-top{display:flex;align-items:center;gap:7px;margin-bottom:3px;}
+.outfit-card-id{font-size:12px;font-family:var(--mono);font-weight:500;color:var(--text);}
+.outfit-card-enf{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);}
+.outfit-enf-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.outfit-card-nombre{font-size:11px;color:var(--text3);line-height:1.4;margin-bottom:6px;}
+.outfit-stars{display:flex;gap:1px;margin-top:4px;}
+.outfit-star{font-size:16px;cursor:pointer;color:var(--bg3);transition:color 0.1s;line-height:1;padding:1px;}
+.outfit-star.on{color:#FFD700;}
+.outfit-stars:hover .outfit-star{color:#FFD700;}
+.outfit-stars .outfit-star:hover~.outfit-star{color:var(--bg3)!important;}
+.cat-header{font-size:11px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin:14px 0 8px;display:flex;align-items:center;gap:8px;}
+.cat-header-dot{width:8px;height:8px;border-radius:50%;}
+.outfit-badge{font-size:10px;padding:2px 7px;border-radius:var(--r-pill);background:var(--bg2);color:var(--text3);}
+
 .accordion{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:8px;background:var(--surface);}
 .acc-header{display:flex;align-items:center;gap:10px;padding:13px 14px;cursor:pointer;user-select:none;transition:background 0.15s;}
 .acc-header:active{background:var(--bg2);}
@@ -159,6 +176,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
   <div class="main-tabs">
     <button class="main-tab active" data-main="closet">closet</button>
     <button class="main-tab" data-main="stats">estadísticas</button>
+    <button class="main-tab" data-main="outfits">outfits</button>
     <button class="main-tab" data-main="heatmap">heatmap</button>
   </div>
 
@@ -289,6 +307,27 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
     <!-- ══════════════════════════════════ -->
     <!-- HEATMAP                            -->
     <!-- ══════════════════════════════════ -->
+    <!-- ══════════════════════════════════ -->
+    <!-- OUTFITS                            -->
+    <!-- ══════════════════════════════════ -->
+    <div class="main-panel" id="main-outfits">
+      <div class="sub-tabs-wrap">
+        <div class="sub-tabs">
+          <button class="sub-tab active" data-outsub="todos">Todos</button>
+          <button class="sub-tab" data-outsub="EE">Elegantes</button>
+          <button class="sub-tab" data-outsub="FF">Formales</button>
+          <button class="sub-tab" data-outsub="RR">Relaxed</button>
+          <button class="sub-tab" data-outsub="WW">Weekend</button>
+        </div>
+      </div>
+      <div class="stats-body">
+        <div id="outfits-list"></div>
+        <button id="btn-export-outfits" class="add-btn" style="margin-top:8px;" onclick="exportOutfits()">
+          <i class="ti ti-download"></i> exportar datos
+        </button>
+      </div>
+    </div>
+
     <div class="main-panel" id="main-heatmap">
       <div class="hm-body">
         <div id="heatmap-wrap"></div>
@@ -458,6 +497,35 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 const SB_URL='https://uytbnqvmgalycxqnhdzb.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5dGJucXZtZ2FseWN4cW5oZHpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5MjI0MzcsImV4cCI6MjA5NjQ5ODQzN30._6AtcAcpMqlhMAcU5rSP-UAq77k7n6hrhN2NgE49izY';
 const SB_H={'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
+
+const OUTFITS_MAP=[
+  {id:"EE01",e:"Bites The Dust"},{id:"EE02",e:"Kurozaki Boy"},{id:"EE03",e:"Golden Spin"},
+  {id:"EE04",e:"Lost in Paradise"},{id:"EE05",e:"Kurozaki Boy"},{id:"EE06",e:"Black & White"},
+  {id:"EE07",e:"Overtime"},{id:"EE08",e:"Golden Spin"},
+  {id:"FF01",e:"Jet Black"},{id:"FF02",e:"Overtime"},{id:"FF03",e:"Red Bebop"},
+  {id:"FF04",e:"Stone Ocean"},{id:"FF05",e:"Emerald Splash"},{id:"FF06",e:"Black & White"},
+  {id:"FF07",e:"Silver Chariot"},{id:"FF08",e:"Bites The Dust"},{id:"FF09",e:"Lost in Paradise"},
+  {id:"FF10",e:"Silver Chariot"},{id:"FF11",e:"Lost in Paradise"},{id:"FF12",e:"Silver Chariot"},
+  {id:"FF13",e:"Emerald Splash"},{id:"FF14",e:"Jet Black"},{id:"FF15",e:"Stone Ocean"},
+  {id:"FF16",e:"Red Bebop"},{id:"FF17",e:"Lost in Paradise"},{id:"FF18",e:"Emerald Splash"},
+  {id:"FF19",e:"Golden Spin"},{id:"FF20",e:"Red Bebop"},{id:"FF21",e:"Red Bebop"},
+  {id:"FF22",e:"Hermit Purple"},
+  {id:"RR01",e:"Stone Ocean"},{id:"RR02",e:"Silver Chariot"},{id:"RR03",e:"Hermit Purple"},
+  {id:"RR04",e:"Emerald Splash"},{id:"RR05",e:"Silver Chariot"},{id:"RR06",e:"Golden Spin"},
+  {id:"RR07",e:"Overtime"},{id:"RR08",e:"Black & White"},{id:"RR09",e:"Red Bebop"},
+  {id:"WW01",e:"Stone Ocean"},{id:"WW02",e:"Emerald Splash"},{id:"WW03",e:"Bites The Dust"},
+  {id:"WW05",e:"Overtime"},{id:"WW06",e:"Lost in Paradise"},{id:"WW07",e:"Silver Chariot"},
+  {id:"WW08",e:"Red Bebop"},{id:"WW09",e:"Kurozaki Boy"},{id:"WW10",e:"Golden Spin"},
+  {id:"WW11",e:"Emerald Splash"},{id:"WW12",e:"Kurozaki Boy"},{id:"WW13",e:"Weekend"},
+  {id:"WW14",e:"Weekend"},
+];
+
+const CATS_MAP={
+  EE:{nombre:"Elegantes",color:"#7F77DD"},
+  FF:{nombre:"Formales",color:"#378ADD"},
+  RR:{nombre:"Relaxed",color:"#1D9E75"},
+  WW:{nombre:"Weekend",color:"#BA7517"},
+};
 
 const ENFOQUES_C={"Silver Chariot":"#9E9E9E","Lost in Paradise":"#C4A882","Stone Ocean":"#4A90C4","Emerald Splash":"#639922","Red Bebop":"#8B1A1A","Overtime":"#1E3A8A","Kurozaki Boy":"#E07B2A","Bites The Dust":"#E8A0B4","Black & White":"#555555","Golden Spin":"#8B6914","Jet Black":"#333333","Hermit Purple":"#9B59B6"};
 
@@ -1133,11 +1201,100 @@ function renderClosetStats(prendas){
   }
 }
 
+// ── OUTFITS PANEL ──
+let globalOutfits = [];
+let outfitsFiltro = 'todos';
+
+function renderOutfits(outfits, filtro='todos'){
+  outfitsFiltro = filtro;
+  const list = document.getElementById('outfits-list');
+  if(!list) return;
+
+  // Merge Supabase data con mapa local
+  const merged = OUTFITS_MAP.map(o=>{
+    const sb = outfits.find(x=>x.id===o.id)||{};
+    return {...o, rating:sb.rating||0, usado:sb.usado||false};
+  });
+
+  const filtrado = filtro==='todos' ? merged : merged.filter(o=>o.id.startsWith(filtro));
+
+  // Agrupar por categoría
+  const cats = filtro==='todos' ? ['EE','FF','RR','WW'] : [filtro];
+  let html = '';
+
+  cats.forEach(cat=>{
+    const items = filtrado.filter(o=>o.id.startsWith(cat));
+    if(!items.length) return;
+    const catInfo = CATS_MAP[cat];
+    html+=`<div class="cat-header">
+      <div class="cat-header-dot" style="background:${catInfo.color};"></div>
+      ${catInfo.nombre}
+      <span class="outfit-badge">${items.length}</span>
+    </div>`;
+    items.forEach(o=>{
+      const enfColor = ENFOQUES_C[o.e]||'#888';
+      html+=`<div class="outfit-card">
+        <img src="https://raw.githubusercontent.com/josesaade/outfits-app/main/fotos/${encodeURIComponent(o.id)}.jpg"
+             class="outfit-card-thumb" alt="${o.id}"
+             onerror="this.style.display='none'">
+        <div class="outfit-card-info">
+          <div class="outfit-card-top">
+            <span class="outfit-card-id">${o.id}</span>
+            <div class="outfit-card-enf">
+              <span class="outfit-enf-dot" style="background:${enfColor};"></span>
+              ${o.e}
+            </div>
+            <span class="outfit-badge" style="margin-left:auto;">${o.usado?'usado':'disp'}</span>
+          </div>
+          <div class="outfit-stars" data-id="${o.id}">
+            ${[1,2,3,4,5,6,7,8,9,10].map(i=>
+              `<span class="outfit-star ${o.rating>=i?'on':''}"
+                onclick="event.stopPropagation();setOutfitRating('${o.id}',${i},this.closest('.outfit-stars'))">★</span>`
+            ).join('')}
+          </div>
+        </div>
+      </div>`;
+    });
+  });
+
+  list.innerHTML = html || '<div style="padding:20px;text-align:center;color:var(--text3);">sin outfits</div>';
+}
+
+async function setOutfitRating(id, stars, el){
+  // Visual inmediato
+  el.querySelectorAll('.outfit-star').forEach((s,i)=>s.classList.toggle('on', i<stars));
+  // Actualizar en globalOutfits
+  const o = globalOutfits.find(x=>x.id===id);
+  if(o) o.rating=stars;
+  try{
+    await fetch(`${SB_URL}/rest/v1/outfits?id=eq.${id}`,{
+      method:'PATCH',
+      headers:{...SB_H,'Prefer':'return=minimal'},
+      body:JSON.stringify({rating:stars})
+    });
+    toast('rating guardado ✓');
+  }catch(e){ toast('error al guardar'); }
+}
+
+function exportOutfits(){
+  const outfits = OUTFITS_MAP.map(o=>{
+    const sb = globalOutfits.find(x=>x.id===o.id)||{};
+    return {id:o.id, enfoque:o.e, rating:sb.rating||0, usado:sb.usado?'sí':'no'};
+  });
+  const lines = ['id,enfoque,rating,usado', ...outfits.map(o=>`${o.id},${o.enfoque},${o.rating},${o.usado}`)];
+  const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'outfits-dejavu.csv';
+  a.click();
+  toast('exportado ✓');
+}
+
 async function init(){
   try{
     const [rHist,rOutfits,rPrendas,rBasicos]=await Promise.all([
       fetch(`${SB_URL}/rest/v1/historial?order=fecha.asc,id.asc&select=fecha,outfit_id,enfoque`,{headers:SB_H}),
-      fetch(`${SB_URL}/rest/v1/outfits?select=id,usado`,{headers:SB_H}),
+      fetch(`${SB_URL}/rest/v1/outfits?select=id,usado,rating`,{headers:SB_H}),
       fetch(`${SB_URL}/rest/v1/prendas?select=*&order=tipo.asc,subtipo.asc`,{headers:SB_H}),
       fetch(`${SB_URL}/rest/v1/basicos?select=*&order=categoria.asc`,{headers:SB_H}),
     ]);
@@ -1152,6 +1309,7 @@ async function init(){
     globalHist=hist;
     globalPrendas=prendas;
     globalBasicos=basicos;
+    globalOutfits=outfits;
 
     document.getElementById('loading').style.display='none';
     document.getElementById('content').style.display='';
@@ -1160,6 +1318,7 @@ async function init(){
     renderBasicos(basicos);
     renderStats(hist,outfits);
     renderClosetStats(prendas);
+    renderOutfits(outfits,'todos');
     buildHeatmap(hist);
   }catch(e){
     console.error(e);
@@ -1173,6 +1332,14 @@ document.getElementById('form-overlay').addEventListener('click',e=>{
 });
 document.getElementById('form-overlay-basico').addEventListener('click',e=>{
   if(e.target===document.getElementById('form-overlay-basico')) closeFormBasico();
+});
+
+// Subtabs de outfits
+document.getElementById('main-outfits').addEventListener('click',e=>{
+  const btn=e.target.closest('[data-outsub]');if(!btn)return;
+  document.querySelectorAll('#main-outfits .sub-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  renderOutfits(globalOutfits, btn.dataset.outsub);
 });
 
 init();
