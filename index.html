@@ -497,6 +497,20 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 const SB_URL='https://uytbnqvmgalycxqnhdzb.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5dGJucXZtZ2FseWN4cW5oZHpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5MjI0MzcsImV4cCI6MjA5NjQ5ODQzN30._6AtcAcpMqlhMAcU5rSP-UAq77k7n6hrhN2NgE49izY';
 const SB_H={'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
+const STORAGE='https://uytbnqvmgalycxqnhdzb.supabase.co/storage/v1/object/public/outfits';
+
+// Mapa outfit_id → prendas (se construye dinámicamente desde globalPrendas)
+let PRENDAS_MAP_DJ={};
+function buildPrendasMap(prendas){
+  PRENDAS_MAP_DJ={};
+  prendas.forEach(p=>{
+    if(!p.outfit_id) return;
+    p.outfit_id.split(',').map(s=>s.trim()).filter(Boolean).forEach(oid=>{
+      if(!PRENDAS_MAP_DJ[oid]) PRENDAS_MAP_DJ[oid]={};
+      PRENDAS_MAP_DJ[oid][p.tipo]={codigo:p.codigo,subtipo:p.subtipo,marca:p.marca,color:p.color,modelo:p.modelo};
+    });
+  });
+}
 
 const OUTFITS_MAP=[
   {id:"EE01",e:"Bites The Dust"},{id:"EE02",e:"Kurozaki Boy"},{id:"EE03",e:"Golden Spin"},
@@ -753,7 +767,10 @@ async function guardarPrenda(){
     // Recargar prendas
     const prendas=await fetchPrendas();
     globalPrendas=prendas;
+    buildPrendasMap(prendas);
     renderCloset(prendas,globalHist);
+    renderClosetStats(prendas);
+    renderOutfits(globalOutfits,'todos');
   }catch(e){console.error(e);toast('error de conexión');}
 }
 
@@ -1210,17 +1227,43 @@ function renderOutfits(outfits, filtro='todos'){
   const list = document.getElementById('outfits-list');
   if(!list) return;
 
-  // Merge Supabase data con mapa local
+  const COLORES={'#1a1916':'Negro','#f5f4f0':'Blanco','#4A90C4':'Azul claro','#1E3A8A':'Azul rey','#1a2a4a':'Azul oscuro','#C0392B':'Rojo','#6B1A1A':'Vinotinto','#E07B2A':'Naranja','#C4C4C0':'Gris claro','#9E9E9E':'Gris medio','#555555':'Gris oscuro','#C4A882':'Beige','#D8C8A8':'Arena','#E8DCC4':'Crema','#8FBC8F':'Verde claro','#639922':'Verde oliva','#2d5a2d':'Verde oscuro','#E8A0B4':'Rosado','#C9A8E0':'Lila','#9B59B6':'Violeta','#3E2723':'Café oscuro','#8D6E63':'Café claro'};
+  function cn(hex){return COLORES[hex]||'';}
+
+  function prendasRow(prendas, tipo, label, fotoUrl){
+    const p=prendas[tipo];if(!p)return '';
+    const det=tipo==='calzado'?(p.marca||'')+(p.modelo?' · '+p.modelo:''):(p.marca||'');
+    const sub=(p.subtipo||'')+(cn(p.color)?' · '+cn(p.color):'');
+    const col=p.color||'#888';
+    const thumb=fotoUrl
+      ?`<img src="${fotoUrl}" style="width:28px;height:28px;border-radius:5px;object-fit:cover;flex-shrink:0;border:0.5px solid var(--border);">`
+      :`<div style="width:28px;height:28px;border-radius:5px;flex-shrink:0;background:${col};border:0.5px solid var(--border);"></div>`;
+    return `<div style="display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:0.5px solid var(--border);">
+      ${thumb}
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">${label}</div>
+        <div style="font-size:12px;color:var(--text);font-weight:500;">${det}</div>
+        <div style="font-size:10px;color:var(--text2);">${sub}</div>
+      </div>
+    </div>`;
+  }
+
   const merged = OUTFITS_MAP.map(o=>{
     const sb = outfits.find(x=>x.id===o.id)||{};
     return {...o, rating:sb.rating||0, usado:sb.usado||false};
   });
+  // Agregar outfits de Supabase no en el mapa
+  outfits.forEach(sb=>{
+    if(!merged.find(x=>x.id===sb.id))
+      merged.push({id:sb.id,e:sb.enfoque||'',rating:sb.rating||0,usado:sb.usado||false});
+  });
 
   const filtrado = filtro==='todos' ? merged : merged.filter(o=>o.id.startsWith(filtro));
-
-  // Agrupar por categoría
   const cats = filtro==='todos' ? ['EE','FF','RR','WW'] : [filtro];
   let html = '';
+
+  const usoCnt={};
+  globalHist.forEach(h=>{usoCnt[h.id]=(usoCnt[h.id]||0)+1;});
 
   cats.forEach(cat=>{
     const items = filtrado.filter(o=>o.id.startsWith(cat));
@@ -1231,20 +1274,41 @@ function renderOutfits(outfits, filtro='todos'){
       ${catInfo.nombre}
       <span class="outfit-badge">${items.length}</span>
     </div>`;
+
     items.forEach(o=>{
       const enfColor = ENFOQUES_C[o.e]||'#888';
-      html+=`<div class="outfit-card">
-        <img src="https://raw.githubusercontent.com/josesaade/outfits-app/main/fotos/${encodeURIComponent(o.id)}.jpg"
-             class="outfit-card-thumb" alt="${o.id}"
-             onerror="this.style.display='none'">
-        <div class="outfit-card-info">
-          <div class="outfit-card-top">
-            <span class="outfit-card-id">${o.id}</span>
-            <div class="outfit-card-enf">
-              <span class="outfit-enf-dot" style="background:${enfColor};"></span>
+      const prendas = PRENDAS_MAP_DJ[o.id]||{};
+      const usos = usoCnt[o.id]||0;
+      const calF=prendas.calzado?`${STORAGE}/calzado/${prendas.calzado.codigo}.jpg`:null;
+      const bolF=prendas.bolso?`${STORAGE}/bolsos/${prendas.bolso.codigo}.jpg`:null;
+      const terF=prendas.accesorio?`${STORAGE}/termos/${prendas.accesorio.codigo}.jpg`:null;
+      const camF=prendas.camisa?`${STORAGE}/camisas/${prendas.camisa.codigo}.jpg`:null;
+      const panF=prendas.pantalon?`${STORAGE}/pantalones/${prendas.pantalon.codigo}.jpg`:null;
+
+      html+=`<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden;">
+        <img src="${STORAGE}/outfits/${o.id}.jpg"
+          style="width:100%;max-height:300px;object-fit:cover;display:block;"
+          onerror="this.style.display='none'">
+        <div style="padding:13px 14px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+            <span style="font-size:13px;font-weight:500;font-family:var(--mono);">${o.id}</span>
+            <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text2);">
+              <span style="width:8px;height:8px;border-radius:50%;background:${enfColor};display:inline-block;"></span>
               ${o.e}
-            </div>
+            </span>
             <span class="outfit-badge" style="margin-left:auto;">${o.usado?'usado':'disp'}</span>
+          </div>
+
+          <div style="background:var(--bg2);border-radius:var(--r-sm);padding:3px 10px;margin-bottom:10px;">
+            ${prendasRow(prendas,'camisa','Camisa',camF)}
+            ${prendasRow(prendas,'pantalon','Pantalón',panF)}
+            ${prendasRow(prendas,'calzado','Calzado',calF)}
+            ${prendasRow(prendas,'bolso','Bolso',bolF)}
+            ${prendasRow(prendas,'accesorio','Termo',terF)}
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <span style="font-size:11px;color:var(--text3);">usado ${usos} ${usos===1?'vez':'veces'}</span>
           </div>
           <div class="outfit-stars" data-id="${o.id}">
             ${[1,2,3,4,5,6,7,8,9,10].map(i=>
@@ -1363,6 +1427,7 @@ async function init(){
     globalPrendas=prendas;
     globalBasicos=basicos;
     globalOutfits=outfits;
+    buildPrendasMap(prendas);
 
     document.getElementById('loading').style.display='none';
     document.getElementById('content').style.display='';
