@@ -181,10 +181,6 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 .tent-full{grid-column:1/-1;}
 
 /* ARMADOR */
-.armador-result{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:14px;}
-.armador-foto{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;}
-.armador-foto-empty{width:100%;aspect-ratio:4/5;background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--text3);font-size:13px;}
-.armador-body{padding:12px 14px;}
 .armador-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px;}
 .armador-slot{background:var(--bg2);border-radius:var(--r-sm);padding:10px 12px;cursor:pointer;border:1px solid var(--border);transition:all 0.15s;}
 .armador-slot.filled{background:var(--surface);border-color:var(--border2);}
@@ -193,6 +189,16 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 .armador-slot-sub{font-size:10px;color:var(--text2);margin-top:1px;}
 .armador-slot-empty{font-size:12px;color:var(--text3);}
 .armador-full{grid-column:1/-1;}
+.armador-stack{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+.armador-module{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px;cursor:pointer;transition:border-color 0.15s;}
+.armador-module:active{border-color:var(--border2);}
+.armador-module-photo-wrap{width:64px;height:64px;border-radius:10px;overflow:hidden;flex-shrink:0;background:var(--bg2);display:flex;align-items:center;justify-content:center;}
+.armador-module-foto{width:100%;height:100%;object-fit:cover;display:block;}
+.armador-module-empty{font-size:20px;color:var(--text3);display:flex;align-items:center;justify-content:center;}
+.armador-module-info{min-width:0;flex:1;}
+.armador-module-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;}
+.armador-module-val{font-size:14px;font-weight:500;color:var(--text);}
+.armador-module-sub{font-size:11px;color:var(--text2);margin-top:1px;}
 
 /* PICKER */
 .picker-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;display:flex;align-items:flex-end;}
@@ -402,31 +408,43 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
     <!-- ARMADOR -->
     <div class="main-panel" id="main-armador">
       <div class="stats-body">
-        <div class="armador-result" id="armador-result">
-          <div class="armador-foto-empty" id="armador-foto-empty">
-            <i class="ti ti-shirt" style="font-size:32px;"></i>
-            elige prendas para ver el outfit
+        <div class="armador-stack" id="armador-stack">
+          <div class="armador-module" onclick="openArmadorPicker('camisa')">
+            <div class="armador-module-photo-wrap" id="amod-camisa-wrap">
+              <div class="armador-module-empty" id="amod-camisa-empty"><i class="ti ti-shirt"></i></div>
+              <img id="amod-camisa-foto" class="armador-module-foto" style="display:none;" alt="camisa">
+            </div>
+            <div class="armador-module-info">
+              <div class="armador-module-lbl">Camisa</div>
+              <div class="armador-module-val" id="amod-camisa-val">toca para elegir</div>
+              <div class="armador-module-sub" id="amod-camisa-sub"></div>
+            </div>
           </div>
-          <img id="armador-foto" class="armador-foto" style="display:none;" alt="outfit">
-          <div class="armador-body" id="armador-info" style="display:none;">
-            <div style="font-size:11px;color:var(--text3);margin-bottom:8px;" id="armador-match-label"></div>
-            <button class="btn btn-dark" style="width:100%;" onclick="armadorUsarHoy()"><i class="ti ti-check"></i> usar hoy</button>
+          <div class="armador-module" onclick="openArmadorPicker('pantalon')">
+            <div class="armador-module-photo-wrap" id="amod-pantalon-wrap">
+              <div class="armador-module-empty" id="amod-pantalon-empty"><i class="ti ti-wash-dry"></i></div>
+              <img id="amod-pantalon-foto" class="armador-module-foto" style="display:none;" alt="pantalón">
+            </div>
+            <div class="armador-module-info">
+              <div class="armador-module-lbl">Pantalón</div>
+              <div class="armador-module-val" id="amod-pantalon-val">toca para elegir</div>
+              <div class="armador-module-sub" id="amod-pantalon-sub"></div>
+            </div>
+          </div>
+          <div class="armador-module" onclick="openArmadorPicker('calzado')">
+            <div class="armador-module-photo-wrap" id="amod-calzado-wrap">
+              <div class="armador-module-empty" id="amod-calzado-empty"><i class="ti ti-shoe"></i></div>
+              <img id="amod-calzado-foto" class="armador-module-foto" style="display:none;" alt="calzado">
+            </div>
+            <div class="armador-module-info">
+              <div class="armador-module-lbl">Calzado</div>
+              <div class="armador-module-val" id="amod-calzado-val">toca para elegir</div>
+              <div class="armador-module-sub" id="amod-calzado-sub"></div>
+            </div>
           </div>
         </div>
 
         <div class="armador-grid" id="armador-grid">
-          <div class="armador-slot" id="aslot-camisa" onclick="openArmadorPicker('camisa')">
-            <div class="armador-slot-lbl">Camisa</div>
-            <div class="armador-slot-empty" id="aval-camisa">toca para elegir</div>
-          </div>
-          <div class="armador-slot" id="aslot-pantalon" onclick="openArmadorPicker('pantalon')">
-            <div class="armador-slot-lbl">Pantalón</div>
-            <div class="armador-slot-empty" id="aval-pantalon">toca para elegir</div>
-          </div>
-          <div class="armador-slot" id="aslot-calzado" onclick="openArmadorPicker('calzado')">
-            <div class="armador-slot-lbl">Calzado</div>
-            <div class="armador-slot-empty" id="aval-calzado">toca para elegir</div>
-          </div>
           <div class="armador-slot" id="aslot-bolso" onclick="openArmadorPicker('bolso')">
             <div class="armador-slot-lbl">Bolso</div>
             <div class="armador-slot-empty" id="aval-bolso">toca para elegir</div>
@@ -449,7 +467,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
     <div class="wish-form-title" id="wish-form-title">agregar prenda en camino</div>
     <div class="form-field">
       <label>tipo</label>
-      <select id="wf-tipo">
+      <select id="wf-tipo" onchange="toggleWishPretina()">
         <option value="pantalon">Pantalón</option>
         <option value="camisa">Camisa</option>
         <option value="calzado">Calzado</option>
@@ -464,6 +482,31 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
     <div class="form-field">
       <label>marca</label>
       <input type="text" id="wf-marca" placeholder="H&M, Zara...">
+    </div>
+    <div class="form-field">
+      <label>talla</label>
+      <input type="text" id="wf-talla" placeholder="S, M, L, XL, 30, 32…">
+    </div>
+    <div class="form-field" id="wfield-fit">
+      <label id="wlabel-fit">fit</label>
+      <input type="text" id="wf-fit" placeholder="slim fit, regular, oversized…">
+    </div>
+    <div class="form-field" id="wfield-modelo" style="display:none;">
+      <label>modelo</label>
+      <input type="text" id="wf-modelo" placeholder="Advantage, Stan Smith, Air Force 1…">
+    </div>
+    <div class="form-field" id="wfield-pretina" style="display:none;">
+      <label>pretina</label>
+      <select id="wf-pretina">
+        <option value="">— selecciona —</option>
+        <option value="Tradicional">Tradicional</option>
+        <option value="Elástico con cordón">Elástico con cordón</option>
+        <option value="Pull-on de Vestir">Pull-on de Vestir</option>
+      </select>
+    </div>
+    <div class="form-field">
+      <label>outfit(s) tentativo(s)</label>
+      <input type="text" id="wf-outfits" placeholder="FF01, FF03, EE07… (opcional)">
     </div>
     <div class="form-field">
       <label>color</label>
@@ -507,8 +550,8 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
       <input type="date" id="wf-fecha">
     </div>
     <div class="form-field">
-      <label>notas</label>
-      <textarea id="wf-notas" style="resize:none;height:60px;" placeholder="talla M, para combinarlo con..."></textarea>
+      <label>descripción</label>
+      <textarea id="wf-notas" style="resize:none;height:60px;" placeholder="Jean negro slim fit, tiro medio…"></textarea>
     </div>
     <div class="form-actions">
       <button class="btn" onclick="closeWishForm()">cancelar</button>
@@ -870,6 +913,21 @@ async function setRating(id, stars, ratingEl){
   }catch(e){ toast('error al guardar'); }
 }
 
+// Genera el siguiente código disponible para un tipo de prenda (CAM0xx, PAN0xx, ZAP0xx, BOL0xx, ACC0xx)
+const CODE_PREFIX_DJ={camisa:'CAM',pantalon:'PAN',calzado:'ZAP',bolso:'BOL',accesorio:'ACC'};
+function nextCodigo(tipo){
+  const prefix=CODE_PREFIX_DJ[tipo];
+  if(!prefix) return '';
+  let max=0;
+  (globalPrendas||[]).forEach(p=>{
+    if(p.codigo&&p.codigo.startsWith(prefix)){
+      const num=parseInt(p.codigo.slice(prefix.length),10);
+      if(!isNaN(num)&&num>max) max=num;
+    }
+  });
+  return prefix+String(max+1).padStart(3,'0');
+}
+
 // Mostrar/ocultar pretina según tipo
 function togglePretina(){
   const tipo=document.getElementById('f-tipo').value;
@@ -907,7 +965,7 @@ function openEditForm(id){
   document.getElementById('f-fit').value=p.fit||'';
   document.getElementById('f-modelo').value=p.modelo||'';
   document.getElementById('f-pretina').value=p.pretina||'';
-  document.getElementById('f-outfits').value=p.outfit_id||'';
+  document.getElementById('f-outfits').value=[...new Set((p.outfit_id||'').split(',').map(s=>s.trim()).filter(Boolean))].join(', ');
   document.getElementById('f-color').value=p.color||'';
   document.getElementById('f-desc').value=p.descripcion||'';
   togglePretina();
@@ -927,13 +985,14 @@ async function guardarPrenda(){
   const fit=tipo==='calzado'?'':document.getElementById('f-fit').value.trim();
   const modelo=tipo==='calzado'?document.getElementById('f-modelo').value.trim():'';
   const pretina=tipo==='pantalon'?document.getElementById('f-pretina').value:'';
-  const outfit_id=document.getElementById('f-outfits').value.trim();
+  const outfit_id=[...new Set(document.getElementById('f-outfits').value.split(',').map(s=>s.trim()).filter(Boolean))].join(', ');
   const color=document.getElementById('f-color').value.trim();
   const descripcion=document.getElementById('f-desc').value.trim();
 
   if(!marca){toast('agrega la marca');return;}
 
   const body={tipo,subtipo,marca,talla,fit,modelo,pretina,outfit_id,color,descripcion};
+  if(!editingId) body.codigo=nextCodigo(tipo); // solo se genera código al crear, nunca se toca al editar
 
   try{
     let r;
@@ -1373,19 +1432,18 @@ function renderClosetStats(prendas){
     }
   }
 
-  const multiOutfit=ropaRelevante.filter(p=>{
-    if(!p.outfit_id) return false;
-    return p.outfit_id.split(',').map(s=>s.trim()).filter(Boolean).length>1;
-  }).sort((a,b)=>{
-    return b.outfit_id.split(',').filter(Boolean).length - a.outfit_id.split(',').filter(Boolean).length;
-  });
+  const multiOutfit=ropaRelevante.map(p=>({
+      p,
+      ids:[...new Set((p.outfit_id||'').split(',').map(s=>s.trim()).filter(Boolean))]
+    }))
+    .filter(x=>x.ids.length>1)
+    .sort((a,b)=>b.ids.length-a.ids.length);
   const multiEl=document.getElementById('pr-multi-outfit');
   if(multiEl){
     if(multiOutfit.length===0){
       multiEl.innerHTML='<div style="padding:10px;font-size:12px;color:var(--text3);">ninguna prenda tiene más de un outfit aún</div>';
     } else {
-      multiEl.innerHTML=multiOutfit.map(p=>{
-        const ids=p.outfit_id.split(',').map(s=>s.trim()).filter(Boolean);
+      multiEl.innerHTML=multiOutfit.map(({p,ids})=>{
         const tipo=p.tipo==='pantalon'?'Pantalón':'Camisa';
         const sub=p.subtipo?` · ${p.subtipo}`:'';
         return`<div class="row" style="flex-wrap:wrap;align-items:flex-start;">
@@ -1671,6 +1729,8 @@ function renderWishlist(items){
       :`<span class="badge-llego">llegó ✓</span>`;
     const btnLlego=w.estado==='en_camino'
       ?`<button onclick="marcarLlego('${w.id}')" style="font-size:11px;padding:5px 10px;border-radius:99px;border:1px solid var(--border2);background:none;color:var(--text);cursor:pointer;font-family:var(--font);">✓ llegó</button>`:'';
+    const detalles=[w.talla,w.fit,w.modelo,w.pretina].filter(Boolean).join(' · ');
+    const tentativos=(w.outfit_tentativo||'').split(',').map(s=>s.trim()).filter(Boolean);
     return`<div class="wish-card">
       <div class="wish-color" style="background:${color};"></div>
       <div class="wish-info">
@@ -1678,9 +1738,11 @@ function renderWishlist(items){
           <span class="wish-marca">${w.marca||'—'}</span>
           <span class="wish-sub">· ${w.tipo}${sub?' · '+sub:''}</span>
         </div>
+        ${detalles?`<div class="wish-meta">${detalles}</div>`:''}
         ${w.tienda||w.precio?`<div class="wish-meta">${[w.tienda,w.precio?'$'+Number(w.precio).toLocaleString('es-CO'):''].filter(Boolean).join(' · ')}</div>`:''}
         ${w.fecha_estimada?`<div class="wish-meta">Llega: ${w.fecha_estimada}</div>`:''}
         ${w.notas?`<div class="wish-meta" style="font-style:italic;">${w.notas}</div>`:''}
+        ${tentativos.length?`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;">${tentativos.map(id=>`<span class="outfit-tag">${id}</span>`).join('')}</div>`:''}
         <div class="wish-meta" style="margin-top:6px;display:flex;align-items:center;gap:8px;">
           ${badge}${btnLlego}
           <button onclick="openWishForm('${w.id}')" style="font-size:11px;padding:5px 10px;border-radius:99px;border:1px solid var(--border2);background:none;color:var(--text);cursor:pointer;font-family:var(--font);">✏️</button>
@@ -1696,16 +1758,37 @@ function renderWishlist(items){
 }
 
 async function marcarLlego(id){
+  const w=globalWishlist.find(x=>x.id===id);
+  if(!w) return;
+  const etiqueta=`${w.marca||'—'}${w.subtipo?' · '+w.subtipo:''}`;
+  if(!confirm(`¿"${etiqueta}" ya llegó? Se va a crear automáticamente en el closet con estos datos.`)) return;
   try{
+    // 1. Crear la prenda en el closet con los mismos datos + código automático
+    const codigo=nextCodigo(w.tipo);
+    const prendaBody={
+      tipo:w.tipo, subtipo:w.subtipo||'', marca:w.marca||'',
+      talla:w.talla||'', fit:w.fit||'', modelo:w.modelo||'',
+      pretina:w.pretina||'', outfit_id:w.outfit_tentativo||'',
+      color:w.color||'', descripcion:w.notas||'', codigo,
+    };
+    const rP=await fetch(`${SB_URL}/rest/v1/prendas`,{
+      method:'POST',headers:{...SB_H,'Prefer':'return=representation'},body:JSON.stringify(prendaBody)
+    });
+    if(!rP.ok){const t=await rP.text();console.error(t);toast('error al crear la prenda en el closet');return;}
+
+    // 2. Marcar wishlist como llegado, enlazado al código de la prenda nueva
     await fetch(`${SB_URL}/rest/v1/wishlist?id=eq.${id}`,{
       method:'PATCH',headers:{...SB_H,'Prefer':'return=minimal'},
-      body:JSON.stringify({estado:'llegó'})
+      body:JSON.stringify({estado:'llegó', prenda_id:codigo})
     });
-    toast('marcado como llegado ✓');
-    const w=await fetchWishlist();
-    globalWishlist=w;
-    renderWishlist(w);
-  }catch(e){toast('error al actualizar');}
+
+    toast(`${codigo} agregado al closet ✓`);
+    const w2=await fetchWishlist();
+    globalWishlist=w2; renderWishlist(w2);
+    const prendasFresh=await fetchPrendas();
+    globalPrendas=prendasFresh; buildPrendasMap(prendasFresh);
+    renderCloset(prendasFresh, globalHist); renderClosetStats(prendasFresh);
+  }catch(e){console.error(e);toast('error al actualizar');}
 }
 
 async function eliminarWish(id){
@@ -1720,6 +1803,14 @@ async function eliminarWish(id){
   }catch(e){toast('error al eliminar');}
 }
 
+// Mostrar/ocultar pretina/fit/modelo en el form de wishlist según tipo (igual que en prendas)
+function toggleWishPretina(){
+  const tipo=document.getElementById('wf-tipo').value;
+  document.getElementById('wfield-pretina').style.display=tipo==='pantalon'?'block':'none';
+  document.getElementById('wfield-fit').style.display=tipo==='calzado'?'none':'block';
+  document.getElementById('wfield-modelo').style.display=tipo==='calzado'?'block':'none';
+}
+
 function openWishForm(id){
   editingWishId=id;
   const w=id?globalWishlist.find(x=>x.id===id):null;
@@ -1727,11 +1818,17 @@ function openWishForm(id){
   document.getElementById('wf-tipo').value=w?.tipo||'pantalon';
   document.getElementById('wf-subtipo').value=w?.subtipo||'';
   document.getElementById('wf-marca').value=w?.marca||'';
+  document.getElementById('wf-talla').value=w?.talla||'';
+  document.getElementById('wf-fit').value=w?.fit||'';
+  document.getElementById('wf-modelo').value=w?.modelo||'';
+  document.getElementById('wf-pretina').value=w?.pretina||'';
+  document.getElementById('wf-outfits').value=w?.outfit_tentativo||'';
   document.getElementById('wf-color').value=w?.color||'';
   document.getElementById('wf-tienda').value=w?.tienda||'';
   document.getElementById('wf-precio').value=w?.precio||'';
   document.getElementById('wf-fecha').value=w?.fecha_estimada||'';
   document.getElementById('wf-notas').value=w?.notas||'';
+  toggleWishPretina();
   document.getElementById('wish-overlay').style.display='flex';
 }
 
@@ -1741,28 +1838,36 @@ function closeWishForm(){
 }
 
 async function guardarWish(){
+  const tipo=document.getElementById('wf-tipo').value;
   const body={
-    tipo:document.getElementById('wf-tipo').value,
+    tipo,
     subtipo:document.getElementById('wf-subtipo').value.trim(),
     marca:document.getElementById('wf-marca').value.trim(),
+    talla:document.getElementById('wf-talla').value.trim(),
+    fit:tipo==='calzado'?'':document.getElementById('wf-fit').value.trim(),
+    modelo:tipo==='calzado'?document.getElementById('wf-modelo').value.trim():'',
+    pretina:tipo==='pantalon'?document.getElementById('wf-pretina').value:'',
+    outfit_tentativo:document.getElementById('wf-outfits').value.trim(),
     color:document.getElementById('wf-color').value,
     tienda:document.getElementById('wf-tienda').value.trim(),
     precio:document.getElementById('wf-precio').value||null,
     fecha_estimada:document.getElementById('wf-fecha').value||null,
     notas:document.getElementById('wf-notas').value.trim(),
-    estado:'en_camino',
   };
+  if(!editingWishId) body.estado='en_camino'; // al crear; al editar no se toca el estado actual
   if(!body.marca){toast('agrega la marca');return;}
   try{
+    let r;
     if(editingWishId){
-      await fetch(`${SB_URL}/rest/v1/wishlist?id=eq.${editingWishId}`,{
+      r=await fetch(`${SB_URL}/rest/v1/wishlist?id=eq.${editingWishId}`,{
         method:'PATCH',headers:{...SB_H,'Prefer':'return=minimal'},body:JSON.stringify(body)
       });
     } else {
-      await fetch(`${SB_URL}/rest/v1/wishlist`,{
+      r=await fetch(`${SB_URL}/rest/v1/wishlist`,{
         method:'POST',headers:{...SB_H,'Prefer':'return=minimal'},body:JSON.stringify(body)
       });
     }
+    if(!r.ok){const t=await r.text();console.error(t);toast('error al guardar — revisa que existan las columnas pretina/outfit_tentativo en wishlist');return;}
     toast(editingWishId?'actualizado ✓':'guardado ✓');
     closeWishForm();
     const w=await fetchWishlist();
@@ -1784,15 +1889,13 @@ let armadorPickerTipo=null;
 
 function resetArmador(){
   armadorSeleccion={camisa:null,pantalon:null,calzado:null,bolso:null,accesorio:null};
-  ['camisa','pantalon','calzado','bolso','accesorio'].forEach(t=>{
+  ['camisa','pantalon','calzado'].forEach(t=>updateArmadorModule(t));
+  ['bolso','accesorio'].forEach(t=>{
     const slot=document.getElementById('aslot-'+t);
     const val=document.getElementById('aval-'+t);
     if(slot) slot.classList.remove('filled');
     if(val){val.className='armador-slot-empty';val.textContent='toca para elegir';}
   });
-  document.getElementById('armador-foto').style.display='none';
-  document.getElementById('armador-foto-empty').style.display='flex';
-  document.getElementById('armador-info').style.display='none';
 }
 
 function openArmadorPicker(tipo){
@@ -1821,12 +1924,49 @@ function openArmadorPicker(tipo){
   document.getElementById('armador-picker').style.display='flex';
 }
 
+// URL de la foto real de la prenda en Storage, según su tipo
+function armadorFotoUrl(tipo,codigo){
+  const folder={camisa:'camisas',pantalon:'pantalones',calzado:'calzado',bolso:'bolsos',accesorio:'termos'}[tipo];
+  return folder&&codigo?`${STORAGE_DJ}/${folder}/${codigo}.jpg`:null;
+}
+
+// Actualiza uno de los 3 módulos apilados (camisa/pantalón/calzado) con la foto real de la prenda
+function updateArmadorModule(tipo){
+  const wrap=document.getElementById('amod-'+tipo+'-wrap');
+  if(!wrap) return; // bolso/accesorio no tienen módulo visual, usan el slot simple
+  const sel=armadorSeleccion[tipo];
+  const fotoEl=document.getElementById('amod-'+tipo+'-foto');
+  const emptyEl=document.getElementById('amod-'+tipo+'-empty');
+  const valEl=document.getElementById('amod-'+tipo+'-val');
+  const subEl=document.getElementById('amod-'+tipo+'-sub');
+  if(!sel){
+    wrap.style.background='var(--bg2)';
+    fotoEl.style.display='none';
+    emptyEl.style.display='flex';
+    valEl.textContent='toca para elegir';
+    subEl.textContent='';
+    return;
+  }
+  wrap.style.background=sel.color||'var(--bg2)';
+  emptyEl.style.display='none';
+  fotoEl.style.display='block';
+  fotoEl.src=armadorFotoUrl(tipo,sel.codigo);
+  fotoEl.onerror=()=>{fotoEl.style.display='none';emptyEl.style.display='flex';};
+  valEl.textContent=sel.val||'—';
+  subEl.textContent=sel.sub||'';
+}
+
 function seleccionarPrenda(codigo, val, sub, color){
   const tipo=armadorPickerTipo;
   armadorSeleccion[tipo]={codigo,val,sub,color};
   document.getElementById('armador-picker').style.display='none';
 
-  // Actualizar slot
+  if(['camisa','pantalon','calzado'].includes(tipo)){
+    updateArmadorModule(tipo);
+    return;
+  }
+
+  // Bolso / termo siguen usando el slot simple debajo
   const slot=document.getElementById('aslot-'+tipo);
   const valEl=document.getElementById('aval-'+tipo);
   if(slot) slot.classList.add('filled');
@@ -1834,49 +1974,6 @@ function seleccionarPrenda(codigo, val, sub, color){
     valEl.className='';
     valEl.innerHTML=`<div class="armador-slot-val">${val}</div>${sub?`<div class="armador-slot-sub">${sub}</div>`:''}`;
   }
-
-  // Buscar outfit más parecido
-  buscarOutfitMasParecido();
-}
-
-function buscarOutfitMasParecido(){
-  const sel=armadorSeleccion;
-  let mejorOutfit=null, mejorPuntos=0;
-
-  globalOutfits.forEach(o=>{
-    const pm=PRENDAS_MAP_DJ[o.id]||{};
-    let puntos=0;
-    if(sel.camisa&&pm.camisa?.codigo===sel.camisa.codigo) puntos+=3;
-    if(sel.pantalon&&pm.pantalon?.codigo===sel.pantalon.codigo) puntos+=3;
-    if(sel.calzado&&pm.calzado?.codigo===sel.calzado.codigo) puntos+=2;
-    if(sel.bolso&&pm.bolso?.codigo===sel.bolso.codigo) puntos+=1;
-    if(sel.accesorio&&pm.accesorio?.codigo===sel.accesorio.codigo) puntos+=1;
-    if(puntos>mejorPuntos){mejorPuntos=puntos;mejorOutfit=o;}
-  });
-
-  const fotoEl=document.getElementById('armador-foto');
-  const emptyEl=document.getElementById('armador-foto-empty');
-  const infoEl=document.getElementById('armador-info');
-  const labelEl=document.getElementById('armador-match-label');
-
-  if(mejorOutfit&&mejorPuntos>0){
-    fotoEl.src=`${STORAGE_DJ}/outfits/${mejorOutfit.id}.jpg`;
-    fotoEl.style.display='block';
-    emptyEl.style.display='none';
-    infoEl.style.display='block';
-    labelEl.textContent=`outfit más parecido · ${mejorOutfit.id} (${mejorPuntos} coincidencias)`;
-    fotoEl.dataset.outfitId=mejorOutfit.id;
-    fotoEl.onerror=()=>{fotoEl.style.display='none';emptyEl.style.display='flex';};
-  } else {
-    fotoEl.style.display='none';
-    emptyEl.style.display='flex';
-    infoEl.style.display='none';
-  }
-}
-
-function armadorUsarHoy(){
-  const oid=document.getElementById('armador-foto')?.dataset?.outfitId;
-  if(oid) toast(`outfit ${oid} — confírmalo en la app principal`);
 }
 
 document.getElementById('form-overlay-basico').addEventListener('click',e=>{
