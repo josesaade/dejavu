@@ -55,6 +55,9 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 .subtipo-lbl{font-size:10px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin:14px 0 8px;}
 .subtipo-lbl:first-child{margin-top:0;}
 .prenda-card{background:var(--surface);border-top:1px solid var(--border);padding:12px 14px;display:flex;gap:12px;align-items:flex-start;}
+.prenda-card.foto-pend{background:rgba(224,123,42,0.07);box-shadow:inset 3px 0 0 #E07B2A;}
+.flag-btn{background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;flex-shrink:0;font-size:14px;line-height:1;opacity:0.45;}
+.flag-btn.on{opacity:1;}
 .prenda-card:last-of-type{border-bottom:none;}
 
 /* OUTFITS PANEL */
@@ -356,6 +359,10 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
           <div class="sl" style="margin-top:20px;">con más de un outfit asignado</div>
           <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">prendas versátiles que van con varios outfits</div>
           <div class="card" id="pr-multi-outfit"></div>
+
+          <div class="sl" style="margin-top:20px;">fotos por actualizar</div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">prendas y outfits marcados con 🚩</div>
+          <div class="card" id="pr-fotos-pendientes"></div>
 
         </div>
       </div>
@@ -844,7 +851,7 @@ function renderCloset(prendas, hist){
         const extras=tipo==='calzado'
           ?[p.talla,p.modelo].filter(Boolean).join(' · ')
           :[p.talla,p.fit,p.pretina].filter(Boolean).join(' · ');
-        return`<div class="prenda-card">
+        return`<div class="prenda-card${p.foto_pendiente?' foto-pend':''}">
           <div class="prenda-color" style="background:${color};${isLight?'border:1px solid var(--border2);':''}width:32px;height:32px;border-radius:7px;flex-shrink:0;"></div>
           <div class="prenda-info" style="flex:1;min-width:0;">
             <div class="prenda-top">
@@ -859,6 +866,7 @@ function renderCloset(prendas, hist){
               ${[1,2,3,4,5].map(i=>`<span class="star ${(p.rating||0)>=i?'on':''}" onclick="event.stopPropagation();setRating('${p.id}',${i},this.closest('.rating'))">★</span>`).join('')}
             </div>
           </div>
+          <button class="flag-btn${p.foto_pendiente?' on':''}" onclick="event.stopPropagation();toggleFotoPendientePrenda('${p.id}',${!!p.foto_pendiente})" title="marcar foto por actualizar">🚩</button>
           <button onclick="event.stopPropagation();openEditForm('${p.id}')" style="background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;flex-shrink:0;"><i class="ti ti-pencil" style="font-size:14px;"></i></button>
         </div>`;
       }).join('');
@@ -911,6 +919,60 @@ async function setRating(id, stars, ratingEl){
     });
     toast('rating guardado ✓');
   }catch(e){ toast('error al guardar'); }
+}
+
+// ── FOTO PENDIENTE (bandera de "hay que actualizar esta foto") ──
+async function toggleFotoPendientePrenda(id, actual){
+  const nuevo=!actual;
+  const p=globalPrendas.find(x=>x.id===id);
+  if(p) p.foto_pendiente=nuevo;
+  renderCloset(globalPrendas, globalHist);
+  renderFotosPendientes();
+  try{
+    await fetch(`${SB_URL}/rest/v1/prendas?id=eq.${id}`,{
+      method:'PATCH',headers:{...SB_H,'Prefer':'return=minimal'},
+      body:JSON.stringify({foto_pendiente:nuevo})
+    });
+    toast(nuevo?'marcada para actualizar foto 🚩':'desmarcada ✓');
+  }catch(e){ toast('error al guardar — ¿existe la columna foto_pendiente en prendas?'); }
+}
+
+async function toggleFotoPendienteOutfit(id, actual){
+  const nuevo=!actual;
+  const o=globalOutfits.find(x=>x.id===id);
+  if(o) o.foto_pendiente=nuevo;
+  renderOutfits(globalOutfits, outfitsFiltro);
+  renderFotosPendientes();
+  try{
+    await fetch(`${SB_URL}/rest/v1/outfits?id=eq.${id}`,{
+      method:'PATCH',headers:{...SB_H,'Prefer':'return=minimal'},
+      body:JSON.stringify({foto_pendiente:nuevo})
+    });
+    toast(nuevo?'marcado para actualizar foto 🚩':'desmarcado ✓');
+  }catch(e){ toast('error al guardar — ¿existe la columna foto_pendiente en outfits?'); }
+}
+
+// Lista consolidada de prendas + outfits marcados, en la pestaña de análisis de prendas
+function renderFotosPendientes(){
+  const el=document.getElementById('pr-fotos-pendientes');
+  if(!el) return;
+  const prendasPend=(globalPrendas||[]).filter(p=>p.foto_pendiente);
+  const outfitsPend=(globalOutfits||[]).filter(o=>o.foto_pendiente);
+  if(prendasPend.length===0 && outfitsPend.length===0){
+    el.innerHTML='<div style="padding:10px;font-size:12px;color:var(--text3);">ninguna foto marcada por ahora ✓</div>';
+    return;
+  }
+  const filasPrendas=prendasPend.map(p=>`<div class="row">
+      <span style="width:10px;height:10px;border-radius:50%;background:${p.color||'#888'};flex-shrink:0;"></span>
+      <span class="rn" style="font-size:12px;">${p.codigo?p.codigo+' · ':''}${p.marca||'—'}<span style="font-size:10px;color:var(--text3);margin-left:5px;">${p.tipo}</span></span>
+      <button onclick="toggleFotoPendientePrenda('${p.id}',true)" style="font-size:11px;padding:4px 9px;border-radius:99px;border:1px solid var(--border2);background:none;color:var(--text);cursor:pointer;font-family:var(--font);">quitar 🚩</button>
+    </div>`).join('');
+  const filasOutfits=outfitsPend.map(o=>`<div class="row">
+      <span style="width:10px;height:10px;border-radius:50%;background:${ENFOQUES_C[o.e]||'#888'};flex-shrink:0;"></span>
+      <span class="rn" style="font-size:12px;">${o.id}<span style="font-size:10px;color:var(--text3);margin-left:5px;">outfit</span></span>
+      <button onclick="toggleFotoPendienteOutfit('${o.id}',true)" style="font-size:11px;padding:4px 9px;border-radius:99px;border:1px solid var(--border2);background:none;color:var(--text);cursor:pointer;font-family:var(--font);">quitar 🚩</button>
+    </div>`).join('');
+  el.innerHTML=filasPrendas+filasOutfits;
 }
 
 // Genera el siguiente código disponible para un tipo de prenda (CAM0xx, PAN0xx, ZAP0xx, BOL0xx, ACC0xx)
@@ -992,7 +1054,12 @@ async function guardarPrenda(){
   if(!marca){toast('agrega la marca');return;}
 
   const body={tipo,subtipo,marca,talla,fit,modelo,pretina,outfit_id,color,descripcion};
-  if(!editingId) body.codigo=nextCodigo(tipo); // solo se genera código al crear, nunca se toca al editar
+  if(!editingId){
+    body.codigo=nextCodigo(tipo); // se genera código al crear
+  } else {
+    const actual=globalPrendas.find(x=>x.id===editingId);
+    if(actual&&!actual.codigo) body.codigo=nextCodigo(tipo); // rellena código si a esta prenda le faltaba (bug anterior)
+  }
 
   try{
     let r;
@@ -1459,6 +1526,8 @@ function renderClosetStats(prendas){
       }).join('');
     }
   }
+
+  renderFotosPendientes();
 }
 
 // ── OUTFITS PANEL ──
@@ -1493,12 +1562,12 @@ function renderOutfits(outfits, filtro='todos'){
 
   const merged = OUTFITS_MAP.map(o=>{
     const sb = outfits.find(x=>x.id===o.id)||{};
-    return {...o, rating:sb.rating||0, usado:sb.usado||false};
+    return {...o, rating:sb.rating||0, usado:sb.usado||false, foto_pendiente:sb.foto_pendiente||false};
   });
   // Agregar outfits de Supabase no en el mapa
   outfits.forEach(sb=>{
     if(!merged.find(x=>x.id===sb.id))
-      merged.push({id:sb.id,e:sb.enfoque||'',rating:sb.rating||0,usado:sb.usado||false});
+      merged.push({id:sb.id,e:sb.enfoque||'',rating:sb.rating||0,usado:sb.usado||false,foto_pendiente:sb.foto_pendiente||false});
   });
 
   const filtrado = filtro==='todos' ? merged : merged.filter(o=>o.id.startsWith(filtro));
@@ -1528,7 +1597,7 @@ function renderOutfits(outfits, filtro='todos'){
       const camF=prendas.camisa?`${STORAGE}/camisas/${prendas.camisa.codigo}.jpg`:null;
       const panF=prendas.pantalon?`${STORAGE}/pantalones/${prendas.pantalon.codigo}.jpg`:null;
 
-      html+=`<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden;">
+      html+=`<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden;${o.foto_pendiente?'box-shadow:inset 3px 0 0 #E07B2A;':''}">
         <img src="${STORAGE}/outfits/${o.id}.jpg"
           style="width:100%;max-height:300px;object-fit:cover;display:block;"
           onerror="this.style.display='none'">
@@ -1539,7 +1608,8 @@ function renderOutfits(outfits, filtro='todos'){
               <span style="width:8px;height:8px;border-radius:50%;background:${enfColor};display:inline-block;"></span>
               ${o.e}
             </span>
-            <span class="outfit-badge" style="margin-left:auto;">${o.usado?'usado':'disp'}</span>
+            <button class="flag-btn${o.foto_pendiente?' on':''}" style="margin-left:auto;" onclick="event.stopPropagation();toggleFotoPendienteOutfit('${o.id}',${!!o.foto_pendiente})" title="marcar foto por actualizar">🚩</button>
+            <span class="outfit-badge">${o.usado?'usado':'disp'}</span>
           </div>
 
           <div style="background:var(--bg2);border-radius:var(--r-sm);padding:3px 10px;margin-bottom:10px;">
@@ -1654,7 +1724,7 @@ async function init(){
   try{
     const [rHist,rOutfits,rPrendas,rBasicos,rWish]=await Promise.all([
       fetch(`${SB_URL}/rest/v1/historial?order=fecha.asc,id.asc&select=fecha,outfit_id,enfoque`,{headers:SB_H}),
-      fetch(`${SB_URL}/rest/v1/outfits?select=id,usado,rating,enfoque&order=id.asc`,{headers:SB_H}),
+      fetch(`${SB_URL}/rest/v1/outfits?select=id,usado,rating,enfoque,foto_pendiente&order=id.asc`,{headers:SB_H}),
       fetch(`${SB_URL}/rest/v1/prendas?select=*&order=tipo.asc,subtipo.asc`,{headers:SB_H}),
       fetch(`${SB_URL}/rest/v1/basicos?select=*&order=categoria.asc`,{headers:SB_H}),
       fetch(`${SB_URL}/rest/v1/wishlist?select=*&order=created_at.desc`,{headers:SB_H}),
