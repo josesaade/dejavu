@@ -981,7 +981,9 @@ function nextCodigo(tipo){
   const prefix=CODE_PREFIX_DJ[tipo];
   if(!prefix) return '';
   let max=0;
-  (globalPrendas||[]).forEach(p=>{
+  // Ojo: se busca en TODAS las prendas (incluidas las derogadas), para no repetir
+  // un código que ya se usó antes, aunque esa prenda ya no se muestre.
+  (globalPrendasAll&&globalPrendasAll.length?globalPrendasAll:globalPrendas||[]).forEach(p=>{
     if(p.codigo&&p.codigo.startsWith(prefix)){
       const num=parseInt(p.codigo.slice(prefix.length),10);
       if(!isNaN(num)&&num>max) max=num;
@@ -1076,9 +1078,8 @@ async function guardarPrenda(){
     toast(editingId?'prenda actualizada ✓':'prenda guardada ✓');
     closeForm();
     // Recargar prendas
-    const prendas=await fetchPrendas();
-    globalPrendas=prendas;
-    buildPrendasMap(prendas);
+    const prendasRaw=await fetchPrendas();
+    const prendas=aplicarPrendas(prendasRaw);
     renderCloset(prendas,globalHist);
     renderClosetStats(prendas);
     renderOutfits(globalOutfits,'todos');
@@ -1348,6 +1349,18 @@ async function fetchPrendas(){
     if(!r.ok) return [];
     return await r.json();
   }catch(e){return [];}
+}
+
+// Aplica el filtro de "derogado": globalPrendas queda solo con las visibles
+// (closet, armador, análisis), pero PRENDAS_MAP_DJ se construye con TODAS
+// (globalPrendasAll) para no romper tarjetas de outfits activos que aún
+// referencien una prenda recién derogada.
+let globalPrendasAll=[];
+function aplicarPrendas(todas){
+  globalPrendasAll=todas;
+  globalPrendas=todas.filter(p=>!p.derogado);
+  buildPrendasMap(globalPrendasAll);
+  return globalPrendas;
 }
 
 // ── CLOSET STATS ──
@@ -1731,19 +1744,19 @@ async function init(){
     ]);
 
     const histRows=await rHist.json();
-    const outfits=await rOutfits.json();
-    const prendas=await rPrendas.json();
+    const outfitsRaw=await rOutfits.json();
+    const prendasRaw=await rPrendas.json();
     const basicos=await rBasicos.json();
     const wishlist=await rWish.json();
 
     const hist=histRows.map(r=>({fecha:r.fecha,id:r.outfit_id,e:r.enfoque}));
+    const outfits=outfitsRaw.filter(o=>!o.derogado); // los derogados no se muestran, pero su historial pasado no se toca
 
     globalHist=hist;
-    globalPrendas=prendas;
+    const prendas=aplicarPrendas(prendasRaw);
     globalBasicos=basicos;
     globalOutfits=outfits;
     globalWishlist=wishlist;
-    buildPrendasMap(prendas);
 
     document.getElementById('loading').style.display='none';
     document.getElementById('content').style.display='';
@@ -1855,8 +1868,7 @@ async function marcarLlego(id){
     toast(`${codigo} agregado al closet ✓`);
     const w2=await fetchWishlist();
     globalWishlist=w2; renderWishlist(w2);
-    const prendasFresh=await fetchPrendas();
-    globalPrendas=prendasFresh; buildPrendasMap(prendasFresh);
+    const prendasFresh=aplicarPrendas(await fetchPrendas());
     renderCloset(prendasFresh, globalHist); renderClosetStats(prendasFresh);
   }catch(e){console.error(e);toast('error al actualizar');}
 }
