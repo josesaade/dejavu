@@ -1807,12 +1807,14 @@ function exportOutfits(){
   const sections = [];
 
   // ── SECCIÓN 1: OUTFITS ──
+  // Recorre globalOutfits (SELECT completo de la tabla `outfits` en Supabase,
+  // ya sin los derogados) en vez del OUTFITS_MAP hardcodeado — así entran
+  // TODOS los outfits que existen en la base, tengan o no historial de uso.
   sections.push('## OUTFITS');
   sections.push('id,categoria,enfoque,rating_outfit,usado');
-  OUTFITS_MAP.forEach(o=>{
-    const sb = globalOutfits.find(x=>x.id===o.id)||{};
+  globalOutfits.forEach(o=>{
     const cat = o.id.startsWith('EE')?'Elegantes':o.id.startsWith('FF')?'Formales':o.id.startsWith('RR')?'Relaxed':'Weekend';
-    sections.push(`${o.id},${cat},${o.e},${sb.rating||0},${sb.usado?'sí':'no'}`);
+    sections.push(`${o.id},${cat},${o.enfoque||''},${o.rating||0},${o.usado?'sí':'no'}`);
   });
 
   // ── SECCIÓN 2: HISTORIAL ──
