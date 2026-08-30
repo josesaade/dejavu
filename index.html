@@ -368,6 +368,11 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
           <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">prendas y outfits marcados con 🚩</div>
           <div class="card" id="pr-fotos-pendientes"></div>
 
+          <div class="sl" style="margin-top:20px;">fotos faltantes en Storage</div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">compara tus códigos contra lo que realmente hay subido</div>
+          <button class="add-btn" onclick="verificarFotosFaltantes()"><i class="ti ti-search"></i> verificar fotos faltantes</button>
+          <div class="card" id="pr-fotos-faltantes" style="margin-top:8px;"></div>
+
         </div>
       </div>
     </div>
@@ -1009,6 +1014,58 @@ function renderFotosPendientes(){
       <button onclick="toggleFotoPendienteOutfit('${o.id}',true)" style="font-size:11px;padding:4px 9px;border-radius:99px;border:1px solid var(--border2);background:none;color:var(--text);cursor:pointer;font-family:var(--font);">quitar 🚩</button>
     </div>`).join('');
   el.innerHTML=filasPrendas+filasOutfits;
+}
+
+// ── Verificación real contra Supabase Storage ──
+// Lista lo que de verdad existe en cada carpeta del bucket y lo compara
+// contra los códigos de tus prendas — mucho más confiable que acordarse de marcar 🚩.
+const STORAGE_FOLDER_DJ={camisa:'camisas',pantalon:'pantalones',calzado:'calzado',bolso:'bolsos',accesorio:'termos'};
+
+async function listarStorage(prefix){
+  try{
+    const r=await fetch(`${SB_URL}/storage/v1/object/list/outfits`,{
+      method:'POST',
+      headers:{...SB_H,'Content-Type':'application/json'},
+      body:JSON.stringify({prefix, limit:1000, sortBy:{column:'name',order:'asc'}})
+    });
+    if(!r.ok) return null; // null = no se pudo consultar (distinto de "carpeta vacía")
+    const rows=await r.json();
+    return new Set(rows.map(f=>f.name.replace(/\.(jpg|jpeg|png|heic)$/i,'').toUpperCase()));
+  }catch(e){return null;}
+}
+
+async function verificarFotosFaltantes(){
+  const el=document.getElementById('pr-fotos-faltantes');
+  el.innerHTML='<div style="padding:10px;font-size:12px;color:var(--text3);">consultando Storage…</div>';
+
+  const tipos=Object.keys(STORAGE_FOLDER_DJ);
+  const listas=await Promise.all(tipos.map(t=>listarStorage(STORAGE_FOLDER_DJ[t]+'/')));
+
+  // Si alguna carpeta no se pudo consultar (ej. permisos), avisar en vez de dar falsos positivos
+  if(listas.some(l=>l===null)){
+    el.innerHTML='<div style="padding:10px;font-size:12px;color:var(--text3);">no se pudo consultar Storage — revisa que el bucket "outfits" permita listar objetos con la anon key.</div>';
+    return;
+  }
+
+  const setsPorTipo={};
+  tipos.forEach((t,i)=>{ setsPorTipo[t]=listas[i]; });
+
+  const faltantes=(globalPrendas||[]).filter(p=>{
+    const set=setsPorTipo[p.tipo];
+    if(!set||!p.codigo) return false;
+    return !set.has(p.codigo.toUpperCase());
+  });
+
+  if(faltantes.length===0){
+    el.innerHTML='<div style="padding:10px;font-size:12px;color:var(--text3);">todas las prendas visibles tienen foto en Storage ✓</div>';
+    return;
+  }
+
+  el.innerHTML=faltantes.map(p=>`<div class="row">
+      <span style="width:10px;height:10px;border-radius:50%;background:${p.color||'#888'};flex-shrink:0;"></span>
+      <span class="rn" style="font-size:12px;">${p.codigo||'—'} · ${p.marca||'—'}<span style="font-size:10px;color:var(--text3);margin-left:5px;">${p.tipo}${p.subtipo?' · '+p.subtipo:''}</span></span>
+      <button onclick="toggleFotoPendientePrenda('${p.id}',false)" style="font-size:11px;padding:4px 9px;border-radius:99px;border:1px solid var(--border2);background:none;color:var(--text);cursor:pointer;font-family:var(--font);">marcar 🚩</button>
+    </div>`).join('');
 }
 
 // Genera el siguiente código disponible para un tipo de prenda (CAM0xx, PAN0xx, ZAP0xx, BOL0xx, ACC0xx)
