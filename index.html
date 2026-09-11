@@ -53,6 +53,10 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
   .armador-stack{flex-direction:row;}
   .armador-module{flex:1;flex-direction:column;text-align:center;gap:8px;}
   .armador-module-info{width:100%;}
+  #outfits-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-items:start;}
+  #outfits-list .cat-header,
+  #outfits-list .archivados-toggle,
+  #outfits-list #archivados-outfits-body{grid-column:1/-1;}
 }
 
 /* SUB TABS */
