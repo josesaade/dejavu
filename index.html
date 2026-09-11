@@ -57,6 +57,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
   #outfits-list .cat-header,
   #outfits-list .archivados-toggle,
   #outfits-list #archivados-outfits-body{grid-column:1/-1;}
+  .gal-grid{grid-template-columns:repeat(5,minmax(0,1fr));}
 }
 
 /* SUB TABS */
@@ -75,6 +76,20 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 .subtipo-lbl{font-size:10px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin:14px 0 8px;}
 .subtipo-lbl:first-child{margin-top:0;}
 .prenda-card{background:var(--surface);border-top:1px solid var(--border);padding:12px 14px;display:flex;gap:12px;align-items:flex-start;}
+
+/* GALERÍA DE FOTOS (aparte del closet) */
+.gal-cat-header{font-size:11px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin:14px 0 8px;display:flex;align-items:center;gap:8px;}
+.gal-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:6px;}
+.gal-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;}
+.gal-card.pend{box-shadow:inset 0 3px 0 0 #E07B2A;}
+.gal-photo-wrap{width:100%;aspect-ratio:1;background:var(--bg2);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.gal-photo-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+.gal-photo-empty{color:var(--text3);font-size:22px;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.gal-photo-empty span{font-size:9px;text-transform:uppercase;letter-spacing:0.05em;}
+.gal-info{padding:6px 7px;}
+.gal-codigo{font-size:11px;font-family:var(--mono);font-weight:500;color:var(--text);}
+.gal-marca{font-size:10px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.gal-usos{font-size:9px;color:var(--text3);margin-top:2px;}
 .prenda-card.foto-pend{background:rgba(224,123,42,0.07);box-shadow:inset 3px 0 0 #E07B2A;}
 .flag-btn{background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;flex-shrink:0;font-size:14px;line-height:1;opacity:0.45;}
 .flag-btn.on{opacity:1;}
@@ -262,6 +277,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
     <button class="main-tab" data-main="heatmap"><i class="ti ti-calendar"></i><span>heatmap</span></button>
     <button class="main-tab" data-main="wishlist"><i class="ti ti-heart"></i><span>wishlist</span></button>
     <button class="main-tab" data-main="armador"><i class="ti ti-stack-2"></i><span>armador</span></button>
+    <button class="main-tab" data-main="fotos"><i class="ti ti-photo"></i><span>fotos</span></button>
   </div>
 
   <div class="loading" id="loading"><i class="ti ti-shirt"></i>cargando datos…</div>
@@ -491,6 +507,15 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
           </div>
         </div>
         <button class="add-btn" onclick="resetArmador()"><i class="ti ti-refresh"></i> limpiar selección</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════ -->
+    <!-- FOTOS (galería, aparte del closet) -->
+    <!-- ══════════════════════════════════ -->
+    <div class="main-panel" id="main-fotos">
+      <div class="stats-body">
+        <div id="galeria-list"></div>
       </div>
     </div>
 
@@ -958,6 +983,51 @@ function renderCloset(prendas, hist){
   });
 }
 
+// ── GALERÍA DE FOTOS (vista aparte, no toca el closet) ──
+function renderGaleria(prendas, hist){
+  const el=document.getElementById('galeria-list');
+  if(!el) return;
+
+  const usoCnt={};
+  hist.forEach(h=>{usoCnt[h.id]=(usoCnt[h.id]||0)+1;});
+
+  const TIPO_ORDEN=['camisa','pantalon','calzado','bolso','accesorio'];
+  const TIPO_LBL={camisa:'Camisas',pantalon:'Pantalones',calzado:'Calzado',bolso:'Bolsos de mano',accesorio:'Accesorios'};
+
+  let html='';
+  TIPO_ORDEN.forEach(tipo=>{
+    const items=prendas.filter(p=>p.tipo===tipo);
+    if(!items.length) return;
+    const folder=STORAGE_FOLDER_DJ[tipo];
+    const sinFoto=items.filter(p=>p.foto_pendiente).length;
+    html+=`<div class="gal-cat-header">
+      ${TIPO_LBL[tipo]||tipo}
+      <span class="outfit-badge">${items.length}</span>
+      ${sinFoto?`<span class="outfit-badge" style="color:#E07B2A;">${sinFoto} sin foto</span>`:''}
+    </div>`;
+    html+=`<div class="gal-grid">`;
+    items.forEach(p=>{
+      const outfitIds=(p.outfit_id||'').split(',').map(s=>s.trim()).filter(Boolean);
+      const usos=outfitIds.reduce((acc,id)=>acc+(usoCnt[id]||0),0);
+      const fotoUrl=p.codigo?`${STORAGE}/${folder}/${p.codigo}.jpg`:'';
+      html+=`<div class="gal-card${p.foto_pendiente?' pend':''}">
+        <div class="gal-photo-wrap">
+          ${fotoUrl?`<img src="${fotoUrl}" alt="${p.codigo}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'gal-photo-empty',innerHTML:'<i class=\\'ti ti-photo-off\\'></i><span>sin foto</span>'}))">`
+            :`<div class="gal-photo-empty"><i class="ti ti-photo-off"></i><span>sin foto</span></div>`}
+        </div>
+        <div class="gal-info">
+          <div class="gal-codigo">${p.codigo||'—'}</div>
+          <div class="gal-marca">${p.marca||'—'}${p.subtipo?' · '+p.subtipo:''}</div>
+          <div class="gal-usos">${usos>0?usos+(usos===1?' uso':' usos'):'sin uso aún'}</div>
+        </div>
+      </div>`;
+    });
+    html+=`</div>`;
+  });
+
+  el.innerHTML=html||'<div style="padding:20px;text-align:center;color:var(--text3);">sin prendas</div>';
+}
+
 // ── FORM ──
 // ── RATING ──
 async function setRating(id, stars, ratingEl){
@@ -988,6 +1058,7 @@ async function toggleFotoPendientePrenda(id, actual){
   const p=globalPrendas.find(x=>x.id===id);
   if(p) p.foto_pendiente=nuevo;
   renderCloset(globalPrendas, globalHist);
+  renderGaleria(globalPrendas, globalHist);
   renderFotosPendientes();
   try{
     await fetch(`${SB_URL}/rest/v1/prendas?id=eq.${id}`,{
@@ -1194,6 +1265,7 @@ async function guardarPrenda(){
     const prendasRaw=await fetchPrendas();
     const prendas=aplicarPrendas(prendasRaw);
     renderCloset(prendas,globalHist);
+    renderGaleria(prendas,globalHist);
     renderClosetStats(prendas);
     renderOutfits(globalOutfits,'todos');
   }catch(e){console.error(e);toast('error de conexión');}
@@ -1922,6 +1994,7 @@ async function init(){
     document.getElementById('content').style.display='';
 
     renderCloset(prendas,hist);
+    renderGaleria(prendas,hist);
     renderBasicos(basicos);
     renderStats(hist,outfits);
     renderClosetStats(prendas);
@@ -2029,7 +2102,7 @@ async function marcarLlego(id){
     const w2=await fetchWishlist();
     globalWishlist=w2; renderWishlist(w2);
     const prendasFresh=aplicarPrendas(await fetchPrendas());
-    renderCloset(prendasFresh, globalHist); renderClosetStats(prendasFresh);
+    renderCloset(prendasFresh, globalHist); renderGaleria(prendasFresh, globalHist); renderClosetStats(prendasFresh);
   }catch(e){console.error(e);toast('error al actualizar');}
 }
 
