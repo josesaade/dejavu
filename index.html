@@ -38,6 +38,22 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 .main-tabs::-webkit-scrollbar{display:none;}
 .main-tab{padding:12px 16px;border:none;background:none;color:var(--text3);font-family:var(--font);font-size:13px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.15s;}
 .main-tab.active{color:var(--text);border-bottom-color:var(--text);}
+.main-tab i{display:none;}
+
+/* IPAD / TABLET: nav lateral en vez de tabs arriba */
+@media(min-width:768px){
+  .app{max-width:1100px;display:grid;grid-template-columns:92px 1fr;grid-template-areas:"status status" "header header" "tabs content";padding-bottom:0;}
+  .status-bar{grid-area:status;}
+  .header{grid-area:header;padding:12px 28px 6px;}
+  .main-tabs{grid-area:tabs;flex-direction:column;border-bottom:none;border-right:1px solid var(--border);padding:4px 8px;overflow-x:visible;position:sticky;top:0;align-self:start;gap:2px;}
+  .main-tab{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 2px;border-bottom:none;border-radius:var(--r-sm);font-size:10px;white-space:normal;text-align:center;}
+  .main-tab.active{background:var(--bg2);}
+  .main-tab i{display:block;font-size:19px;color:inherit;}
+  .loading,#content{grid-area:content;min-width:0;}
+  .armador-stack{flex-direction:row;}
+  .armador-module{flex:1;flex-direction:column;text-align:center;gap:8px;}
+  .armador-module-info{width:100%;}
+}
 
 /* SUB TABS */
 .sub-tabs-wrap{padding:10px 20px 0;border-bottom:1px solid var(--border);}
@@ -236,12 +252,12 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
   </div>
 
   <div class="main-tabs">
-    <button class="main-tab active" data-main="closet">closet</button>
-    <button class="main-tab" data-main="stats">estadísticas</button>
-    <button class="main-tab" data-main="outfits">outfits</button>
-    <button class="main-tab" data-main="heatmap">heatmap</button>
-    <button class="main-tab" data-main="wishlist">wishlist</button>
-    <button class="main-tab" data-main="armador">armador</button>
+    <button class="main-tab active" data-main="closet"><i class="ti ti-shirt"></i><span>closet</span></button>
+    <button class="main-tab" data-main="stats"><i class="ti ti-chart-bar"></i><span>estadísticas</span></button>
+    <button class="main-tab" data-main="outfits"><i class="ti ti-hanger-2"></i><span>outfits</span></button>
+    <button class="main-tab" data-main="heatmap"><i class="ti ti-calendar"></i><span>heatmap</span></button>
+    <button class="main-tab" data-main="wishlist"><i class="ti ti-heart"></i><span>wishlist</span></button>
+    <button class="main-tab" data-main="armador"><i class="ti ti-stack-2"></i><span>armador</span></button>
   </div>
 
   <div class="loading" id="loading"><i class="ti ti-shirt"></i>cargando datos…</div>
