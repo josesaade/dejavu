@@ -621,6 +621,13 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
         <option value="#9B59B6">Violeta</option>
         <option value="#3E2723">Café oscuro</option>
         <option value="#8D6E63">Café claro</option>
+        <optgroup label="Accesorios / metálicos">
+          <option value="#7D8B99">Acero</option>
+          <option value="#C9A227">Dorado</option>
+          <option value="linear-gradient(135deg,#f5f4f0 50%,#1a1916 50%)">Nevado (blanco y negro)</option>
+          <option value="linear-gradient(135deg,#4A90C4 50%,#f5f4f0 50%)">Glaciar (azul y blanco)</option>
+          <option value="#0E9F6E">Verde esmeralda</option>
+        </optgroup>
       </select>
     </div>
     <div class="form-field">
@@ -729,6 +736,13 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
         <option value="#9B59B6">Violeta</option>
         <option value="#3E2723">Café oscuro</option>
         <option value="#8D6E63">Café claro</option>
+        <optgroup label="Accesorios / metálicos">
+          <option value="#7D8B99">Acero</option>
+          <option value="#C9A227">Dorado</option>
+          <option value="linear-gradient(135deg,#f5f4f0 50%,#1a1916 50%)">Nevado (blanco y negro)</option>
+          <option value="linear-gradient(135deg,#4A90C4 50%,#f5f4f0 50%)">Glaciar (azul y blanco)</option>
+          <option value="#0E9F6E">Verde esmeralda</option>
+        </optgroup>
       </select>
     </div>
     <div class="form-field">
@@ -931,6 +945,7 @@ function renderCloset(prendas, hist){
   // Colores con poca saturación (negro/blanco/grises) se agrupan aparte, de oscuro a claro,
   // y el resto se ordena por matiz (rojo → naranja → verde → azul → violeta)
   function colorSortKey(hex){
+    if(hex&&hex[0]!=='#') return [2,0]; // colores de dos tonos (Nevado/Glaciar) al final
     const {h,s,l}=hexToHSL(hex);
     return s<12 ? [1,l] : [0,h];
   }
@@ -963,7 +978,7 @@ function renderCloset(prendas, hist){
         const outfitIds=(p.outfit_id||'').split(',').map(s=>s.trim()).filter(Boolean);
         const usosTotales=outfitIds.reduce((acc,id)=>acc+(usoCnt[id]||0),0);
         const color=p.color||'#888888';
-        const isLight=['#f5f4f0','#ffffff','#fff','#f0f0e8','#E8DCC4','#D8C8A8'].includes(color.toLowerCase());
+        const isLight=color[0]!=='#'||['#f5f4f0','#ffffff','#fff','#f0f0e8','#E8DCC4','#D8C8A8'].includes(color.toLowerCase());
         const extras=tipo==='calzado'
           ?[p.talla,p.modelo].filter(Boolean).join(' · ')
           :[p.talla,p.fit,p.pretina].filter(Boolean).join(' · ');
@@ -1617,6 +1632,7 @@ function renderClosetStats(prendas){
     '#8FBC8F':'Verde claro','#639922':'Verde oliva','#2d5a2d':'Verde oscuro',
     '#E8A0B4':'Rosado claro','#C2185B':'Rosado fuerte','#C9A8E0':'Lila',
     '#9B59B6':'Violeta','#3E2723':'Café oscuro','#8D6E63':'Café claro',
+    '#7D8B99':'Acero','#C9A227':'Dorado','linear-gradient(135deg,#f5f4f0 50%,#1a1916 50%)':'Nevado (blanco y negro)','linear-gradient(135deg,#4A90C4 50%,#f5f4f0 50%)':'Glaciar (azul y blanco)','#0E9F6E':'Verde esmeralda',
   };
 
   function contarColores(items){
@@ -1769,7 +1785,7 @@ function renderOutfits(outfits, filtro='todos'){
   const list = document.getElementById('outfits-list');
   if(!list) return;
 
-  const COLORES={'#1a1916':'Negro','#f5f4f0':'Blanco','#4A90C4':'Azul claro','#1E3A8A':'Azul rey','#1a2a4a':'Azul oscuro','#C0392B':'Rojo','#6B1A1A':'Vinotinto','#E07B2A':'Naranja','#C4C4C0':'Gris claro','#9E9E9E':'Gris medio','#555555':'Gris oscuro','#C4A882':'Beige','#D8C8A8':'Arena','#E8DCC4':'Crema','#8FBC8F':'Verde claro','#639922':'Verde oliva','#2d5a2d':'Verde oscuro','#E8A0B4':'Rosado','#C9A8E0':'Lila','#9B59B6':'Violeta','#3E2723':'Café oscuro','#8D6E63':'Café claro'};
+  const COLORES={'#1a1916':'Negro','#f5f4f0':'Blanco','#4A90C4':'Azul claro','#1E3A8A':'Azul rey','#1a2a4a':'Azul oscuro','#C0392B':'Rojo','#6B1A1A':'Vinotinto','#E07B2A':'Naranja','#C4C4C0':'Gris claro','#9E9E9E':'Gris medio','#555555':'Gris oscuro','#C4A882':'Beige','#D8C8A8':'Arena','#E8DCC4':'Crema','#8FBC8F':'Verde claro','#639922':'Verde oliva','#2d5a2d':'Verde oscuro','#E8A0B4':'Rosado','#C9A8E0':'Lila','#9B59B6':'Violeta','#3E2723':'Café oscuro','#8D6E63':'Café claro','#7D8B99':'Acero','#C9A227':'Dorado','linear-gradient(135deg,#f5f4f0 50%,#1a1916 50%)':'Nevado (blanco y negro)','linear-gradient(135deg,#4A90C4 50%,#f5f4f0 50%)':'Glaciar (azul y blanco)','#0E9F6E':'Verde esmeralda'};
   function cn(hex){return COLORES[hex]||'';}
 
   function prendasRow(prendas, tipo, label, fotoUrl){
@@ -1963,7 +1979,7 @@ function exportOutfits(){
       p.tipo||'',
       p.subtipo||'',
       p.marca||'',
-      p.color||'',
+      (p.color||'').replace(/,/g,';'),
       p.talla||'',
       p.fit||'',
       p.modelo||'',
@@ -1985,7 +2001,7 @@ function exportOutfits(){
       b.categoria||'',
       desc,
       b.marca||'',
-      b.color||'',
+      (b.color||'').replace(/,/g,';'),
       b.cantidad||0,
       b.rating||0
     ].join(','));
@@ -2051,7 +2067,7 @@ document.getElementById('form-overlay').addEventListener('click',e=>{
 // ══════════════════════════════════════════
 let globalWishlist=[], editingWishId=null;
 
-const COLOR_NAMES_DJ={'#1a1916':'Negro','#f5f4f0':'Blanco','#4A90C4':'Azul claro','#1E3A8A':'Azul rey','#1a2a4a':'Azul oscuro','#C0392B':'Rojo','#6B1A1A':'Vinotinto','#E07B2A':'Naranja','#C4C4C0':'Gris claro','#9E9E9E':'Gris medio','#555555':'Gris oscuro','#C4A882':'Beige','#D8C8A8':'Arena','#E8DCC4':'Crema','#8FBC8F':'Verde claro','#639922':'Verde oliva','#2d5a2d':'Verde oscuro','#E8A0B4':'Rosado','#C9A8E0':'Lila','#9B59B6':'Violeta','#3E2723':'Café oscuro','#8D6E63':'Café claro'};
+const COLOR_NAMES_DJ={'#1a1916':'Negro','#f5f4f0':'Blanco','#4A90C4':'Azul claro','#1E3A8A':'Azul rey','#1a2a4a':'Azul oscuro','#C0392B':'Rojo','#6B1A1A':'Vinotinto','#E07B2A':'Naranja','#C4C4C0':'Gris claro','#9E9E9E':'Gris medio','#555555':'Gris oscuro','#C4A882':'Beige','#D8C8A8':'Arena','#E8DCC4':'Crema','#8FBC8F':'Verde claro','#639922':'Verde oliva','#2d5a2d':'Verde oscuro','#E8A0B4':'Rosado','#C9A8E0':'Lila','#9B59B6':'Violeta','#3E2723':'Café oscuro','#8D6E63':'Café claro','#7D8B99':'Acero','#C9A227':'Dorado','linear-gradient(135deg,#f5f4f0 50%,#1a1916 50%)':'Nevado (blanco y negro)','linear-gradient(135deg,#4A90C4 50%,#f5f4f0 50%)':'Glaciar (azul y blanco)','#0E9F6E':'Verde esmeralda'};
 
 async function fetchWishlist(){
   try{
