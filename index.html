@@ -294,6 +294,9 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
           <button class="sub-tab" data-sub="calzado">Calzado</button>
           <button class="sub-tab" data-sub="bolso">Bolso de mano</button>
           <button class="sub-tab" data-sub="accesorio">Accesorios</button>
+          <button class="sub-tab" data-sub="reloj">Reloj</button>
+          <button class="sub-tab" data-sub="collar">Collar</button>
+          <button class="sub-tab" data-sub="pulsera">Pulseras</button>
           <button class="sub-tab" data-sub="basicos">Básicos</button>
         </div>
       </div>
@@ -302,6 +305,9 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
       <div class="sub-panel" id="sub-calzado"><div class="closet-body" id="list-calzado"></div></div>
       <div class="sub-panel" id="sub-bolso"><div class="closet-body" id="list-bolso"></div></div>
       <div class="sub-panel" id="sub-accesorio"><div class="closet-body" id="list-accesorio"></div></div>
+      <div class="sub-panel" id="sub-reloj"><div class="closet-body" id="list-reloj"></div></div>
+      <div class="sub-panel" id="sub-collar"><div class="closet-body" id="list-collar"></div></div>
+      <div class="sub-panel" id="sub-pulsera"><div class="closet-body" id="list-pulsera"></div></div>
       <div class="sub-panel" id="sub-basicos"><div class="closet-body" id="list-basicos"></div></div>
     </div>
 
@@ -505,6 +511,22 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
             <div class="armador-slot-lbl">Termo</div>
             <div class="armador-slot-empty" id="aval-accesorio">toca para elegir</div>
           </div>
+          <div class="armador-slot" id="aslot-reloj" onclick="openArmadorPicker('reloj')">
+            <div class="armador-slot-lbl">Reloj</div>
+            <div class="armador-slot-empty" id="aval-reloj">toca para elegir</div>
+          </div>
+          <div class="armador-slot" id="aslot-collar" onclick="openArmadorPicker('collar')">
+            <div class="armador-slot-lbl">Collar</div>
+            <div class="armador-slot-empty" id="aval-collar">toca para elegir</div>
+          </div>
+          <div class="armador-slot" id="aslot-pulsera" onclick="openArmadorPicker('pulsera')">
+            <div class="armador-slot-lbl">Pulsera 1</div>
+            <div class="armador-slot-empty" id="aval-pulsera">toca para elegir</div>
+          </div>
+          <div class="armador-slot" id="aslot-pulsera2" onclick="openArmadorPicker('pulsera2')">
+            <div class="armador-slot-lbl">Pulsera 2</div>
+            <div class="armador-slot-empty" id="aval-pulsera2">toca para elegir</div>
+          </div>
         </div>
         <button class="add-btn" onclick="resetArmador()"><i class="ti ti-refresh"></i> limpiar selección</button>
       </div>
@@ -534,6 +556,9 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
         <option value="calzado">Calzado</option>
         <option value="bolso">Bolso</option>
         <option value="accesorio">Accesorio/Termo</option>
+        <option value="reloj">Reloj</option>
+        <option value="collar">Collar</option>
+        <option value="pulsera">Pulsera</option>
       </select>
     </div>
     <div class="form-field">
@@ -639,6 +664,9 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
         <option value="calzado">Calzado</option>
         <option value="bolso">Bolso de mano</option>
         <option value="accesorio">Accesorio</option>
+        <option value="reloj">Reloj</option>
+        <option value="collar">Collar</option>
+        <option value="pulsera">Pulsera</option>
       </select>
     </div>
     <div class="form-field">
@@ -792,11 +820,13 @@ const STORAGE='https://uytbnqvmgalycxqnhdzb.supabase.co/storage/v1/object/public
 let PRENDAS_MAP_DJ={};
 function buildPrendasMap(prendas){
   PRENDAS_MAP_DJ={};
-  prendas.forEach(p=>{
+  [...prendas].sort((a,b)=>(a.codigo||'').localeCompare(b.codigo||'')).forEach(p=>{
     if(!p.outfit_id) return;
     p.outfit_id.split(',').map(s=>s.trim()).filter(Boolean).forEach(oid=>{
       if(!PRENDAS_MAP_DJ[oid]) PRENDAS_MAP_DJ[oid]={};
-      PRENDAS_MAP_DJ[oid][p.tipo]={codigo:p.codigo,subtipo:p.subtipo,marca:p.marca,color:p.color,modelo:p.modelo};
+      let key=p.tipo;
+      if(key==='pulsera'&&PRENDAS_MAP_DJ[oid].pulsera) key='pulsera2';
+      PRENDAS_MAP_DJ[oid][key]={codigo:p.codigo,subtipo:p.subtipo,marca:p.marca,color:p.color,modelo:p.modelo};
     });
   });
 }
@@ -834,7 +864,7 @@ const ENFOQUES_C={"Silver Chariot":"#9E9E9E","Lost in Paradise":"#C4A882","Stone
 
 const OUTFITS_INV=["EE01","EE02","EE03","EE04","EE05","EE06","EE07","EE08","FF01","FF02","FF03","FF04","FF05","FF06","FF07","FF08","FF09","FF10","FF11","FF12","FF13","FF14","FF15","FF16","FF17","FF18","FF19","FF20","FF21","RR01","RR02","RR03","RR04","RR05","RR06","RR07","WW01","WW02","WW03","WW04","WW05","WW06","WW07","WW08","WW09"];
 
-const TIPO_LABELS={pantalon:"Pantalón",camisa:"Camisa",calzado:"Calzado",bolso:"Bolso de mano",accesorio:"Accesorio"};
+const TIPO_LABELS={pantalon:"Pantalón",camisa:"Camisa",calzado:"Calzado",bolso:"Bolso de mano",accesorio:"Accesorio",reloj:"Reloj",collar:"Collar",pulsera:"Pulsera"};
 
 // Estado global
 let globalHist=[], globalPrendas=[], editingId=null, globalBasicos=[], editingBasicoId=null;
@@ -874,7 +904,7 @@ document.getElementById('main-stats').addEventListener('click',e=>{
 
 // ── CLOSET ──
 function renderCloset(prendas, hist){
-  const tipoMap={pantalon:[],camisa:[],calzado:[],bolso:[],accesorio:[]};
+  const tipoMap={pantalon:[],camisa:[],calzado:[],bolso:[],accesorio:[],reloj:[],collar:[],pulsera:[]};
   prendas.forEach(p=>{ if(tipoMap[p.tipo]) tipoMap[p.tipo].push(p); });
 
   const usoCnt={};
@@ -991,8 +1021,8 @@ function renderGaleria(prendas, hist){
   const usoCnt={};
   hist.forEach(h=>{usoCnt[h.id]=(usoCnt[h.id]||0)+1;});
 
-  const TIPO_ORDEN=['camisa','pantalon','calzado','bolso','accesorio'];
-  const TIPO_LBL={camisa:'Camisas',pantalon:'Pantalones',calzado:'Calzado',bolso:'Bolsos de mano',accesorio:'Accesorios'};
+  const TIPO_ORDEN=['camisa','pantalon','calzado','bolso','accesorio','reloj','collar','pulsera'];
+  const TIPO_LBL={camisa:'Camisas',pantalon:'Pantalones',calzado:'Calzado',bolso:'Bolsos de mano',accesorio:'Accesorios',reloj:'Relojes',collar:'Collares',pulsera:'Pulseras'};
 
   let html='';
   TIPO_ORDEN.forEach(tipo=>{
@@ -1110,7 +1140,7 @@ function renderFotosPendientes(){
 // ── Verificación real contra Supabase Storage ──
 // Lista lo que de verdad existe en cada carpeta del bucket y lo compara
 // contra los códigos de tus prendas — mucho más confiable que acordarse de marcar 🚩.
-const STORAGE_FOLDER_DJ={camisa:'camisas',pantalon:'pantalones',calzado:'calzado',bolso:'bolsos',accesorio:'termos'};
+const STORAGE_FOLDER_DJ={camisa:'camisas',pantalon:'pantalones',calzado:'calzado',bolso:'bolsos',accesorio:'termos',reloj:'relojes',collar:'collares',pulsera:'pulseras'};
 
 async function listarStorage(prefix){
   try{
@@ -1160,7 +1190,7 @@ async function verificarFotosFaltantes(){
 }
 
 // Genera el siguiente código disponible para un tipo de prenda (CAM0xx, PAN0xx, ZAP0xx, BOL0xx, ACC0xx)
-const CODE_PREFIX_DJ={camisa:'CAM',pantalon:'PAN',calzado:'ZAP',bolso:'BOL',accesorio:'ACC'};
+const CODE_PREFIX_DJ={camisa:'CAM',pantalon:'PAN',calzado:'ZAP',bolso:'BOL',accesorio:'ACC',reloj:'REL',collar:'COL',pulsera:'PUL'};
 function nextCodigo(tipo){
   const prefix=CODE_PREFIX_DJ[tipo];
   if(!prefix) return '';
@@ -1638,7 +1668,8 @@ function renderClosetStats(prendas){
   const calzado=prendas.filter(p=>p.tipo==='calzado');
   const bolsos=prendas.filter(p=>p.tipo==='bolso');
   const accesorios=prendas.filter(p=>p.tipo==='accesorio');
-  const todos=[...pantalones,...camisas,...calzado,...bolsos,...accesorios];
+  const extrasPrendas=prendas.filter(p=>['reloj','collar','pulsera'].includes(p.tipo));
+  const todos=[...pantalones,...camisas,...calzado,...bolsos,...accesorios,...extrasPrendas];
 
   // KPIs generales
   const kpisEl=document.getElementById('cs-kpis');
@@ -1817,6 +1848,10 @@ function renderOutfits(outfits, filtro='todos'){
             ${prendasRow(prendas,'calzado','Calzado',calF)}
             ${prendasRow(prendas,'bolso','Bolso',bolF)}
             ${prendasRow(prendas,'accesorio','Termo',terF)}
+            ${prendasRow(prendas,'reloj','Reloj',prendas.reloj?`${STORAGE}/relojes/${prendas.reloj.codigo}.jpg`:null)}
+            ${prendasRow(prendas,'collar','Collar',prendas.collar?`${STORAGE}/collares/${prendas.collar.codigo}.jpg`:null)}
+            ${prendasRow(prendas,'pulsera',prendas.pulsera2?'Pulsera 1':'Pulsera',prendas.pulsera?`${STORAGE}/pulseras/${prendas.pulsera.codigo}.jpg`:null)}
+            ${prendasRow(prendas,'pulsera2','Pulsera 2',prendas.pulsera2?`${STORAGE}/pulseras/${prendas.pulsera2.codigo}.jpg`:null)}
           </div>
 
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
@@ -2199,13 +2234,13 @@ function openTentForm(){
 // ARMADOR
 // ══════════════════════════════════════════
 const STORAGE_DJ='https://uytbnqvmgalycxqnhdzb.supabase.co/storage/v1/object/public/outfits';
-let armadorSeleccion={camisa:null,pantalon:null,calzado:null,bolso:null,accesorio:null};
+let armadorSeleccion={camisa:null,pantalon:null,calzado:null,bolso:null,accesorio:null,reloj:null,collar:null,pulsera:null,pulsera2:null};
 let armadorPickerTipo=null;
 
 function resetArmador(){
-  armadorSeleccion={camisa:null,pantalon:null,calzado:null,bolso:null,accesorio:null};
+  armadorSeleccion={camisa:null,pantalon:null,calzado:null,bolso:null,accesorio:null,reloj:null,collar:null,pulsera:null,pulsera2:null};
   ['camisa','pantalon','calzado'].forEach(t=>updateArmadorModule(t));
-  ['bolso','accesorio'].forEach(t=>{
+  ['bolso','accesorio','reloj','collar','pulsera','pulsera2'].forEach(t=>{
     const slot=document.getElementById('aslot-'+t);
     const val=document.getElementById('aval-'+t);
     if(slot) slot.classList.remove('filled');
@@ -2215,11 +2250,11 @@ function resetArmador(){
 
 function openArmadorPicker(tipo){
   armadorPickerTipo=tipo;
-  const labels={camisa:'camisa',pantalon:'pantalón',calzado:'calzado',bolso:'bolso',accesorio:'termo'};
+  const labels={camisa:'camisa',pantalon:'pantalón',calzado:'calzado',bolso:'bolso',accesorio:'termo',reloj:'reloj',collar:'collar',pulsera:'pulsera 1',pulsera2:'pulsera 2'};
   document.getElementById('armador-picker-title').textContent='elegir '+labels[tipo];
 
   // Filtrar prendas del tipo correcto
-  const prendas=globalPrendas.filter(p=>p.tipo===tipo);
+  const prendas=globalPrendas.filter(p=>p.tipo===(tipo==='pulsera2'?'pulsera':tipo));
   const list=document.getElementById('armador-picker-list');
   if(prendas.length===0){
     list.innerHTML='<div style="padding:20px;text-align:center;color:var(--text3);">sin prendas de este tipo</div>';
@@ -2241,7 +2276,7 @@ function openArmadorPicker(tipo){
 
 // URL de la foto real de la prenda en Storage, según su tipo
 function armadorFotoUrl(tipo,codigo){
-  const folder={camisa:'camisas',pantalon:'pantalones',calzado:'calzado',bolso:'bolsos',accesorio:'termos'}[tipo];
+  const folder={camisa:'camisas',pantalon:'pantalones',calzado:'calzado',bolso:'bolsos',accesorio:'termos',reloj:'relojes',collar:'collares',pulsera:'pulseras',pulsera2:'pulseras'}[tipo];
   return folder&&codigo?`${STORAGE_DJ}/${folder}/${codigo}.jpg`:null;
 }
 
