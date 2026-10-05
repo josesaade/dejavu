@@ -916,6 +916,19 @@ document.getElementById('main-stats').addEventListener('click',e=>{
   document.getElementById('statsub-'+btn.dataset.statsub).classList.add('active');
 });
 
+// Usos de una prenda = veces que se usó alguno de sus outfits.
+// Si la prenda tiene en_uso_desde (fecha YYYY-MM-DD), solo cuentan los usos desde ese día,
+// para que una prenda nueva no herede el historial anterior de los outfits donde se enlaza.
+function usosPrenda(p,hist){
+  const ids=new Set((p.outfit_id||'').split(',').map(s=>s.trim()).filter(Boolean));
+  const desde=p.en_uso_desde||'';
+  return hist.filter(h=>ids.has(h.id)&&(!desde||h.fecha>=desde)).length;
+}
+function hoyISO_DJ(){
+  const d=new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
 // ── CLOSET ──
 function renderCloset(prendas, hist){
   const tipoMap={pantalon:[],camisa:[],calzado:[],bolso:[],accesorio:[],reloj:[],collar:[],pulsera:[]};
@@ -976,7 +989,7 @@ function renderCloset(prendas, hist){
       const count=ps.length;
       const prendasHTML=ps.map(p=>{
         const outfitIds=(p.outfit_id||'').split(',').map(s=>s.trim()).filter(Boolean);
-        const usosTotales=outfitIds.reduce((acc,id)=>acc+(usoCnt[id]||0),0);
+        const usosTotales=usosPrenda(p,hist);
         const color=p.color||'#888888';
         const isLight=color[0]!=='#'||['#f5f4f0','#ffffff','#fff','#f0f0e8','#E8DCC4','#D8C8A8'].includes(color.toLowerCase());
         const extras=tipo==='calzado'
@@ -1053,7 +1066,7 @@ function renderGaleria(prendas, hist){
     html+=`<div class="gal-grid">`;
     items.forEach(p=>{
       const outfitIds=(p.outfit_id||'').split(',').map(s=>s.trim()).filter(Boolean);
-      const usos=outfitIds.reduce((acc,id)=>acc+(usoCnt[id]||0),0);
+      const usos=usosPrenda(p,hist);
       const fotoUrl=p.codigo?`${STORAGE}/${folder}/${p.codigo}.jpg`:'';
       html+=`<div class="gal-card${p.foto_pendiente?' pend':''}">
         <div class="gal-photo-wrap">
@@ -1287,6 +1300,8 @@ async function guardarPrenda(){
   const body={tipo,subtipo,marca,talla,fit,modelo,pretina,outfit_id,color,descripcion};
   if(!editingId){
     body.codigo=nextCodigo(tipo); // se genera código al crear
+    // Reloj/collar/pulsera son nuevos: sus usos cuentan desde hoy, no desde el historial viejo de los outfits
+    if(['reloj','collar','pulsera'].includes(tipo)) body.en_uso_desde=hoyISO_DJ();
   } else {
     const actual=globalPrendas.find(x=>x.id===editingId);
     if(actual&&!actual.codigo) body.codigo=nextCodigo(tipo); // rellena código si a esta prenda le faltaba (bug anterior)
@@ -2137,6 +2152,7 @@ async function marcarLlego(id){
       talla:w.talla||'', fit:w.fit||'', modelo:w.modelo||'',
       pretina:w.pretina||'', outfit_id:w.outfit_tentativo||'',
       color:w.color||'', descripcion:w.notas||'', codigo,
+      en_uso_desde:hoyISO_DJ(), // prenda recién llegada: usos desde hoy
     };
     const rP=await fetch(`${SB_URL}/rest/v1/prendas`,{
       method:'POST',headers:{...SB_H,'Prefer':'return=representation'},body:JSON.stringify(prendaBody)
