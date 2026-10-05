@@ -527,6 +527,10 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
             <div class="armador-slot-lbl">Pulsera 2</div>
             <div class="armador-slot-empty" id="aval-pulsera2">toca para elegir</div>
           </div>
+          <div class="armador-slot" id="aslot-pulsera3" onclick="openArmadorPicker('pulsera3')">
+            <div class="armador-slot-lbl">Pulsera 3</div>
+            <div class="armador-slot-empty" id="aval-pulsera3">toca para elegir</div>
+          </div>
         </div>
         <button class="add-btn" onclick="resetArmador()"><i class="ti ti-refresh"></i> limpiar selección</button>
       </div>
@@ -839,7 +843,7 @@ function buildPrendasMap(prendas){
     p.outfit_id.split(',').map(s=>s.trim()).filter(Boolean).forEach(oid=>{
       if(!PRENDAS_MAP_DJ[oid]) PRENDAS_MAP_DJ[oid]={};
       let key=p.tipo;
-      if(key==='pulsera'&&PRENDAS_MAP_DJ[oid].pulsera) key='pulsera2';
+      if(key==='pulsera'&&PRENDAS_MAP_DJ[oid].pulsera) key=PRENDAS_MAP_DJ[oid].pulsera2?'pulsera3':'pulsera2';
       PRENDAS_MAP_DJ[oid][key]={codigo:p.codigo,subtipo:p.subtipo,marca:p.marca,color:p.color,modelo:p.modelo};
     });
   });
@@ -1883,6 +1887,7 @@ function renderOutfits(outfits, filtro='todos'){
             ${prendasRow(prendas,'collar','Collar',prendas.collar?`${STORAGE}/collares/${prendas.collar.codigo}.jpg`:null)}
             ${prendasRow(prendas,'pulsera',prendas.pulsera2?'Pulsera 1':'Pulsera',prendas.pulsera?`${STORAGE}/pulseras/${prendas.pulsera.codigo}.jpg`:null)}
             ${prendasRow(prendas,'pulsera2','Pulsera 2',prendas.pulsera2?`${STORAGE}/pulseras/${prendas.pulsera2.codigo}.jpg`:null)}
+            ${prendasRow(prendas,'pulsera3','Pulsera 3',prendas.pulsera3?`${STORAGE}/pulseras/${prendas.pulsera3.codigo}.jpg`:null)}
           </div>
 
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
@@ -2266,13 +2271,13 @@ function openTentForm(){
 // ARMADOR
 // ══════════════════════════════════════════
 const STORAGE_DJ='https://uytbnqvmgalycxqnhdzb.supabase.co/storage/v1/object/public/outfits';
-let armadorSeleccion={camisa:null,pantalon:null,calzado:null,bolso:null,accesorio:null,reloj:null,collar:null,pulsera:null,pulsera2:null};
+let armadorSeleccion={camisa:null,pantalon:null,calzado:null,bolso:null,accesorio:null,reloj:null,collar:null,pulsera:null,pulsera2:null,pulsera3:null};
 let armadorPickerTipo=null;
 
 function resetArmador(){
-  armadorSeleccion={camisa:null,pantalon:null,calzado:null,bolso:null,accesorio:null,reloj:null,collar:null,pulsera:null,pulsera2:null};
+  armadorSeleccion={camisa:null,pantalon:null,calzado:null,bolso:null,accesorio:null,reloj:null,collar:null,pulsera:null,pulsera2:null,pulsera3:null};
   ['camisa','pantalon','calzado'].forEach(t=>updateArmadorModule(t));
-  ['bolso','accesorio','reloj','collar','pulsera','pulsera2'].forEach(t=>{
+  ['bolso','accesorio','reloj','collar','pulsera','pulsera2','pulsera3'].forEach(t=>{
     const slot=document.getElementById('aslot-'+t);
     const val=document.getElementById('aval-'+t);
     if(slot) slot.classList.remove('filled');
@@ -2282,11 +2287,11 @@ function resetArmador(){
 
 function openArmadorPicker(tipo){
   armadorPickerTipo=tipo;
-  const labels={camisa:'camisa',pantalon:'pantalón',calzado:'calzado',bolso:'bolso',accesorio:'termo',reloj:'reloj',collar:'collar',pulsera:'pulsera 1',pulsera2:'pulsera 2'};
+  const labels={camisa:'camisa',pantalon:'pantalón',calzado:'calzado',bolso:'bolso',accesorio:'termo',reloj:'reloj',collar:'collar',pulsera:'pulsera 1',pulsera2:'pulsera 2',pulsera3:'pulsera 3'};
   document.getElementById('armador-picker-title').textContent='elegir '+labels[tipo];
 
   // Filtrar prendas del tipo correcto
-  const prendas=globalPrendas.filter(p=>p.tipo===(tipo==='pulsera2'?'pulsera':tipo));
+  const prendas=globalPrendas.filter(p=>p.tipo===(tipo.startsWith('pulsera')?'pulsera':tipo));
   const list=document.getElementById('armador-picker-list');
   if(prendas.length===0){
     list.innerHTML='<div style="padding:20px;text-align:center;color:var(--text3);">sin prendas de este tipo</div>';
@@ -2308,7 +2313,7 @@ function openArmadorPicker(tipo){
 
 // URL de la foto real de la prenda en Storage, según su tipo
 function armadorFotoUrl(tipo,codigo){
-  const folder={camisa:'camisas',pantalon:'pantalones',calzado:'calzado',bolso:'bolsos',accesorio:'termos',reloj:'relojes',collar:'collares',pulsera:'pulseras',pulsera2:'pulseras'}[tipo];
+  const folder={camisa:'camisas',pantalon:'pantalones',calzado:'calzado',bolso:'bolsos',accesorio:'termos',reloj:'relojes',collar:'collares',pulsera:'pulseras',pulsera2:'pulseras',pulsera3:'pulseras'}[tipo];
   return folder&&codigo?`${STORAGE_DJ}/${folder}/${codigo}.jpg`:null;
 }
 
