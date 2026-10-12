@@ -347,6 +347,8 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
           <div class="card" style="padding:14px;"><div class="dow-grid" id="dow-grid"></div></div>
           <div class="sl">enfoques de esta semana</div>
           <div class="card" id="semana-enfoques"></div>
+          <div class="sl">sport · aparte de los enfoques</div>
+          <div class="card" id="sport-stats"></div>
         </div>
       </div>
 
@@ -1366,13 +1368,17 @@ async function guardarPrenda(){
 }
 
 // ── ESTADÍSTICAS ──
-function renderStats(hist, outfits){
+const esSS_DJ=id=>(id||'').substring(0,2)==='SS';
+function renderStats(histCompleta, outfits){
+  // Los outfits deportivos (SS) no cuentan en enfoques, ranking ni nunca-usados: tienen su propio bloque.
+  const hist=histCompleta.filter(h=>!esSS_DJ(h.id));
+  const histSport=histCompleta.filter(h=>esSS_DJ(h.id));
   const total=hist.length;
   const unicos=new Set(hist.map(h=>h.id)).size;
   const dias=new Set(hist.map(h=>h.fecha)).size;
 
   // Rachas
-  const fechas=[...new Set(hist.map(h=>h.fecha))].sort();
+  const fechas=[...new Set(histCompleta.map(h=>h.fecha))].sort(); // la racha cuenta cualquier día con outfit, incluido sport
   let maxR=1,curR=1,curRacha=1;
   for(let i=1;i<fechas.length;i++){
     if((new Date(fechas[i])-new Date(fechas[i-1]))/86400000===1){curR++;curRacha++;if(curR>maxR)maxR=curR;}
@@ -1422,7 +1428,7 @@ function renderStats(hist, outfits){
   }).join('');
 
   // Nunca usados
-  const nuncaUsados=OUTFITS_INV.filter(id=>!usoCnt[id]);
+  const nuncaUsados=OUTFITS_INV.filter(id=>!esSS_DJ(id)&&!usoCnt[id]);
   document.getElementById('nunca-usados').innerHTML=nuncaUsados.length===0
     ?'<div style="padding:10px;font-size:13px;color:var(--text3);">todos los outfits han sido usados</div>'
     :nuncaUsados.map(id=>{
@@ -1469,15 +1475,26 @@ function renderStats(hist, outfits){
     </div>`;
   }
   document.getElementById('semana-enfoques').innerHTML=semanaHTML||'<div style="padding:10px;font-size:13px;color:var(--text3);">sin datos esta semana</div>';
+
+  // Sport: historial propio
+  const isoHace=n=>{const d=new Date(hoyD);d.setDate(d.getDate()-n);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
+  const s7=histSport.filter(h=>h.fecha>=isoHace(6)).length, s30=histSport.filter(h=>h.fecha>=isoHace(29)).length;
+  const porId={};histSport.forEach(h=>{porId[h.id]=(porId[h.id]||0)+1;});
+  const filasSport=Object.entries(porId).sort((a,b)=>b[1]-a[1]);
+  const maxS=filasSport[0]?.[1]||1;
+  const cSport=ENFOQUES_C['Entrenamiento'];
+  document.getElementById('sport-stats').innerHTML=`<div class="row"><span class="os-dot" style="background:${cSport};"></span><span class="os-name">${s7} sesiones esta semana · ${s30} en 30 días</span><span style="font-size:11px;color:var(--text3);">${histSport.length} total</span></div>`
+    +(filasSport.length?filasSport.map(([id,n])=>`<div class="row"><span class="os-id">${id}</span><div class="bw"><div class="bf" style="width:${Math.round(n/maxS*100)}%;background:${cSport};"></div></div><span class="os-n">${n}x</span></div>`).join(''):'<div style="padding:10px;font-size:13px;color:var(--text3);">aún sin sesiones registradas</div>');
 }
 
 // ── HEATMAP ──
 function buildHeatmap(hist){
   const byDate={};
-  hist.forEach(h=>{if(!byDate[h.fecha])byDate[h.fecha]=[];byDate[h.fecha].push(h.e);});
+  const sportDias=new Set();
+  hist.forEach(h=>{ if(esSS_DJ(h.id)){sportDias.add(h.fecha);return;} if(!byDate[h.fecha])byDate[h.fecha]=[];byDate[h.fecha].push(h.e);});
   const mesesSet=[...new Set(hist.map(h=>h.fecha.substring(0,7)))].sort();
   const mN=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-  const enfsUsados=new Set(hist.map(h=>h.e));
+  const enfsUsados=new Set(hist.filter(h=>!esSS_DJ(h.id)).map(h=>h.e));
   let html='';
   mesesSet.forEach(mes=>{
     const[y,m]=mes.split('-').map(Number);
@@ -1489,7 +1506,9 @@ function buildHeatmap(hist){
       const fecha=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
       const enfs=byDate[fecha]||[];
       if(enfs.length===0){
-        html+=`<div class="hm-cell" style="background:var(--bg3);"></div>`;
+        html+=sportDias.has(fecha)
+          ?`<div class="hm-cell" title="solo sport" style="background:rgba(230,57,70,0.28);"></div>`
+          :`<div class="hm-cell" style="background:var(--bg3);"></div>`;
       } else if(enfs.length===1){
         const c=ENFOQUES_C[enfs[0]]||'#888';
         html+=`<div class="hm-cell" title="${enfs[0]}" style="background:${c};"></div>`;
@@ -1508,7 +1527,8 @@ function buildHeatmap(hist){
   });
   document.getElementById('heatmap-wrap').innerHTML=html;
   document.getElementById('hm-legend').innerHTML=[...enfsUsados].map(e=>
-    `<span class="hm-leg"><span class="hm-leg-sq" style="background:${ENFOQUES_C[e]||'#888'}"></span>${e}</span>`).join('');
+    `<span class="hm-leg"><span class="hm-leg-sq" style="background:${ENFOQUES_C[e]||'#888'}"></span>${e}</span>`).join('')
+    +(sportDias.size?`<span class="hm-leg"><span class="hm-leg-sq" style="background:rgba(230,57,70,0.28)"></span>solo sport</span>`:'');
 }
 
 // ── BÁSICOS (medias, boxers) ──
