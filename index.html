@@ -298,6 +298,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
           <button class="sub-tab" data-sub="collar">Collar</button>
           <button class="sub-tab" data-sub="pulsera">Pulseras</button>
           <button class="sub-tab" data-sub="basicos">Básicos</button>
+          <button class="sub-tab" data-sub="sport">Sport</button>
         </div>
       </div>
       <div class="sub-panel active" id="sub-pantalon"><div class="closet-body" id="list-pantalon"></div></div>
@@ -309,6 +310,12 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
       <div class="sub-panel" id="sub-collar"><div class="closet-body" id="list-collar"></div></div>
       <div class="sub-panel" id="sub-pulsera"><div class="closet-body" id="list-pulsera"></div></div>
       <div class="sub-panel" id="sub-basicos"><div class="closet-body" id="list-basicos"></div></div>
+      <div class="sub-panel" id="sub-sport"><div class="closet-body">
+        <div id="sport-wash"></div>
+        <div class="subtipo-lbl">Camisetas deportivas</div><div id="list-camiseta_dep"></div>
+        <div class="subtipo-lbl">Pantalonetas deportivas</div><div id="list-pantaloneta_dep"></div>
+        <div class="subtipo-lbl">Medias deportivas</div><div id="list-medias_dep"></div>
+      </div></div>
     </div>
 
     <!-- ══════════════════════════════════ -->
@@ -433,6 +440,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
           <button class="sub-tab" data-outsub="FF">Formales</button>
           <button class="sub-tab" data-outsub="RR">Relaxed</button>
           <button class="sub-tab" data-outsub="WW">Weekend</button>
+          <button class="sub-tab" data-outsub="SS">Sport</button>
         </div>
       </div>
       <div class="stats-body">
@@ -511,6 +519,10 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
             <div class="armador-slot-lbl">Termo</div>
             <div class="armador-slot-empty" id="aval-accesorio">toca para elegir</div>
           </div>
+          <div class="armador-slot" id="aslot-medias" onclick="openArmadorPicker('medias')">
+            <div class="armador-slot-lbl">Medias</div>
+            <div class="armador-slot-empty" id="aval-medias">toca para elegir</div>
+          </div>
           <div class="armador-slot" id="aslot-reloj" onclick="openArmadorPicker('reloj')">
             <div class="armador-slot-lbl">Reloj</div>
             <div class="armador-slot-empty" id="aval-reloj">toca para elegir</div>
@@ -562,7 +574,9 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
         <option value="accesorio">Accesorio/Termo</option>
         <option value="reloj">Reloj</option>
         <option value="collar">Collar</option>
-        <option value="pulsera">Pulsera</option>
+        <option value="camiseta_dep">Camiseta deportiva</option>
+        <option value="pantaloneta_dep">Pantaloneta deportiva</option>
+        <option value="medias_dep">Medias deportivas</option>
       </select>
     </div>
     <div class="form-field">
@@ -631,6 +645,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
           <option value="linear-gradient(135deg,#f5f4f0 50%,#1a1916 50%)">Nevado (blanco y negro)</option>
           <option value="linear-gradient(135deg,#4A90C4 50%,#f5f4f0 50%)">Glaciar (azul y blanco)</option>
           <option value="#0E9F6E">Verde esmeralda</option>
+          <option value="#E5E4E2">Platino</option>
         </optgroup>
       </select>
     </div>
@@ -677,7 +692,9 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
         <option value="accesorio">Accesorio</option>
         <option value="reloj">Reloj</option>
         <option value="collar">Collar</option>
-        <option value="pulsera">Pulsera</option>
+        <option value="camiseta_dep">Camiseta deportiva</option>
+        <option value="pantaloneta_dep">Pantaloneta deportiva</option>
+        <option value="medias_dep">Medias deportivas</option>
       </select>
     </div>
     <div class="form-field">
@@ -746,6 +763,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
           <option value="linear-gradient(135deg,#f5f4f0 50%,#1a1916 50%)">Nevado (blanco y negro)</option>
           <option value="linear-gradient(135deg,#4A90C4 50%,#f5f4f0 50%)">Glaciar (azul y blanco)</option>
           <option value="#0E9F6E">Verde esmeralda</option>
+          <option value="#E5E4E2">Platino</option>
         </optgroup>
       </select>
     </div>
@@ -843,6 +861,7 @@ function buildPrendasMap(prendas){
     p.outfit_id.split(',').map(s=>s.trim()).filter(Boolean).forEach(oid=>{
       if(!PRENDAS_MAP_DJ[oid]) PRENDAS_MAP_DJ[oid]={};
       let key=p.tipo;
+      if(key==='camiseta_dep') key='camisa'; else if(key==='pantaloneta_dep') key='pantalon'; else if(key==='medias_dep') key='medias';
       if(key==='pulsera'&&PRENDAS_MAP_DJ[oid].pulsera) key=PRENDAS_MAP_DJ[oid].pulsera2?'pulsera3':'pulsera2';
       PRENDAS_MAP_DJ[oid][key]={codigo:p.codigo,subtipo:p.subtipo,marca:p.marca,color:p.color,modelo:p.modelo};
     });
@@ -876,13 +895,14 @@ const CATS_MAP={
   FF:{nombre:"Formales",color:"#378ADD"},
   RR:{nombre:"Relaxed",color:"#1D9E75"},
   WW:{nombre:"Weekend",color:"#BA7517"},
+  SS:{nombre:"Sport",color:"#D85A30"},
 };
 
-const ENFOQUES_C={"Silver Chariot":"#9E9E9E","Lost in Paradise":"#C4A882","Stone Ocean":"#4A90C4","Emerald Splash":"#639922","Red Bebop":"#8B1A1A","Overtime":"#1E3A8A","Kurozaki Boy":"#E07B2A","Bites The Dust":"#E8A0B4","Black & White":"#555555","Golden Spin":"#8B6914","Jet Black":"#333333","Hermit Purple":"#9B59B6"};
+const ENFOQUES_C={"Silver Chariot":"#9E9E9E","Lost in Paradise":"#C4A882","Stone Ocean":"#4A90C4","Emerald Splash":"#639922","Red Bebop":"#8B1A1A","Overtime":"#1E3A8A","Kurozaki Boy":"#E07B2A","Bites The Dust":"#E8A0B4","Black & White":"#555555","Golden Spin":"#8B6914","Jet Black":"#333333","Hermit Purple":"#9B59B6","Entrenamiento":"#E63946"};
 
 const OUTFITS_INV=["EE01","EE02","EE03","EE04","EE05","EE06","EE07","EE08","FF01","FF02","FF03","FF04","FF05","FF06","FF07","FF08","FF09","FF10","FF11","FF12","FF13","FF14","FF15","FF16","FF17","FF18","FF19","FF20","FF21","RR01","RR02","RR03","RR04","RR05","RR06","RR07","WW01","WW02","WW03","WW04","WW05","WW06","WW07","WW08","WW09"];
 
-const TIPO_LABELS={pantalon:"Pantalón",camisa:"Camisa",calzado:"Calzado",bolso:"Bolso de mano",accesorio:"Accesorio",reloj:"Reloj",collar:"Collar",pulsera:"Pulsera"};
+const TIPO_LABELS={pantalon:"Pantalón",camisa:"Camisa",calzado:"Calzado",bolso:"Bolso de mano",accesorio:"Accesorio",reloj:"Reloj",collar:"Collar",pulsera:"Pulsera",camiseta_dep:"Camiseta deportiva",pantaloneta_dep:"Pantaloneta deportiva",medias_dep:"Medias deportivas"};
 
 // Estado global
 let globalHist=[], globalPrendas=[], editingId=null, globalBasicos=[], editingBasicoId=null;
@@ -935,7 +955,7 @@ function hoyISO_DJ(){
 
 // ── CLOSET ──
 function renderCloset(prendas, hist){
-  const tipoMap={pantalon:[],camisa:[],calzado:[],bolso:[],accesorio:[],reloj:[],collar:[],pulsera:[]};
+  const tipoMap={pantalon:[],camisa:[],calzado:[],bolso:[],accesorio:[],reloj:[],collar:[],pulsera:[],camiseta_dep:[],pantaloneta_dep:[],medias_dep:[]};
   prendas.forEach(p=>{ if(tipoMap[p.tipo]) tipoMap[p.tipo].push(p); });
 
   const usoCnt={};
@@ -1053,8 +1073,8 @@ function renderGaleria(prendas, hist){
   const usoCnt={};
   hist.forEach(h=>{usoCnt[h.id]=(usoCnt[h.id]||0)+1;});
 
-  const TIPO_ORDEN=['camisa','pantalon','calzado','bolso','accesorio','reloj','collar','pulsera'];
-  const TIPO_LBL={camisa:'Camisas',pantalon:'Pantalones',calzado:'Calzado',bolso:'Bolsos de mano',accesorio:'Accesorios',reloj:'Relojes',collar:'Collares',pulsera:'Pulseras'};
+  const TIPO_ORDEN=['camisa','pantalon','calzado','bolso','accesorio','reloj','collar','pulsera','camiseta_dep','pantaloneta_dep','medias_dep'];
+  const TIPO_LBL={camisa:'Camisas',pantalon:'Pantalones',calzado:'Calzado',bolso:'Bolsos de mano',accesorio:'Accesorios',reloj:'Relojes',collar:'Collares',pulsera:'Pulseras',camiseta_dep:'Camisetas deportivas',pantaloneta_dep:'Pantalonetas deportivas',medias_dep:'Medias deportivas'};
 
   let html='';
   TIPO_ORDEN.forEach(tipo=>{
@@ -1172,7 +1192,7 @@ function renderFotosPendientes(){
 // ── Verificación real contra Supabase Storage ──
 // Lista lo que de verdad existe en cada carpeta del bucket y lo compara
 // contra los códigos de tus prendas — mucho más confiable que acordarse de marcar 🚩.
-const STORAGE_FOLDER_DJ={camisa:'camisas',pantalon:'pantalones',calzado:'calzado',bolso:'bolsos',accesorio:'termos',reloj:'relojes',collar:'collares',pulsera:'pulseras'};
+const STORAGE_FOLDER_DJ={camisa:'camisas',pantalon:'pantalones',calzado:'calzado',bolso:'bolsos',accesorio:'termos',reloj:'relojes',collar:'collares',pulsera:'pulseras',camiseta_dep:'camisetas_dep',pantaloneta_dep:'pantalonetas_dep',medias_dep:'medias_dep'};
 
 async function listarStorage(prefix){
   try{
@@ -1222,7 +1242,7 @@ async function verificarFotosFaltantes(){
 }
 
 // Genera el siguiente código disponible para un tipo de prenda (CAM0xx, PAN0xx, ZAP0xx, BOL0xx, ACC0xx)
-const CODE_PREFIX_DJ={camisa:'CAM',pantalon:'PAN',calzado:'ZAP',bolso:'BOL',accesorio:'ACC',reloj:'REL',collar:'COL',pulsera:'PUL'};
+const CODE_PREFIX_DJ={camisa:'CAM',pantalon:'PAN',calzado:'ZAP',bolso:'BOL',accesorio:'ACC',reloj:'REL',collar:'COL',pulsera:'PUL',camiseta_dep:'CDE',pantaloneta_dep:'PDE',medias_dep:'MDE'};
 function nextCodigo(tipo){
   const prefix=CODE_PREFIX_DJ[tipo];
   if(!prefix) return '';
@@ -1305,7 +1325,7 @@ async function guardarPrenda(){
   if(!editingId){
     body.codigo=nextCodigo(tipo); // se genera código al crear
     // Reloj/collar/pulsera son nuevos: sus usos cuentan desde hoy, no desde el historial viejo de los outfits
-    if(['reloj','collar','pulsera'].includes(tipo)) body.en_uso_desde=hoyISO_DJ();
+    if(['reloj','collar','pulsera','camiseta_dep','pantaloneta_dep','medias_dep'].includes(tipo)) body.en_uso_desde=hoyISO_DJ();
   } else {
     const actual=globalPrendas.find(x=>x.id===editingId);
     if(actual&&!actual.codigo) body.codigo=nextCodigo(tipo); // rellena código si a esta prenda le faltaba (bug anterior)
@@ -1486,7 +1506,7 @@ function renderBasicos(basicos){
   const container=document.getElementById('list-basicos');
   if(!container) return;
 
-  const byCat={medias:[],boxers:[],camisillas:[],camisetas_dormir:[],camisetas_ejercicio:[],camisa_hibrida:[],pantaloneta_dormir:[],pantaloneta_ejercicio:[],pantaloneta_hibrida:[]};
+  const byCat={medias:[],boxers:[],camisillas:[],camisetas_dormir:[],camisa_hibrida:[],pantaloneta_dormir:[],pantaloneta_hibrida:[]};
   basicos.forEach(b=>{ if(byCat[b.categoria]) byCat[b.categoria].push(b); });
 
   const catLabels={
@@ -1523,10 +1543,22 @@ function renderBasicos(basicos){
   container.innerHTML=html;
 }
 
-function openFormBasico(){
+// ── SPORT: tarjeta de lavado semanal (sábados). Las prendas salen de renderCloset ──
+function renderSport(){
+  const container=document.getElementById('sport-wash');
+  if(!container) return;
+  const hoy=new Date(hoyISO_DJ()+'T12:00:00');
+  const falta=(6-hoy.getDay()+7)%7;
+  const prox=new Date(hoy.getTime()+falta*86400000);
+  const fechaTxt=prox.toLocaleDateString('es-CO',{day:'numeric',month:'short'});
+  const lavTxt=falta===0?'hoy es día de lavado':falta===1?'mañana es día de lavado':`faltan ${falta} días`;
+  container.innerHTML=`<div class="prenda-card" style="margin-bottom:14px;"><div class="prenda-color" style="background:#E63946;display:flex;align-items:center;justify-content:center;color:#fff;width:32px;height:32px;border-radius:7px;"><i class="ti ti-washing-machine" style="font-size:20px;"></i></div><div class="prenda-info"><div class="prenda-top"><span class="prenda-marca">Lavado semanal</span></div><div class="prenda-desc">todos los sábados · próximo ${fechaTxt} · ${lavTxt}</div></div></div>`;
+}
+
+function openFormBasico(cat){
   editingBasicoId=null;
   document.getElementById('form-title-basico').textContent='agregar básico';
-  document.getElementById('b-categoria').value='medias';
+  document.getElementById('b-categoria').value=(typeof cat==='string'&&cat)?cat:'medias';
   document.getElementById('b-desc').value='';
   document.getElementById('b-marca').value='';
   document.getElementById('b-color').value='';
@@ -1580,6 +1612,7 @@ async function guardarBasico(){
     const basicos=await fetchBasicos();
     globalBasicos=basicos;
     renderBasicos(basicos);
+    renderSport();
   }catch(e){console.error(e);toast('error de conexión');}
 }
 
@@ -1651,7 +1684,7 @@ function renderClosetStats(prendas){
     '#8FBC8F':'Verde claro','#639922':'Verde oliva','#2d5a2d':'Verde oscuro',
     '#E8A0B4':'Rosado claro','#C2185B':'Rosado fuerte','#C9A8E0':'Lila',
     '#9B59B6':'Violeta','#3E2723':'Café oscuro','#8D6E63':'Café claro',
-    '#7D8B99':'Acero','#C9A227':'Dorado','linear-gradient(135deg,#f5f4f0 50%,#1a1916 50%)':'Nevado (blanco y negro)','linear-gradient(135deg,#4A90C4 50%,#f5f4f0 50%)':'Glaciar (azul y blanco)','#0E9F6E':'Verde esmeralda',
+    '#7D8B99':'Acero','#C9A227':'Dorado','linear-gradient(135deg,#f5f4f0 50%,#1a1916 50%)':'Nevado (blanco y negro)','linear-gradient(135deg,#4A90C4 50%,#f5f4f0 50%)':'Glaciar (azul y blanco)','#0E9F6E':'Verde esmeralda','#E5E4E2':'Platino',
   };
 
   function contarColores(items){
@@ -1804,7 +1837,7 @@ function renderOutfits(outfits, filtro='todos'){
   const list = document.getElementById('outfits-list');
   if(!list) return;
 
-  const COLORES={'#1a1916':'Negro','#f5f4f0':'Blanco','#4A90C4':'Azul claro','#1E3A8A':'Azul rey','#1a2a4a':'Azul oscuro','#C0392B':'Rojo','#6B1A1A':'Vinotinto','#E07B2A':'Naranja','#C4C4C0':'Gris claro','#9E9E9E':'Gris medio','#555555':'Gris oscuro','#C4A882':'Beige','#D8C8A8':'Arena','#E8DCC4':'Crema','#8FBC8F':'Verde claro','#639922':'Verde oliva','#2d5a2d':'Verde oscuro','#E8A0B4':'Rosado','#C9A8E0':'Lila','#9B59B6':'Violeta','#3E2723':'Café oscuro','#8D6E63':'Café claro','#7D8B99':'Acero','#C9A227':'Dorado','linear-gradient(135deg,#f5f4f0 50%,#1a1916 50%)':'Nevado (blanco y negro)','linear-gradient(135deg,#4A90C4 50%,#f5f4f0 50%)':'Glaciar (azul y blanco)','#0E9F6E':'Verde esmeralda'};
+  const COLORES={'#1a1916':'Negro','#f5f4f0':'Blanco','#4A90C4':'Azul claro','#1E3A8A':'Azul rey','#1a2a4a':'Azul oscuro','#C0392B':'Rojo','#6B1A1A':'Vinotinto','#E07B2A':'Naranja','#C4C4C0':'Gris claro','#9E9E9E':'Gris medio','#555555':'Gris oscuro','#C4A882':'Beige','#D8C8A8':'Arena','#E8DCC4':'Crema','#8FBC8F':'Verde claro','#639922':'Verde oliva','#2d5a2d':'Verde oscuro','#E8A0B4':'Rosado','#C9A8E0':'Lila','#9B59B6':'Violeta','#3E2723':'Café oscuro','#8D6E63':'Café claro','#7D8B99':'Acero','#C9A227':'Dorado','linear-gradient(135deg,#f5f4f0 50%,#1a1916 50%)':'Nevado (blanco y negro)','linear-gradient(135deg,#4A90C4 50%,#f5f4f0 50%)':'Glaciar (azul y blanco)','#0E9F6E':'Verde esmeralda','#E5E4E2':'Platino'};
   function cn(hex){return COLORES[hex]||'';}
 
   function prendasRow(prendas, tipo, label, fotoUrl){
@@ -1836,7 +1869,7 @@ function renderOutfits(outfits, filtro='todos'){
   });
 
   const filtrado = filtro==='todos' ? merged : merged.filter(o=>o.id.startsWith(filtro));
-  const cats = filtro==='todos' ? ['EE','FF','RR','WW'] : [filtro];
+  const cats = filtro==='todos' ? ['EE','FF','RR','WW','SS'] : [filtro];
   let html = '';
 
   const usoCnt={};
@@ -1859,8 +1892,9 @@ function renderOutfits(outfits, filtro='todos'){
       const calF=prendas.calzado?`${STORAGE}/calzado/${prendas.calzado.codigo}.jpg`:null;
       const bolF=prendas.bolso?`${STORAGE}/bolsos/${prendas.bolso.codigo}.jpg`:null;
       const terF=prendas.accesorio?`${STORAGE}/termos/${prendas.accesorio.codigo}.jpg`:null;
-      const camF=prendas.camisa?`${STORAGE}/camisas/${prendas.camisa.codigo}.jpg`:null;
-      const panF=prendas.pantalon?`${STORAGE}/pantalones/${prendas.pantalon.codigo}.jpg`:null;
+      const fDep=c=>({CDE:'camisetas_dep',PDE:'pantalonetas_dep',MDE:'medias_dep'}[(c||'').substring(0,3)]);
+      const camF=prendas.camisa?`${STORAGE}/${fDep(prendas.camisa.codigo)||'camisas'}/${prendas.camisa.codigo}.jpg`:null;
+      const panF=prendas.pantalon?`${STORAGE}/${fDep(prendas.pantalon.codigo)||'pantalones'}/${prendas.pantalon.codigo}.jpg`:null;
 
       html+=`<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden;${o.foto_pendiente?'box-shadow:inset 3px 0 0 #E07B2A;':''}">
         <img src="${STORAGE}/outfits/${o.id}.jpg"
@@ -1880,6 +1914,7 @@ function renderOutfits(outfits, filtro='todos'){
           <div style="background:var(--bg2);border-radius:var(--r-sm);padding:3px 10px;margin-bottom:10px;">
             ${prendasRow(prendas,'camisa','Camisa',camF)}
             ${prendasRow(prendas,'pantalon','Pantalón',panF)}
+            ${prendasRow(prendas,'medias','Medias',prendas.medias?`${STORAGE}/medias_dep/${prendas.medias.codigo}.jpg`:null)}
             ${prendasRow(prendas,'calzado','Calzado',calF)}
             ${prendasRow(prendas,'bolso','Bolso',bolF)}
             ${prendasRow(prendas,'accesorio','Termo',terF)}
@@ -2067,6 +2102,7 @@ async function init(){
     renderCloset(prendas,hist);
     renderGaleria(prendas,hist);
     renderBasicos(basicos);
+    renderSport();
     renderStats(hist,outfits);
     renderClosetStats(prendas);
     renderOutfits(outfits,'todos');
@@ -2087,7 +2123,7 @@ document.getElementById('form-overlay').addEventListener('click',e=>{
 // ══════════════════════════════════════════
 let globalWishlist=[], editingWishId=null;
 
-const COLOR_NAMES_DJ={'#1a1916':'Negro','#f5f4f0':'Blanco','#4A90C4':'Azul claro','#1E3A8A':'Azul rey','#1a2a4a':'Azul oscuro','#C0392B':'Rojo','#6B1A1A':'Vinotinto','#E07B2A':'Naranja','#C4C4C0':'Gris claro','#9E9E9E':'Gris medio','#555555':'Gris oscuro','#C4A882':'Beige','#D8C8A8':'Arena','#E8DCC4':'Crema','#8FBC8F':'Verde claro','#639922':'Verde oliva','#2d5a2d':'Verde oscuro','#E8A0B4':'Rosado','#C9A8E0':'Lila','#9B59B6':'Violeta','#3E2723':'Café oscuro','#8D6E63':'Café claro','#7D8B99':'Acero','#C9A227':'Dorado','linear-gradient(135deg,#f5f4f0 50%,#1a1916 50%)':'Nevado (blanco y negro)','linear-gradient(135deg,#4A90C4 50%,#f5f4f0 50%)':'Glaciar (azul y blanco)','#0E9F6E':'Verde esmeralda'};
+const COLOR_NAMES_DJ={'#1a1916':'Negro','#f5f4f0':'Blanco','#4A90C4':'Azul claro','#1E3A8A':'Azul rey','#1a2a4a':'Azul oscuro','#C0392B':'Rojo','#6B1A1A':'Vinotinto','#E07B2A':'Naranja','#C4C4C0':'Gris claro','#9E9E9E':'Gris medio','#555555':'Gris oscuro','#C4A882':'Beige','#D8C8A8':'Arena','#E8DCC4':'Crema','#8FBC8F':'Verde claro','#639922':'Verde oliva','#2d5a2d':'Verde oscuro','#E8A0B4':'Rosado','#C9A8E0':'Lila','#9B59B6':'Violeta','#3E2723':'Café oscuro','#8D6E63':'Café claro','#7D8B99':'Acero','#C9A227':'Dorado','linear-gradient(135deg,#f5f4f0 50%,#1a1916 50%)':'Nevado (blanco y negro)','linear-gradient(135deg,#4A90C4 50%,#f5f4f0 50%)':'Glaciar (azul y blanco)','#0E9F6E':'Verde esmeralda','#E5E4E2':'Platino'};
 
 async function fetchWishlist(){
   try{
@@ -2271,13 +2307,13 @@ function openTentForm(){
 // ARMADOR
 // ══════════════════════════════════════════
 const STORAGE_DJ='https://uytbnqvmgalycxqnhdzb.supabase.co/storage/v1/object/public/outfits';
-let armadorSeleccion={camisa:null,pantalon:null,calzado:null,bolso:null,accesorio:null,reloj:null,collar:null,pulsera:null,pulsera2:null,pulsera3:null};
+let armadorSeleccion={camisa:null,pantalon:null,calzado:null,bolso:null,accesorio:null,reloj:null,collar:null,pulsera:null,pulsera2:null,pulsera3:null,medias:null};
 let armadorPickerTipo=null;
 
 function resetArmador(){
-  armadorSeleccion={camisa:null,pantalon:null,calzado:null,bolso:null,accesorio:null,reloj:null,collar:null,pulsera:null,pulsera2:null,pulsera3:null};
+  armadorSeleccion={camisa:null,pantalon:null,calzado:null,bolso:null,accesorio:null,reloj:null,collar:null,pulsera:null,pulsera2:null,pulsera3:null,medias:null};
   ['camisa','pantalon','calzado'].forEach(t=>updateArmadorModule(t));
-  ['bolso','accesorio','reloj','collar','pulsera','pulsera2','pulsera3'].forEach(t=>{
+  ['bolso','accesorio','medias','reloj','collar','pulsera','pulsera2','pulsera3'].forEach(t=>{
     const slot=document.getElementById('aslot-'+t);
     const val=document.getElementById('aval-'+t);
     if(slot) slot.classList.remove('filled');
@@ -2287,11 +2323,12 @@ function resetArmador(){
 
 function openArmadorPicker(tipo){
   armadorPickerTipo=tipo;
-  const labels={camisa:'camisa',pantalon:'pantalón',calzado:'calzado',bolso:'bolso',accesorio:'termo',reloj:'reloj',collar:'collar',pulsera:'pulsera 1',pulsera2:'pulsera 2',pulsera3:'pulsera 3'};
+  const labels={camisa:'camisa',pantalon:'pantalón',calzado:'calzado',bolso:'bolso',accesorio:'termo',reloj:'reloj',collar:'collar',pulsera:'pulsera 1',pulsera2:'pulsera 2',pulsera3:'pulsera 3',medias:'medias'};
   document.getElementById('armador-picker-title').textContent='elegir '+labels[tipo];
 
   // Filtrar prendas del tipo correcto
-  const prendas=globalPrendas.filter(p=>p.tipo===(tipo.startsWith('pulsera')?'pulsera':tipo));
+  const tiposOk=tipo.startsWith('pulsera')?['pulsera']:tipo==='camisa'?['camisa','camiseta_dep']:tipo==='pantalon'?['pantalon','pantaloneta_dep']:tipo==='medias'?['medias_dep']:[tipo];
+  const prendas=globalPrendas.filter(p=>tiposOk.includes(p.tipo));
   const list=document.getElementById('armador-picker-list');
   if(prendas.length===0){
     list.innerHTML='<div style="padding:20px;text-align:center;color:var(--text3);">sin prendas de este tipo</div>';
@@ -2313,7 +2350,7 @@ function openArmadorPicker(tipo){
 
 // URL de la foto real de la prenda en Storage, según su tipo
 function armadorFotoUrl(tipo,codigo){
-  const folder={camisa:'camisas',pantalon:'pantalones',calzado:'calzado',bolso:'bolsos',accesorio:'termos',reloj:'relojes',collar:'collares',pulsera:'pulseras',pulsera2:'pulseras',pulsera3:'pulseras'}[tipo];
+  const folder={CDE:'camisetas_dep',PDE:'pantalonetas_dep',MDE:'medias_dep'}[(codigo||'').substring(0,3)]||{camisa:'camisas',pantalon:'pantalones',calzado:'calzado',bolso:'bolsos',accesorio:'termos',reloj:'relojes',collar:'collares',pulsera:'pulseras',pulsera2:'pulseras',pulsera3:'pulseras',medias:'medias_dep'}[tipo];
   return folder&&codigo?`${STORAGE_DJ}/${folder}/${codigo}.jpg`:null;
 }
 
