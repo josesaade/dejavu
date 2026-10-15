@@ -1370,6 +1370,9 @@ async function guardarPrenda(){
 // ── ESTADÍSTICAS ──
 const esSS_DJ=id=>(id||'').substring(0,2)==='SS';
 function renderStats(histCompleta, outfits){
+  // Variantes (WW08V2…) cuentan como su outfit base en las estadísticas.
+  histCompleta=histCompleta.map(h=>({...h,id:(h.id||'').replace(/(?<=\d)V\d+$/,'')}));
+  outfits=outfits.filter(o=>!/^[A-Z]{2}\d+V\d+$/.test(o.id||''));
   // Los outfits deportivos (SS) no cuentan en enfoques, ranking ni nunca-usados: tienen su propio bloque.
   const hist=histCompleta.filter(h=>!esSS_DJ(h.id));
   const histSport=histCompleta.filter(h=>esSS_DJ(h.id));
