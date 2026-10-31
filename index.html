@@ -1445,6 +1445,8 @@ async function guardarPrenda(){
 
 // ── ESTADÍSTICAS ──
 const esSS_DJ=id=>(id||'').substring(0,2)==='SS';
+// WF## = versión weekend de un FF##: cuenta como Weekend
+const catPref=id=>{const c=(id||'').substring(0,2);return c==='WF'?'WW':c;};
 function renderStats(histCompleta, outfits){
   // Variantes (WW08V2…) cuentan como su outfit base en las estadísticas.
   histCompleta=histCompleta.map(h=>({...h,id:(h.id||'').replace(/(?<=\d)V\d+$/,'')}));
@@ -2029,7 +2031,7 @@ function renderOutfits(outfits, filtro='todos'){
       merged.push({id:sb.id,e:sb.enfoque||'',rating:sb.rating||0,usado:sb.usado||false,foto_pendiente:sb.foto_pendiente||false});
   });
 
-  const filtrado = filtro==='todos' ? merged : merged.filter(o=>o.id.startsWith(filtro));
+  const filtrado = filtro==='todos' ? merged : merged.filter(o=>catPref(o.id)===filtro);
   const cats = filtro==='todos' ? ['EE','FF','RR','WW','SS'] : [filtro];
   let html = '';
 
@@ -2037,7 +2039,7 @@ function renderOutfits(outfits, filtro='todos'){
   globalHist.forEach(h=>{usoCnt[h.id]=(usoCnt[h.id]||0)+1;});
 
   cats.forEach(cat=>{
-    const items = filtrado.filter(o=>o.id.startsWith(cat));
+    const items = filtrado.filter(o=>catPref(o.id)===cat);
     if(!items.length) return;
     const catInfo = CATS_MAP[cat];
     html+=`<div class="cat-header">
@@ -2104,7 +2106,7 @@ function renderOutfits(outfits, filtro='todos'){
 
   // ── Sección aparte, colapsada, para outfits derogados ──
   if(globalOutfitsDerogados.length){
-    const derogCats = filtro==='todos' ? globalOutfitsDerogados : globalOutfitsDerogados.filter(o=>o.id.startsWith(filtro));
+    const derogCats = filtro==='todos' ? globalOutfitsDerogados : globalOutfitsDerogados.filter(o=>catPref(o.id)===filtro);
     if(derogCats.length){
       html+=`<div class="archivados-toggle" onclick="toggleArchivadosOutfits()">
         <span>🗄 archivados</span>
