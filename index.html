@@ -1372,6 +1372,13 @@ function nextCodigo(tipo){
       if(!isNaN(num)&&num>max) max=num;
     }
   });
+  // También cuenta los códigos ya reservados por prendas "en camino" (wishlist), para no repetirlos
+  (typeof globalWishlist!=='undefined'?globalWishlist:[]).forEach(w=>{
+    if(w.prenda_id&&w.prenda_id.startsWith(prefix)){
+      const num=parseInt(w.prenda_id.slice(prefix.length),10);
+      if(!isNaN(num)&&num>max) max=num;
+    }
+  });
   return prefix+String(max+1).padStart(3,'0');
 }
 
@@ -2349,12 +2356,21 @@ function renderWishlist(items){
       ?`<button onclick="marcarLlego('${w.id}')" style="font-size:11px;padding:5px 10px;border-radius:99px;border:1px solid var(--border2);background:none;color:var(--text);cursor:pointer;font-family:var(--font);">✓ llegó</button>`:'';
     const detalles=[w.talla,w.fit,w.modelo,w.pretina].filter(Boolean).join(' · ');
     const tentativos=(w.outfit_tentativo||'').split(',').map(s=>s.trim()).filter(Boolean);
+    const fCarpeta=STORAGE_FOLDER_DJ[w.tipo];
+    const fUrl=(w.prenda_id&&fCarpeta)?`${STORAGE}/${fCarpeta}/${w.prenda_id}.jpg`:'';
+    const thumb=fUrl
+      ?`<div style="position:relative;width:64px;height:64px;flex-shrink:0;"><div class="wish-color" style="width:64px;height:64px;background:${color};position:absolute;inset:0;"></div><img src="${fUrl}" alt="${w.prenda_id}" style="position:absolute;inset:0;width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--border);" onerror="this.style.display='none'"></div>`
+      :`<div class="wish-color" style="background:${color};"></div>`;
+    const codeChip=w.prenda_id
+      ?`<span class="prenda-codigo" title="sube la foto a ${fCarpeta||''}/${w.prenda_id}.jpg">${w.prenda_id}</span>`
+      :(w.estado==='en_camino'?`<button onclick="asignarCodigoWish('${w.id}')" style="font-size:11px;padding:3px 9px;border-radius:99px;border:1px dashed var(--border2);background:none;color:var(--text);cursor:pointer;font-family:var(--font);">asignar código</button>`:'');
     return`<div class="wish-card">
-      <div class="wish-color" style="background:${color};"></div>
+      ${thumb}
       <div class="wish-info">
         <div class="wish-top">
           <span class="wish-marca">${w.marca||'—'}</span>
           <span class="wish-sub">· ${w.tipo}${sub?' · '+sub:''}</span>
+          ${codeChip}
         </div>
         ${detalles?`<div class="wish-meta">${detalles}</div>`:''}
         ${w.tienda||w.precio?`<div class="wish-meta">${[w.tienda,w.precio?'$'+Number(w.precio).toLocaleString('es-CO'):''].filter(Boolean).join(' · ')}</div>`:''}
@@ -2382,7 +2398,9 @@ async function marcarLlego(id){
   if(!confirm(`¿"${etiqueta}" ya llegó? Se va a crear automáticamente en el closet con estos datos.`)) return;
   try{
     // 1. Crear la prenda en el closet con los mismos datos + código automático
-    const codigo=nextCodigo(w.tipo);
+    // Usa el código reservado (el de la foto ya subida); si no tiene o ya existe en el closet, genera uno nuevo
+    const yaExiste=c=>(globalPrendasAll||[]).some(p=>p.codigo===c);
+    const codigo=(w.prenda_id&&!yaExiste(w.prenda_id))?w.prenda_id:nextCodigo(w.tipo);
     const prendaBody={
       tipo:w.tipo, subtipo:w.subtipo||'', marca:w.marca||'',
       talla:w.talla||'', fit:w.fit||'', modelo:w.modelo||'',
@@ -2407,6 +2425,21 @@ async function marcarLlego(id){
     const prendasFresh=aplicarPrendas(await fetchPrendas());
     renderCloset(prendasFresh, globalHist); renderGaleria(prendasFresh, globalHist); renderClosetStats(prendasFresh);
   }catch(e){console.error(e);toast('error al actualizar');}
+}
+
+async function asignarCodigoWish(id){
+  const w=globalWishlist.find(x=>x.id===id);
+  if(!w||w.prenda_id) return;
+  const codigo=nextCodigo(w.tipo);
+  if(!codigo){toast('este tipo no genera código');return;}
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/wishlist?id=eq.${id}`,{
+      method:'PATCH',headers:{...SB_H,'Prefer':'return=minimal'},body:JSON.stringify({prenda_id:codigo})
+    });
+    if(!r.ok){toast('error al asignar código');return;}
+    toast(`código ${codigo} reservado ✓`);
+    const w2=await fetchWishlist(); globalWishlist=w2; renderWishlist(w2);
+  }catch(e){toast('error al asignar código');}
 }
 
 async function eliminarWish(id){
@@ -2474,6 +2507,13 @@ async function guardarWish(){
   };
   if(!editingWishId) body.estado='en_camino'; // al crear; al editar no se toca el estado actual
   if(!body.marca){toast('agrega la marca');return;}
+  // Código reservado desde ya: así puedes subir la foto a Storage antes de que llegue la prenda
+  if(!editingWishId){
+    body.prenda_id=nextCodigo(tipo);
+  } else {
+    const prev=globalWishlist.find(x=>x.id===editingWishId);
+    if(prev&&prev.estado==='en_camino'&&(!prev.prenda_id||prev.tipo!==tipo)) body.prenda_id=nextCodigo(tipo);
+  }
   try{
     let r;
     if(editingWishId){
@@ -2486,7 +2526,7 @@ async function guardarWish(){
       });
     }
     if(!r.ok){const t=await r.text();console.error(t);toast('error al guardar — revisa que existan las columnas pretina/outfit_tentativo en wishlist');return;}
-    toast(editingWishId?'actualizado ✓':'guardado ✓');
+    toast(editingWishId?'actualizado ✓':(body.prenda_id?`guardado ✓ · código ${body.prenda_id}`:'guardado ✓'));
     closeWishForm();
     const w=await fetchWishlist();
     globalWishlist=w;
